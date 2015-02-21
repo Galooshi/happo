@@ -7,7 +7,8 @@ end
 
 get '/' do
   @config = {
-    'source_files' => []
+    'source_files' => [],
+    'stylesheets' => []
   }
   config_file = '.likadan.yaml'
   if File.exist? config_file
@@ -16,7 +17,7 @@ get '/' do
   erb :index
 end
 
-get '/script' do
+get '/resource' do
   file = params[:file]
   send_file file
 end
