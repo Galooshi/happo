@@ -1,0 +1,6 @@
+source_files:
+  - example.js
+stylesheets:
+  - css/styles.css
+snapshots_folder: ./snapshots
+
