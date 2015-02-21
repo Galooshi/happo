@@ -6,16 +6,19 @@ require 'diffux_core/snapshot_comparison_image/before'
 require 'diffux_core/snapshot_comparison_image/overlayed'
 require 'diffux_core/snapshot_comparison_image/after'
 require 'chunky_png'
+require 'yaml'
 
 driver = Selenium::WebDriver.for :firefox
-
 begin
+  config = YAML.load_file('.likadan.yaml')
+  snapshots_folder = config['snapshots_folder'] || './snapshots'
+
   driver.navigate.to 'http://localhost:4567/'
 
   while current = driver.execute_script('return window.likadan.next()') do
     now = Time.now.to_i
     normalized_name = current['name'].gsub(/[^a-zA-Z0-9\-_]/, '_')
-    file = "./snapshots/#{normalized_name}/snapshot_#{now}.png"
+    file = "#{snapshots_folder}/#{normalized_name}/snapshot_#{now}.png"
     dirname = File.dirname(file)
     unless File.directory?(dirname)
       FileUtils.mkdir_p(dirname)
