@@ -12,35 +12,39 @@ driver.navigate.to 'http://localhost:4567/'
 
 while current = driver.execute_script('return nextExample()') do
   now = Time.now.to_i
-  file = "./screenshots/#{current['name']}/#{now}.png"
+  file = "./screenshots/#{current['name']}/snapshot_#{now}.png"
   dirname = File.dirname(file)
   unless File.directory?(dirname)
     FileUtils.mkdir_p(dirname)
   end
 
-  previous_png = Dir.glob(File.join(dirname, '*.png')).max do |a,b|
+  previous_png = Dir.glob(File.join(dirname, 'snapshot_*.png')).max do |a,b|
     File.ctime(a) <=> File.ctime(b)
   end
 
   driver.save_screenshot(file)
+  to_crop = ChunkyPNG::Image.from_file(file)
+  to_crop.crop!(0, 0, current['width'], current['height'])
+  to_crop.save(file)
+
+  print "Checking \"#{current['name']}\"... "
 
   if previous_png
-    puts "Comparing #{current['name']} with previous screenshot..."
     comparison = Diffux::SnapshotComparer.new(
       ChunkyPNG::Image.from_file(previous_png),
       ChunkyPNG::Image.from_file(file),
     ).compare!
 
     if img = comparison[:diff_image]
-      img.save(file + '.diff.png')
-      puts "DIFF: #{comparison[:diff_in_percent]}%"
+      diff_output = File.join(dirname, "diff_#{now}.png")
+      img.save(diff_output)
+      puts "#{comparison[:diff_in_percent]}% (#{diff_output})"
     else
-      puts 'No diff'
+      puts 'No diff.'
     end
   else
-    puts "No previous image to compare #{current['name']} with."
+    puts "First snapshot created (#{file})"
   end
 end
 
 driver.quit
-
