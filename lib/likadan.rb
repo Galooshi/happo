@@ -12,7 +12,7 @@ driver = Selenium::WebDriver.for :firefox
 begin
   driver.navigate.to 'http://localhost:4567/'
 
-  while current = driver.execute_script('return nextExample()') do
+  while current = driver.execute_script('return window.likadan.next()') do
     now = Time.now.to_i
     normalized_name = current['name'].gsub(/[^a-zA-Z0-9\-_]/, '_')
     file = "./snapshots/#{normalized_name}/snapshot_#{now}.png"
