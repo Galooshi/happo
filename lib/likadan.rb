@@ -12,7 +12,8 @@ driver.navigate.to 'http://localhost:4567/'
 
 while current = driver.execute_script('return nextExample()') do
   now = Time.now.to_i
-  file = "./screenshots/#{current['name']}/snapshot_#{now}.png"
+  normalized_name = current['name'].gsub(/[^a-zA-Z0-9\-_]/, '_')
+  file = "./snapshots/#{normalized_name}/snapshot_#{now}.png"
   dirname = File.dirname(file)
   unless File.directory?(dirname)
     FileUtils.mkdir_p(dirname)
