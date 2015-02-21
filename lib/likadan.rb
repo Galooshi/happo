@@ -8,6 +8,7 @@ require 'diffux_core/snapshot_comparison_image/after'
 require 'chunky_png'
 
 driver = Selenium::WebDriver.for :firefox
+
 begin
   driver.navigate.to 'http://localhost:4567/'
 
