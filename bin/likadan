@@ -1,40 +1,12 @@
 #!/usr/bin/env ruby
-require 'sinatra'
-require 'yaml'
-
-def get_configuration
-  config = {
-    'source_files' => [],
-    'stylesheets' => [],
-    'port' => 4567
-  }
-  config_file = '.likadan.yaml'
-  if File.exist? config_file
-    config = config.merge(YAML.load_file(config_file))
-  end
-  config
-end
-
-configure do
-  enable :static
-  set :port, get_configuration['port']
-end
-
-get '/' do
-  @config = get_configuration
-  erb :index
-end
-
-get '/resource' do
-  file = params[:file]
-  if file.start_with? 'http'
-    redirect file
-  else
-    send_file file
-  end
-end
 
 Thread.new do # trivial example work thread
-  require 'likadan_runner'
-  exit
+  begin
+    require 'likadan_runner'
+  ensure
+    exit
+  end
 end
+
+require 'likadan_server'
+

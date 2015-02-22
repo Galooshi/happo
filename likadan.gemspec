@@ -9,6 +9,8 @@ Gem::Specification.new do |s|
   s.executables   = ['likadan']
   s.homepage    = 'http://rubygems.org/gems/likadan'
   s.license     = 'MIT'
+  s.require_paths = ['lib']
+  s.files         = Dir['lib/**/*']
   s.add_runtime_dependency 'diffux-core', '~> 0.0', '>= 0.0.2'
   s.add_runtime_dependency 'chunky_png', '~> 1.3', '>= 1.3.4'
   s.add_runtime_dependency 'selenium-webdriver', '~> 2.44', '>= 2.44.0'
