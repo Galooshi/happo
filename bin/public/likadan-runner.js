@@ -15,8 +15,9 @@ window.likadan = {
     }
     var out = document.getElementById('likadan-output');
     out.innerHTML = '';
-    var elem = next.func();
-    out.appendChild(elem);
+    next.func(out);
+
+    var elem = out.firstChild;
 
     return {
       name: next.name,
