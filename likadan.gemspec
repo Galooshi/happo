@@ -6,10 +6,10 @@ Gem::Specification.new do |s|
   s.description = 'Likadan, a perceptual diff tool for JS components'
   s.authors     = ['Henric Trotzig']
   s.email       = 'henric.trotzig@gmail.com'
-  s.executables   = ['likadan-server', 'likadan']
+  s.executables   = ['likadan']
   s.homepage    = 'http://rubygems.org/gems/likadan'
   s.license     = 'MIT'
-  s.add_runtime_dependency 'diffux-core', '>= 0.0.2'
+  s.add_runtime_dependency 'diffux-core', '~> 0.0', '>= 0.0.2'
   s.add_runtime_dependency 'chunky_png', '~> 1.3', '>= 1.3.4'
   s.add_runtime_dependency 'selenium-webdriver', '~> 2.44', '>= 2.44.0'
   s.add_runtime_dependency 'thin', '~> 1.6', '>= 1.6.3'
