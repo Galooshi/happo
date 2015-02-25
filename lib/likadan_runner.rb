@@ -18,38 +18,36 @@ begin
   while current = driver.execute_script('return window.likadan.next()') do
     now = Time.now.to_i
     normalized_name = current['name'].gsub(/[^a-zA-Z0-9\-_]/, '_')
-    file = "#{snapshots_folder}/#{normalized_name}/snapshot_#{now}.png"
-    dirname = File.dirname(file)
-    unless File.directory?(dirname)
+    output_file = File.join(snapshots_folder, normalized_name, 'candidate.png')
+    unless File.directory?(dirname = File.dirname(output_file))
       FileUtils.mkdir_p(dirname)
     end
 
-    previous_png = Dir.glob(File.join(dirname, 'snapshot_*.png')).max do |a,b|
-      File.ctime(a) <=> File.ctime(b)
-    end
-
-    driver.save_screenshot(file)
-    to_crop = ChunkyPNG::Image.from_file(file)
-    to_crop.crop!(0, 0, current['width'], current['height'])
-    to_crop.save(file)
+    driver.save_screenshot(output_file)
+    cropped = ChunkyPNG::Image.from_file(output_file)
+    cropped.crop!(0, 0, current['width'], current['height'])
+    cropped.save(output_file)
 
     print "Checking \"#{current['name']}\"... "
 
-    if previous_png
+    baseline_file = File.join(snapshots_folder, normalized_name, 'baseline.png')
+    if File.exist? baseline_file
       comparison = Diffux::SnapshotComparer.new(
-        ChunkyPNG::Image.from_file(previous_png),
-        ChunkyPNG::Image.from_file(file),
+        ChunkyPNG::Image.from_file(baseline_file),
+        cropped
       ).compare!
 
       if img = comparison[:diff_image]
-        diff_output = File.join(dirname, "diff_#{now}.png")
+        diff_output = File.join(snapshots_folder, normalized_name, 'diff.png')
         img.save(diff_output)
         puts "#{comparison[:diff_in_percent]}% (#{diff_output})"
       else
+        File.delete(output_file)
         puts 'No diff.'
       end
     else
-      puts "First snapshot created (#{file})"
+      File.rename(output_file, baseline_file)
+      puts "First snapshot created (#{baseline_file})"
     end
   end
 ensure
