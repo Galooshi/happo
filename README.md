@@ -16,6 +16,10 @@ source_files:
 stylesheets:
  - application.css
 snapshots_folder: ./snapshots
+viewport_widths:
+ - 320
+ - 640
+ - 1200
 ```
 
 ## Running the tool

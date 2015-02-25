@@ -3,4 +3,6 @@ source_files:
 stylesheets:
   - css/styles.css
 snapshots_folder: ./snapshots
-
+viewport_widths:
+  - 320
+  - 1024
