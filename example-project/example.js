@@ -1,18 +1,18 @@
-likadan.define('foo', function() {
+likadan.define('foo', function(out) {
   var elem = document.createElement('div');
   elem.setAttribute('class', 'foo');
   elem.innerHTML = 'Text inside';
-  return elem;
+  out.appendChild(elem);
 });
 
-likadan.define('hallooo', function() {
+likadan.define('hallooo', function(out) {
   var elem = document.createElement('span');
   elem.innerHTML = 'Hioi!<br>Hello';
-  return elem;
+  out.appendChild(elem);
 });
 
-likadan.define('bar', function() {
+likadan.define('bar', function(out) {
   var elem = document.createElement('span');
-  elem.innerHTML = 'bars!<br>bars';
-  return elem;
+  elem.innerHTML = 'go bars!<br>bars';
+  out.appendChild(elem);
 });
