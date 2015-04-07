@@ -20,6 +20,9 @@ viewport_widths:
  - 320
  - 640
  - 1200
+setup_commands:
+ - ./scripts/precompile-javascript.sh
+ - ./scripts/precompile-stylesheets.sh
 ```
 
 ## Running the tool
