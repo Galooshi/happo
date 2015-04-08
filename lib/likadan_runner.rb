@@ -66,4 +66,3 @@ begin
 ensure
   driver.quit
 end
-
