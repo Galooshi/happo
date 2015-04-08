@@ -1,12 +1,24 @@
 #!/usr/bin/env ruby
 
-Thread.new do # trivial example work thread
-  begin
-    require 'likadan_runner'
-  ensure
-    exit
+action = ARGV[0] || 'run'
+case action
+when 'run'
+  Thread.new do # trivial example work thread
+    begin
+      require 'likadan_runner'
+    ensure
+      puts 'Press Enter to exit...'
+      gets
+      exit
+    end
   end
+  require 'likadan_server'
+
+when 'approve', 'reject'
+  require 'likadan_action'
+  abort "Missing example name" unless example_name = ARGV[1]
+  abort "Missing viewport width" unless width = ARGV[2]
+  LikadanAction.new(example_name, width).send(action)
+else
+  abort "Unknown action \"#{action}\""
 end
-
-require 'likadan_server'
-
