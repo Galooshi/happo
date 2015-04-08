@@ -9,7 +9,7 @@ likadan.define('hallooo', function(out) {
   var elem = document.createElement('span');
   elem.innerHTML = 'Hioi!<br>Hello';
   out.appendChild(elem);
-});
+}, [320, 1024]);
 
 likadan.define('bar', function(out) {
   var elem = document.createElement('span');

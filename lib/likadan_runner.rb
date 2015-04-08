@@ -12,29 +12,34 @@ driver = Selenium::WebDriver.for :firefox
 begin
   config = YAML.load_file('.likadan.yaml')
   snapshots_folder = config['snapshots_folder'] || './snapshots'
-  viewport_widths = config['viewport_widths'] || [1024]
 
   driver.navigate.to 'http://localhost:4567/'
 
-  viewport_widths.each do |viewport_width|
-    driver.execute_script('window.likadan.reset()')
-    driver.manage.window.resize_to(viewport_width, 800)
+  while current = driver.execute_script('return window.likadan.next()') do
+    normalized_name = current['name'].gsub(/[^a-zA-Z0-9\-_]/, '_')
+    current['viewportWidths'].each do |viewport_width|
+      # Resize window to the right size before rendering
+      driver.manage.window.resize_to(viewport_width, viewport_width)
 
-    while current = driver.execute_script('return window.likadan.next()') do
-      normalized_name = current['name'].gsub(/[^a-zA-Z0-9\-_]/, '_')
+      # Render the example
+      rendered = driver.execute_script('return window.likadan.renderCurrent()')
       output_file = File.join(snapshots_folder, normalized_name,
                               "@#{viewport_width}", 'candidate.png')
+
+      # Create the folder structure if it doesn't already exist
       unless File.directory?(dirname = File.dirname(output_file))
         FileUtils.mkdir_p(dirname)
       end
 
+      # Save and crop the screenshot
       driver.save_screenshot(output_file)
       cropped = ChunkyPNG::Image.from_file(output_file)
-      cropped.crop!(0, 0, current['width'], current['height'])
+      cropped.crop!(0, 0, rendered['width'], rendered['height'])
       cropped.save(output_file)
 
       print "Checking \"#{current['name']}\" at #{viewport_width}px... "
 
+      # Run the diff if needed
       baseline_file = File.join(snapshots_folder, normalized_name,
                                 "@#{viewport_width}", 'baseline.png')
       if File.exist? baseline_file
