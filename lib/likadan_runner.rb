@@ -14,13 +14,6 @@ begin
   snapshots_folder = config['snapshots_folder'] || './snapshots'
   viewport_widths = config['viewport_widths'] || [1024]
 
-  if setup_commands = config['setup_commands']
-    puts 'Running setup commands...'
-    setup_commands.each do |setup_command|
-      system setup_command
-    end
-  end
-
   driver.navigate.to 'http://localhost:4567/'
 
   viewport_widths.each do |viewport_width|
