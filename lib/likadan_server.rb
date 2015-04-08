@@ -8,9 +8,18 @@ class LikadanServer < Sinatra::Base
     set :port, LikadanUtils.config['port']
   end
 
+  def current_diffs
+    Dir.glob("#{LikadanUtils.config['snapshots_folder']}/**/diff.png")
+  end
+
   get '/' do
     @config = LikadanUtils.config
     erb :index
+  end
+
+  get '/review' do
+    @diffs = current_diffs
+    erb :review
   end
 
   get '/resource' do

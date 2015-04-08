@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'likadan_utils'
+
 action = ARGV[0] || 'run'
 case action
 when 'run'
@@ -14,10 +16,14 @@ when 'run'
   end
   require 'likadan_server'
 
+when 'review'
+  system 'open', LikadanUtils.construct_url('/review')
+  require 'likadan_server'
+
 when 'approve', 'reject'
   require 'likadan_action'
-  abort "Missing example name" unless example_name = ARGV[1]
-  abort "Missing viewport width" unless width = ARGV[2]
+  abort 'Missing example name' unless example_name = ARGV[1]
+  abort 'Missing viewport width' unless width = ARGV[2]
   LikadanAction.new(example_name, width).send(action)
 else
   abort "Unknown action \"#{action}\""
