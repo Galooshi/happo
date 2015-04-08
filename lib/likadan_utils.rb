@@ -22,4 +22,8 @@ class LikadanUtils
       file_name
     )
   end
+
+  def self.construct_url(absolute_path)
+    return "http://localhost:#{config['port']}#{absolute_path}"
+  end
 end

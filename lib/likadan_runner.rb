@@ -10,7 +10,7 @@ require 'likadan_utils'
 
 driver = Selenium::WebDriver.for :firefox
 begin
-  driver.navigate.to 'http://localhost:4567/'
+  driver.navigate.to LikadanUtils.construct_url('/')
 
   while current = driver.execute_script('return window.likadan.next()') do
     current['viewportWidths'].each do |width|
