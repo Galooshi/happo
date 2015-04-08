@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <style type="text/css">
+      * {
+        -webkit-transition: none !important;
+        -moz-transition: none !important;
+        transition: none !important;
+        -webkit-animation-duration: 0 !important;
+        -moz-animation-duration: 0 !important;
+        animation-duration: 0 !important;
+      }
+    </style>
+
     <% @config['stylesheets'].each do |stylesheet| %>
       <link rel="stylesheet" type="text/css"
         href="/resource?file=<%= ERB::Util.url_encode(stylesheet) %>">
