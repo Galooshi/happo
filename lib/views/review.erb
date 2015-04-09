@@ -1,0 +1,4 @@
+<h1>Likadan Review Tool</h1>
+<% @diffs.each do |diff| %>
+  <img src="/resource?file=<%= ERB::Util.url_encode(diff) %>">
+<% end %>
