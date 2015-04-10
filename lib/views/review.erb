@@ -1,4 +1,44 @@
-<h1>Likadan Review Tool</h1>
-<% @diffs.each do |diff| %>
-  <img src="/resource?file=<%= ERB::Util.url_encode(diff) %>">
-<% end %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      body {
+        background-color: #f0f0f0;
+        font-family: helvetica, arial;
+      }
+      form {
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Likadan Review Tool</h1>
+    <h2>DIFFS</h2>
+    <% @snapshots[:diffs].each do |diff| %>
+      <h3>
+        <%= diff[:name] %> @ <%= diff[:width] %>
+      </h3>
+      <p><img src="/resource?file=<%= ERB::Util.url_encode(diff[:file]) %>"></p>
+      <form style="display: inline-block"
+            action="/approve?name=<%= diff[:name] %>&width=<%= diff[:width] %>"
+            method="POST">
+        <button type="submit">Approve</button>
+      </form>
+      <form style="display: inline-block"
+            action="/reject?name=<%= diff[:name] %>&width=<%= diff[:width] %>"
+            method="POST">
+        <button type="submit">Reject</button>
+      </form>
+    <% end %>
+
+    <hr>
+
+    <h2>BASELINES</h2>
+    <% @snapshots[:baselines].each do |baseline| %>
+      <h3>
+        <%= baseline[:name] %> @ <%= baseline[:width] %>
+      </h3>
+      <p><img src="/resource?file=<%= ERB::Util.url_encode(baseline[:file]) %>"></p>
+    <% end %>
+  </body>
+</html>
