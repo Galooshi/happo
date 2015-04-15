@@ -19,6 +19,15 @@ begin
 
       # Render the example
       rendered = driver.execute_script('return window.likadan.renderCurrent()')
+      if error = rendered['error']
+        puts <<-EOS
+          Error while rendering "#{current['name']}" @#{width}px:
+            #{rendered['error']}
+          Debug by pointing your browser to
+          #{LikadanUtils.construct_url('/', name: current['name'])}
+        EOS
+        next
+      end
       output_file = LikadanUtils.path_to(current['name'], width, 'candidate.png')
 
       # Create the folder structure if it doesn't already exist

@@ -23,7 +23,14 @@ class LikadanUtils
     )
   end
 
-  def self.construct_url(absolute_path)
-    return "http://localhost:#{config['port']}#{absolute_path}"
+  def self.construct_url(absolute_path, params = {})
+    params_str = params.map do |key, value|
+      "#{key}=#{URI.escape(value)}"
+    end.join('&')
+    unless params_str.empty?
+      params_str = "?#{params_str}"
+    end
+
+    return "http://localhost:#{config['port']}#{absolute_path}#{params_str}"
   end
 end
