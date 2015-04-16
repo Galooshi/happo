@@ -18,7 +18,6 @@
     <% end %>
   </head>
   <body style="margin: 0; background-color: #fff;">
-    <div id="likadan-output"/>
     <script src="/likadan-runner.js"></script>
     <% @config['source_files'].each do |source_file| %>
       <script src="/resource?file=<%= ERB::Util.url_encode(source_file) %>"></script>
