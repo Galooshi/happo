@@ -38,7 +38,10 @@ begin
       # Save and crop the screenshot
       driver.save_screenshot(output_file)
       cropped = ChunkyPNG::Image.from_file(output_file)
-      cropped.crop!(0, 0, rendered['width'], rendered['height'])
+      cropped.crop!(rendered['left'],
+                    rendered['top'],
+                    rendered['width'],
+                    rendered['height'])
       cropped.save(output_file)
 
       print "Checking \"#{current['name']}\" at #{width}px... "
