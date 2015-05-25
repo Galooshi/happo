@@ -58,7 +58,7 @@ begin
         if img = comparison[:diff_image]
           diff_output = LikadanUtils.path_to(current['name'], width, 'diff.png')
           img.save(diff_output)
-          puts "#{comparison[:diff_in_percent]}% (#{diff_output})"
+          puts "#{comparison[:diff_in_percent].round(1)}% (#{diff_output})"
         else
           File.delete(output_file)
           puts 'No diff.'
