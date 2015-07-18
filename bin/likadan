@@ -9,8 +9,6 @@ when 'run'
     begin
       require 'likadan_runner'
     ensure
-      puts 'Press Enter to exit...'
-      gets
       exit
     end
   end
