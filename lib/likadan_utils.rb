@@ -7,7 +7,8 @@ class LikadanUtils
       'snapshots_folder' => './snapshots',
       'source_files' => [],
       'stylesheets' => [],
-      'port' => 4567
+      'port' => 4567,
+      'driver' => :firefox,
     }.merge(YAML.load(ERB.new(File.read(
       ENV['LIKADAN_CONFIG_FILE'] || '.likadan.yaml')).result))
   end
