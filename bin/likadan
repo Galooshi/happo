@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 
 require 'likadan_utils'
+require 'likadan_action'
+require 'likadan_uploader'
 
 action = ARGV[0] || 'run'
 case action
@@ -19,10 +21,14 @@ when 'review'
   require 'likadan_server'
 
 when 'approve', 'reject'
-  require 'likadan_action'
   abort 'Missing example name' unless example_name = ARGV[1]
   abort 'Missing viewport width' unless width = ARGV[2]
   LikadanAction.new(example_name, width).send(action)
+
+when 'upload_diffs'
+  LikadanUploader.new.upload_diffs.each do |url|
+    puts url
+  end
 else
   abort "Unknown action \"#{action}\""
 end

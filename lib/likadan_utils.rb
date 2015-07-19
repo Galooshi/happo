@@ -34,4 +34,22 @@ class LikadanUtils
 
     return "http://localhost:#{config['port']}#{absolute_path}#{params_str}"
   end
+
+  def self.current_snapshots
+    prepare_file = lambda do |file|
+      width_dir = File.expand_path('..', file)
+      name_dir = File.expand_path('..', width_dir)
+      {
+        name: File.basename(name_dir),
+        width: File.basename(width_dir).sub('@', '').to_i,
+        file: file,
+      }
+    end
+    diff_files = Dir.glob("#{LikadanUtils.config['snapshots_folder']}/**/diff.png")
+    baselines = Dir.glob("#{LikadanUtils.config['snapshots_folder']}/**/baseline.png")
+    {
+      diffs: diff_files.map(&prepare_file),
+      baselines: baselines.map(&prepare_file)
+    }
+  end
 end
