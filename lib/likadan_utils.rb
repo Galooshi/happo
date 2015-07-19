@@ -1,4 +1,5 @@
 require 'yaml'
+require 'erb'
 
 class LikadanUtils
   def self.config
@@ -7,7 +8,7 @@ class LikadanUtils
       'source_files' => [],
       'stylesheets' => [],
       'port' => 4567
-    }.merge(YAML.load_file('.likadan.yaml'))
+    }.merge(YAML.load(ERB.new(File.read('.likadan.yaml')).result))
   end
 
   def self.normalize_name(name)
