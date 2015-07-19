@@ -8,7 +8,8 @@ class LikadanUtils
       'source_files' => [],
       'stylesheets' => [],
       'port' => 4567
-    }.merge(YAML.load(ERB.new(File.read('.likadan.yaml')).result))
+    }.merge(YAML.load(ERB.new(File.read(
+      ENV['LIKADAN_CONFIG_FILE'] || '.likadan.yaml')).result))
   end
 
   def self.normalize_name(name)

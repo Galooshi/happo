@@ -8,8 +8,10 @@ Likadan comes bundled as a gem. To install it, run `gem install likadan`.
 
 ## Configuration
 
-Likadan can be configured through a `.likadan.yaml` file, placed in the root of
-your project.
+Likadan loads configuration in one of the following ways:
+
+- From a YAML file specified via a `LIKADAN_CONFIG_FILE` environment variable
+- From `.likadan.yaml` in the current working directory
 
 ```yaml
 source_files:
