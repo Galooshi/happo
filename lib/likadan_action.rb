@@ -1,5 +1,5 @@
 require 'likadan_utils'
-require 'FileUtils'
+require 'fileutils'
 
 class LikadanAction
   def initialize(example_name, width)

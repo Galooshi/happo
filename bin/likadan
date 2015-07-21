@@ -3,6 +3,7 @@
 require 'likadan_utils'
 require 'likadan_action'
 require 'likadan_uploader'
+require 'fileutils'
 
 action = ARGV[0] || 'run'
 case action
@@ -19,6 +20,9 @@ when 'run'
 when 'review'
   system 'open', LikadanUtils.construct_url('/review')
   require 'likadan_server'
+
+when 'prune'
+  FileUtils.remove_entry_secure LikadanUtils.config['snapshots_folder']
 
 when 'approve', 'reject'
   abort 'Missing example name' unless example_name = ARGV[1]

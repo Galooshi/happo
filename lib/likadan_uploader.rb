@@ -1,5 +1,4 @@
 require 'likadan_utils'
-require 'FileUtils'
 require 's3'
 require 'securerandom'
 
