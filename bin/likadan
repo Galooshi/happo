@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 
 require 'likadan_utils'
+require 'likadan_action'
+require 'likadan_uploader'
+require 'fileutils'
 
 action = ARGV[0] || 'run'
 case action
@@ -9,8 +12,6 @@ when 'run'
     begin
       require 'likadan_runner'
     ensure
-      puts 'Press Enter to exit...'
-      gets
       exit
     end
   end
@@ -20,11 +21,18 @@ when 'review'
   system 'open', LikadanUtils.construct_url('/review')
   require 'likadan_server'
 
+when 'prune'
+  FileUtils.remove_entry_secure LikadanUtils.config['snapshots_folder']
+
 when 'approve', 'reject'
-  require 'likadan_action'
   abort 'Missing example name' unless example_name = ARGV[1]
   abort 'Missing viewport width' unless width = ARGV[2]
   LikadanAction.new(example_name, width).send(action)
+
+when 'upload_diffs'
+  LikadanUploader.new.upload_diffs.each do |url|
+    puts url
+  end
 else
   abort "Unknown action \"#{action}\""
 end

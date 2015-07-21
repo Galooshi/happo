@@ -7,8 +7,9 @@ require 'diffux_core/snapshot_comparison_image/overlayed'
 require 'diffux_core/snapshot_comparison_image/after'
 require 'chunky_png'
 require 'likadan_utils'
+require 'fileutils'
 
-driver = Selenium::WebDriver.for :firefox
+driver = Selenium::WebDriver.for LikadanUtils.config['driver'].to_sym
 begin
   driver.navigate.to LikadanUtils.construct_url('/')
 

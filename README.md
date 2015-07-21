@@ -8,8 +8,10 @@ Likadan comes bundled as a gem. To install it, run `gem install likadan`.
 
 ## Configuration
 
-Likadan can be configured through a `.likadan.yaml` file, placed in the root of
-your project.
+Likadan loads configuration in one of the following ways:
+
+- From a YAML file specified via a `LIKADAN_CONFIG_FILE` environment variable
+- From `.likadan.yaml` in the current working directory
 
 ```yaml
 source_files:
@@ -18,16 +20,31 @@ source_files:
 stylesheets:
  - application.css
 snapshots_folder: ./snapshots
+s3_access_key_id: <your acccess key id>
+s3_secret_access_key: <your secret acccess key>
 ```
 
-## Running the tool
+## Command line tools
 
-Just run `likadan` from the command line. This will start up Firefox and start
-taking snapshots of all your examples.
+### `likadan`
 
-## Reviewing snapshots
+This command will fire up a Firefox instance and take snapshots of all your
+likadan examples.
 
-Once that has finished, run `likadan review` from the command line. This will
-open a page that compares the latest run's snapshots against the previously
-accepted snapshots. You can then approve or reject the snapshots for the next
-run.
+### `likadan review`
+
+Once `likadan` has finished, run `likadan review` from the command line. This
+will open a page that compares the latest run's snapshots against the
+previously accepted snapshots. You can then approve or reject the snapshots for
+the next run.
+
+### `likadan upload_diffs`
+
+Uploads all current diff images to an Amazon S3 account and reports back URLs
+to access those diff images. Requires the `s3_access_key_id` and
+`s3_secret_access_key` configuration options.
+
+### `likadan prune`
+
+Recursively removes everything in the snapshots folder (configured through
+`snapshot_folder`).
