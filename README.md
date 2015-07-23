@@ -9,6 +9,8 @@ representation of the changes will be constructed. You can then use that diff
 image to decide whether a visual regression has been introduced or not, and
 take appropriate action based on that information.
 
+![Demo of Likadan in action](likadan_demo.gif)
+
 ## Defining examples
 
 You define your examples in a JavaScript file and include it in the
