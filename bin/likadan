@@ -30,9 +30,8 @@ when 'approve', 'reject'
   LikadanAction.new(example_name, width).send(action)
 
 when 'upload_diffs'
-  LikadanUploader.new.upload_diffs.each do |url|
-    puts url
-  end
+  # `upload_diffs` returns a URL to a static html file
+  puts LikadanUploader.new.upload_diffs
 else
   abort "Unknown action \"#{action}\""
 end

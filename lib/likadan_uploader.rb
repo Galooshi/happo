@@ -17,12 +17,23 @@ class LikadanUploader
     bucket = service.buckets.build(SecureRandom.hex)
     bucket.save(location: :us)
 
-    current_snapshots[:diffs].map do |diff|
-      object = bucket.objects.build("#{diff[:name]}_#{diff[:width]}.png")
-      object.content = open(diff[:file])
-      object.content_type = 'image/png'
-      object.save
-      object.url
+    diff_images = current_snapshots[:diffs].map do |diff|
+      image = bucket.objects.build("#{diff[:name]}_#{diff[:width]}.png")
+      image.content = open(diff[:file])
+      image.content_type = 'image/png'
+      image.save
+      diff[:url] = image.url
+      diff
     end
+
+    html = bucket.objects.build('likadan-diffs.html')
+    html.content =
+      ERB.new(
+        File.read(File.expand_path(
+          File.join(File.dirname(__FILE__), 'likadan-diffs.html.erb')))
+      ).result(binding)
+    html.content_type = 'text/html'
+    html.save
+    html.url
   end
 end

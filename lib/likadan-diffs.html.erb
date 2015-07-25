@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Likadan diffs</title>
+  </head>
+  <body>
+    <h1>Likadan diffs</h1>
+    <p>File generated: <%= Time.now %></p>
+
+    <% diff_images.each do |diff| %>
+      <h3>
+        <%= diff[:name] %> @ <%= diff[:width] %>
+      </h3>
+      <p><img src="<%= diff[:url] %>"></p>
+    <% end %>
+  </body>
+</html>
