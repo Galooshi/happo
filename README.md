@@ -113,7 +113,7 @@ Uploads all current diff images to an Amazon S3 account and reports back URLs
 to access those diff images. Requires the `s3_access_key_id` and
 `s3_secret_access_key` configuration options.
 
-### `likadan prune`
+### `likadan clean`
 
 Recursively removes everything in the snapshots folder (configured through
-`snapshot_folder`).
+`snapshots_folder`).
