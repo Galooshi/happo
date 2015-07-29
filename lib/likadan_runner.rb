@@ -14,7 +14,7 @@ begin
   driver.navigate.to LikadanUtils.construct_url('/')
 
   while current = driver.execute_script('return window.likadan.next()') do
-    current['viewportWidths'].each do |width|
+    current['options']['viewportWidths'].each do |width|
       # Resize window to the right size before rendering
       driver.manage.window.resize_to(width, width)
 

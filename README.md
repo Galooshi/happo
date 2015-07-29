@@ -39,12 +39,12 @@ those situations, you can use the `likadan.fdefine` function instead of
 `likadan.define`. Using `fdefine` will cause `likadan` to only run for that
 example.
 
-### Setting viewports
+### Setting viewport sizes
 
 By default, Likadan renders examples in a 1024 wide window. If you have
-components that render differently depending on screen width you can pass in a
-second argument to `likadan.define` listing the widths you want to take
-snapshots for.
+components that render differently depending on screen width you can use the
+`viewportWidths` option in the object passed in as the second argument to
+`likadan.define`
 
 ```javascript
 likadan.define('responsive component', function() {
@@ -52,7 +52,7 @@ likadan.define('responsive component', function() {
   elem.setAttribute('class', '.responsive-component');
   document.body.appendChild(elem);
   return elem;
-}, [320, 1024]);
+}, { viewportWidths: [320, 1024] });
 ```
 
 ### Controlling the snapshot
@@ -68,7 +68,7 @@ likadan.define('dialog window', function() {
   elem.setAttribute('class', '.dialog');
   document.body.appendChild(elem);
   return elem;
-}, [320, 1024], { snapshotEntireScreen: true });
+}, { snapshotEntireScreen: true });
 ```
 
 ## Installation

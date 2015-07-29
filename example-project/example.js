@@ -11,11 +11,11 @@ likadan.define('hallooo', function() {
   elem.innerHTML = 'Hioi!<br>Hello';
   document.body.appendChild(elem);
   return elem;
-}, [320, 1024]);
+}, { viewportWidths: [320, 1024] });
 
 likadan.define('bar', function() {
   var elem = document.createElement('span');
   elem.innerHTML = 'go bars!<br>bars';
   document.body.appendChild(elem);
   return elem;
-});
+}, { snapshotEntireScreen: true });
