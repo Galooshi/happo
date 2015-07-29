@@ -9,6 +9,12 @@ class LikadanUtils
       'stylesheets' => [],
       'port' => 4567,
       'driver' => :firefox,
+      'viewports' => {
+        'desktop' => {
+          'width' => 1024,
+          'height' => 768
+        }
+      }
     }.merge(YAML.load(ERB.new(File.read(
       ENV['LIKADAN_CONFIG_FILE'] || '.likadan.yaml')).result))
   end
@@ -17,11 +23,11 @@ class LikadanUtils
     name.gsub(/[^a-zA-Z0-9\-_]/, '_')
   end
 
-  def self.path_to(name, width, file_name)
+  def self.path_to(name, viewport_name, file_name)
     File.join(
       config['snapshots_folder'],
       normalize_name(name),
-      "@#{width}",
+      "@#{viewport_name}",
       file_name
     )
   end
@@ -39,11 +45,11 @@ class LikadanUtils
 
   def self.current_snapshots
     prepare_file = lambda do |file|
-      width_dir = File.expand_path('..', file)
-      name_dir = File.expand_path('..', width_dir)
+      viewport_dir = File.expand_path('..', file)
+      name_dir = File.expand_path('..', viewport_dir)
       {
         name: File.basename(name_dir),
-        width: File.basename(width_dir).sub('@', '').to_i,
+        viewport: File.basename(viewport_dir).sub('@', ''),
         file: file,
       }
     end

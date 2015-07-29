@@ -9,27 +9,36 @@ require 'chunky_png'
 require 'likadan_utils'
 require 'fileutils'
 
+def resolve_viewports(example)
+  configured_viewports = LikadanUtils.config['viewports']
+
+  (example['options']['viewports'] || [configured_viewports.first.first]).map do |viewport|
+    configured_viewports[viewport].merge('name' => viewport)
+  end
+end
+
 driver = Selenium::WebDriver.for LikadanUtils.config['driver'].to_sym
 begin
   driver.navigate.to LikadanUtils.construct_url('/')
 
   while current = driver.execute_script('return window.likadan.next()') do
-    current['viewportWidths'].each do |width|
+    resolve_viewports(current).each do |viewport|
       # Resize window to the right size before rendering
-      driver.manage.window.resize_to(width, width)
+      driver.manage.window.resize_to(viewport['width'], viewport['height'])
 
       # Render the example
       rendered = driver.execute_script('return window.likadan.renderCurrent()')
       if error = rendered['error']
         puts <<-EOS
-          Error while rendering "#{current['name']}" @#{width}px:
+          Error while rendering "#{current['name']}" @#{viewport['name']}:
             #{rendered['error']}
           Debug by pointing your browser to
           #{LikadanUtils.construct_url('/', name: current['name'])}
         EOS
         next
       end
-      output_file = LikadanUtils.path_to(current['name'], width, 'candidate.png')
+      output_file = LikadanUtils.path_to(
+        current['name'], viewport['name'], 'candidate.png')
 
       # Create the folder structure if it doesn't already exist
       unless File.directory?(dirname = File.dirname(output_file))
@@ -45,10 +54,10 @@ begin
                     rendered['height'])
       cropped.save(output_file)
 
-      print "Checking \"#{current['name']}\" at #{width}px... "
+      print "Checking \"#{current['name']}\" at [#{viewport['name']}]... "
 
       # Run the diff if needed
-      baseline_file = LikadanUtils.path_to(current['name'], width, 'baseline.png')
+      baseline_file = LikadanUtils.path_to(current['name'], viewport['name'], 'baseline.png')
 
       if File.exist? baseline_file
         comparison = Diffux::SnapshotComparer.new(
@@ -57,7 +66,7 @@ begin
         ).compare!
 
         if img = comparison[:diff_image]
-          diff_output = LikadanUtils.path_to(current['name'], width, 'diff.png')
+          diff_output = LikadanUtils.path_to(current['name'], viewport['name'], 'diff.png')
           img.save(diff_output)
           puts "#{comparison[:diff_in_percent].round(1)}% (#{diff_output})"
         else

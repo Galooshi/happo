@@ -29,12 +29,12 @@ class LikadanServer < Sinatra::Base
   end
 
   post '/reject' do
-    LikadanAction.new(params[:name], params[:width]).reject
+    LikadanAction.new(params[:name], params[:viewport]).reject
     redirect back
   end
 
   post '/approve' do
-    LikadanAction.new(params[:name], params[:width]).approve
+    LikadanAction.new(params[:name], params[:viewport]).approve
     redirect back
   end
 

@@ -8,14 +8,14 @@ likadan.define('foo', function() {
 
 likadan.define('hallooo', function() {
   var elem = document.createElement('span');
-  elem.innerHTML = 'Hioi!<br>Hello';
+  elem.innerHTML = 'Hioyi!<br>Hello';
   document.body.appendChild(elem);
   return elem;
-}, [320, 1024]);
+}, { viewports: ['mobile', 'desktop'] });
 
 likadan.define('bar', function() {
   var elem = document.createElement('span');
   elem.innerHTML = 'go bars!<br>bars';
   document.body.appendChild(elem);
   return elem;
-});
+}, { snapshotEntireScreen: true });

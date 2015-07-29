@@ -18,7 +18,7 @@ class LikadanUploader
     bucket.save(location: :us)
 
     diff_images = current_snapshots[:diffs].map do |diff|
-      image = bucket.objects.build("#{diff[:name]}_#{diff[:width]}.png")
+      image = bucket.objects.build("#{diff[:name]}_#{diff[:viewport]}.png")
       image.content = open(diff[:file])
       image.content_type = 'image/png'
       image.save

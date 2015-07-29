@@ -8,12 +8,10 @@ require 'fileutils'
 action = ARGV[0] || 'run'
 case action
 when 'run'
-  Thread.new do # trivial example work thread
-    begin
-      require 'likadan_runner'
-    ensure
-      exit
-    end
+  Thread.abort_on_exception = true
+  Thread.new do
+    require 'likadan_runner'
+    exit
   end
   require 'likadan_server'
 
@@ -28,8 +26,8 @@ when 'clean'
 
 when 'approve', 'reject'
   abort 'Missing example name' unless example_name = ARGV[1]
-  abort 'Missing viewport width' unless width = ARGV[2]
-  LikadanAction.new(example_name, width).send(action)
+  abort 'Missing viewport name' unless viewport_name = ARGV[2]
+  LikadanAction.new(example_name, viewport_name).send(action)
 
 when 'upload_diffs'
   # `upload_diffs` returns a URL to a static html file

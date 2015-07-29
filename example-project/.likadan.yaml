@@ -3,3 +3,11 @@ source_files:
 stylesheets:
   - css/styles.css
 snapshots_folder: ./snapshots
+viewports:
+  desktop:
+    width: 1024
+    height: 768
+  mobile:
+    # http://stackoverflow.com/questions/12463643/mobile-safari-on-iphone-5-visible-area-size
+    width: 320
+    height: 444
