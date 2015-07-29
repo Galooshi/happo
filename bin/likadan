@@ -8,12 +8,10 @@ require 'fileutils'
 action = ARGV[0] || 'run'
 case action
 when 'run'
-  Thread.new do # trivial example work thread
-    begin
-      require 'likadan_runner'
-    ensure
-      exit
-    end
+  Thread.abort_on_exception = true
+  Thread.new do
+    require 'likadan_runner'
+    exit
   end
   require 'likadan_server'
 
