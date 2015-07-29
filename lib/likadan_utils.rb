@@ -10,9 +10,17 @@ class LikadanUtils
       'port' => 4567,
       'driver' => :firefox,
       'viewports' => {
-        'desktop' => {
+        'large' => {
           'width' => 1024,
           'height' => 768
+        },
+        'medium' => {
+          'width' => 640,
+          'height' => 888
+        },
+        'small' => {
+          'width' => 320,
+          'height' => 444
         }
       }
     }.merge(YAML.load(ERB.new(File.read(

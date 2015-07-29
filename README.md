@@ -45,9 +45,8 @@ By default, Likadan renders examples in a 1024 wide window. If you have
 components that render differently depending on available screen size you can
 use the `viewports` option in the object passed in as the second argument to
 `likadan.define`. These need to correspond to configured `viewports` in the
-`.likadan.yaml` file. If you leave this out, the default viewport will be used,
-which is either `'desktop'` (if you haven't configured any viewports), or the
-first configured viewport that you have in your `.likadan.yaml` file
+`.likadan.yaml` file. Likadan comes pre-configured with three default sizes:
+`large` (1024x768), `medium` (640x888), and `small` (320x444).
 
 ```javascript
 likadan.define('responsive component', function() {
@@ -55,7 +54,7 @@ likadan.define('responsive component', function() {
   elem.setAttribute('class', '.responsive-component');
   document.body.appendChild(elem);
   return elem;
-}, { viewports: ['desktop', 'mobile'] });
+}, { viewports: ['large', 'small'] });
 ```
 
 ### Controlling the snapshot
@@ -93,10 +92,10 @@ stylesheets:
  - application.css
 snapshots_folder: ./snapshots
 viewports:
-  desktop:
+  large:
     width: 1024
     height: 768
-  mobile:
+  small:
     width: 320
     height: 444
 s3_access_key_id: <your acccess key id>
