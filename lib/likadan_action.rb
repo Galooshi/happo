@@ -2,15 +2,15 @@ require 'likadan_utils'
 require 'fileutils'
 
 class LikadanAction
-  def initialize(example_name, width)
+  def initialize(example_name, viewport_name)
     @example_name = example_name
-    @width = width
+    @viewport_name = viewport_name
   end
 
   def approve
-    diff_path = LikadanUtils.path_to(@example_name, @width, 'diff.png')
-    baseline_path = LikadanUtils.path_to(@example_name, @width, 'baseline.png')
-    candidate_path = LikadanUtils.path_to(@example_name, @width, 'candidate.png')
+    diff_path = LikadanUtils.path_to(@example_name, @viewport_name, 'diff.png')
+    baseline_path = LikadanUtils.path_to(@example_name, @viewport_name, 'baseline.png')
+    candidate_path = LikadanUtils.path_to(@example_name, @viewport_name, 'candidate.png')
 
     FileUtils.rm(diff_path, force: true)
 
@@ -20,8 +20,8 @@ class LikadanAction
   end
 
   def reject
-    diff_path = LikadanUtils.path_to(@example_name, @width, 'diff.png')
-    candidate_path = LikadanUtils.path_to(@example_name, @width, 'candidate.png')
+    diff_path = LikadanUtils.path_to(@example_name, @viewport_name, 'diff.png')
+    candidate_path = LikadanUtils.path_to(@example_name, @viewport_name, 'candidate.png')
 
     FileUtils.rm(diff_path, force: true)
     FileUtils.rm(candidate_path, force: true)

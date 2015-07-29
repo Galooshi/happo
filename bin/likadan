@@ -28,8 +28,8 @@ when 'clean'
 
 when 'approve', 'reject'
   abort 'Missing example name' unless example_name = ARGV[1]
-  abort 'Missing viewport width' unless width = ARGV[2]
-  LikadanAction.new(example_name, width).send(action)
+  abort 'Missing viewport name' unless viewport_name = ARGV[2]
+  LikadanAction.new(example_name, viewport_name).send(action)
 
 when 'upload_diffs'
   # `upload_diffs` returns a URL to a static html file

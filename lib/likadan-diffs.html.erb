@@ -9,7 +9,7 @@
 
     <% diff_images.each do |diff| %>
       <h3>
-        <%= diff[:name] %> @ <%= diff[:width] %>
+        <%= diff[:name] %> @ <%= diff[:viewport] %>
       </h3>
       <p><img src="<%= diff[:url] %>"></p>
     <% end %>
