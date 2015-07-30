@@ -21,6 +21,12 @@ driver = Selenium::WebDriver.for LikadanUtils.config['driver'].to_sym
 begin
   driver.navigate.to LikadanUtils.construct_url('/')
 
+  # Check for errors during startup
+  errors = driver.execute_script('return window.likadan.errors;')
+  unless errors.empty?
+    fail "JavaScript errors found during initialization: \n#{errors.inspect}"
+  end
+
   while current = driver.execute_script('return window.likadan.next()') do
     resolve_viewports(current).each do |viewport|
       # Resize window to the right size before rendering
