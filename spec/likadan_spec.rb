@@ -32,14 +32,13 @@ describe 'likadan' do
   end
 
   after do
-    #puts @tmp_dir
     FileUtils.remove_entry_secure @tmp_dir
   end
 
   def run_likadan
     pwd = Dir.pwd
     Dir.chdir @tmp_dir do
-      system("#{pwd}/bin/likadan")
+      system("ruby -I#{pwd}/lib #{pwd}/bin/likadan")
     end
   end
 

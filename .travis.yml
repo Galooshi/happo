@@ -1,0 +1,9 @@
+language: ruby
+rvm:
+  - "2.2.1"
+
+script: bash headless_rspec.sh
+install: gem install rspec headless; bundle install;
+before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
