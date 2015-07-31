@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'likadan'
-  s.version     = '0.0.12'
+  s.version     = '0.0.13'
   s.date        = '2015-02-20'
   s.summary     = 'Likadan'
   s.description = 'Likadan, a perceptual diff tool for JS components'
