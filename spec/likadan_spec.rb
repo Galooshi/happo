@@ -42,32 +42,26 @@ describe 'likadan' do
     end
   end
 
+  def snapshot_file_exists?(size, file_name)
+    File.exist?(
+      File.join(@tmp_dir, 'snapshots', 'foo', size, file_name)
+    )
+  end
+
   describe 'with no previous run' do
     it 'generates a baseline' do
       run_likadan
-      expect(
-        File.exist?(
-          File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'baseline.png')
-        )
-      ).to be(true)
+      expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
     end
 
     it 'does not generate a diff' do
       run_likadan
-      expect(
-        File.exist?(
-          File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'diff.png')
-        )
-      ).to be(false)
+      expect(snapshot_file_exists?('@large', 'diff.png')).to be(false)
     end
 
     it 'does not create a candidate file' do
       run_likadan
-      expect(
-        File.exist?(
-          File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'candidate.png')
-        )
-      ).to be(false)
+      expect(snapshot_file_exists?('@large', 'candidate.png')).to be(false)
     end
   end
 
@@ -79,29 +73,17 @@ describe 'likadan' do
 
       it 'keeps the baseline' do
         run_likadan
-        expect(
-          File.exist?(
-            File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'baseline.png')
-          )
-        ).to be(true)
+        expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
       end
 
       it 'does not generate a diff' do
         run_likadan
-        expect(
-          File.exist?(
-            File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'diff.png')
-          )
-        ).to be(false)
+        expect(snapshot_file_exists?('@large', 'diff.png')).to be(false)
       end
 
       it 'does not create a candidate file' do
         run_likadan
-        expect(
-          File.exist?(
-            File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'candidate.png')
-          )
-        ).to be(false)
+        expect(snapshot_file_exists?('@large', 'candidate.png')).to be(false)
       end
     end
 
@@ -123,29 +105,17 @@ describe 'likadan' do
 
       it 'keeps the baseline' do
         run_likadan
-        expect(
-          File.exist?(
-            File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'baseline.png')
-          )
-        ).to be(true)
+        expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
       end
 
       it 'generates a diff' do
         run_likadan
-        expect(
-          File.exist?(
-            File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'diff.png')
-          )
-        ).to be(true)
+        expect(snapshot_file_exists?('@large', 'diff.png')).to be(true)
       end
 
       it 'generates a candidate file' do
         run_likadan
-        expect(
-          File.exist?(
-            File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'candidate.png')
-          )
-        ).to be(true)
+        expect(snapshot_file_exists?('@large', 'candidate.png')).to be(true)
       end
     end
   end
