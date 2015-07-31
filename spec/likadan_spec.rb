@@ -87,20 +87,23 @@ describe 'likadan' do
         end
       end
 
-      it 'keeps the baseline' do
+      it 'keeps the baseline, and generates a diff' do
         run_likadan
         expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
-      end
-
-      it 'generates a diff' do
-        run_likadan
         expect(snapshot_file_exists?('@large', 'diff.png')).to be(true)
-      end
-
-      it 'generates a candidate file' do
-        run_likadan
         expect(snapshot_file_exists?('@large', 'candidate.png')).to be(true)
       end
+    end
+  end
+
+  describe 'with more than one viewport' do
+    let(:example_config) { "{ viewports: ['large', 'small'] }" }
+
+    it 'generates the right baselines' do
+      run_likadan
+      expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
+      expect(snapshot_file_exists?('@small', 'baseline.png')).to be(true)
+      expect(snapshot_file_exists?('@medium', 'baseline.png')).to be(false)
     end
   end
 end
