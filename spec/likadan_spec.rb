@@ -42,32 +42,18 @@ describe 'likadan' do
     end
   end
 
+  def snapshot_file_exists?(size, file_name)
+    File.exist?(
+      File.join(@tmp_dir, 'snapshots', 'foo', size, file_name)
+    )
+  end
+
   describe 'with no previous run' do
-    it 'generates a baseline' do
+    it 'generates a baseline, but no diff' do
       run_likadan
-      expect(
-        File.exist?(
-          File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'baseline.png')
-        )
-      ).to be(true)
-    end
-
-    it 'does not generate a diff' do
-      run_likadan
-      expect(
-        File.exist?(
-          File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'diff.png')
-        )
-      ).to be(false)
-    end
-
-    it 'does not create a candidate file' do
-      run_likadan
-      expect(
-        File.exist?(
-          File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'candidate.png')
-        )
-      ).to be(false)
+      expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
+      expect(snapshot_file_exists?('@large', 'diff.png')).to be(false)
+      expect(snapshot_file_exists?('@large', 'candidate.png')).to be(false)
     end
   end
 
@@ -77,31 +63,11 @@ describe 'likadan' do
         run_likadan
       end
 
-      it 'keeps the baseline' do
+      it 'keeps the baseline, and creates no diff' do
         run_likadan
-        expect(
-          File.exist?(
-            File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'baseline.png')
-          )
-        ).to be(true)
-      end
-
-      it 'does not generate a diff' do
-        run_likadan
-        expect(
-          File.exist?(
-            File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'diff.png')
-          )
-        ).to be(false)
-      end
-
-      it 'does not create a candidate file' do
-        run_likadan
-        expect(
-          File.exist?(
-            File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'candidate.png')
-          )
-        ).to be(false)
+        expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
+        expect(snapshot_file_exists?('@large', 'diff.png')).to be(false)
+        expect(snapshot_file_exists?('@large', 'candidate.png')).to be(false)
       end
     end
 
@@ -121,31 +87,58 @@ describe 'likadan' do
         end
       end
 
-      it 'keeps the baseline' do
+      it 'keeps the baseline, and generates a diff' do
         run_likadan
-        expect(
-          File.exist?(
-            File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'baseline.png')
-          )
-        ).to be(true)
+        expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
+        expect(snapshot_file_exists?('@large', 'diff.png')).to be(true)
+        expect(snapshot_file_exists?('@large', 'candidate.png')).to be(true)
       end
+    end
+  end
 
-      it 'generates a diff' do
+  describe 'with more than one viewport' do
+    let(:example_config) { "{ viewports: ['large', 'small'] }" }
+
+    it 'generates the right baselines' do
+      run_likadan
+      expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
+      expect(snapshot_file_exists?('@small', 'baseline.png')).to be(true)
+      expect(snapshot_file_exists?('@medium', 'baseline.png')).to be(false)
+    end
+  end
+
+  describe 'with custom viewports in .likadan.yaml' do
+    let(:config) do
+      {
+        'source_files' => ['examples.js'],
+        'viewports' => {
+          'foo' => {
+            'width' => 320,
+            'height' => 500
+          },
+          'bar' => {
+            'width' => 640,
+            'height' => 1000
+          }
+        }
+      }
+    end
+
+    context 'and the example has no `viewport` config' do
+      it 'uses the first viewport in the config' do
         run_likadan
-        expect(
-          File.exist?(
-            File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'diff.png')
-          )
-        ).to be(true)
+        expect(snapshot_file_exists?('@foo', 'baseline.png')).to be(true)
+        expect(snapshot_file_exists?('@bar', 'baseline.png')).to be(false)
       end
+    end
 
-      it 'generates a candidate file' do
+    context 'and the example has a `viewport` config' do
+      let(:example_config) { "{ viewports: ['bar'] }" }
+
+      it 'uses the viewport to generate a baseline' do
         run_likadan
-        expect(
-          File.exist?(
-            File.join(@tmp_dir, 'snapshots', 'foo', '@large', 'candidate.png')
-          )
-        ).to be(true)
+        expect(snapshot_file_exists?('@foo', 'baseline.png')).to be(false)
+        expect(snapshot_file_exists?('@bar', 'baseline.png')).to be(true)
       end
     end
   end
