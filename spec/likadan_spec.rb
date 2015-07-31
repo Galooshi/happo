@@ -49,18 +49,10 @@ describe 'likadan' do
   end
 
   describe 'with no previous run' do
-    it 'generates a baseline' do
+    it 'generates a baseline, but no diff' do
       run_likadan
       expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
-    end
-
-    it 'does not generate a diff' do
-      run_likadan
       expect(snapshot_file_exists?('@large', 'diff.png')).to be(false)
-    end
-
-    it 'does not create a candidate file' do
-      run_likadan
       expect(snapshot_file_exists?('@large', 'candidate.png')).to be(false)
     end
   end
@@ -71,18 +63,10 @@ describe 'likadan' do
         run_likadan
       end
 
-      it 'keeps the baseline' do
+      it 'keeps the baseline, and creates no diff' do
         run_likadan
         expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
-      end
-
-      it 'does not generate a diff' do
-        run_likadan
         expect(snapshot_file_exists?('@large', 'diff.png')).to be(false)
-      end
-
-      it 'does not create a candidate file' do
-        run_likadan
         expect(snapshot_file_exists?('@large', 'candidate.png')).to be(false)
       end
     end
