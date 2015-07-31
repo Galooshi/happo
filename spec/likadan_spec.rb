@@ -106,4 +106,40 @@ describe 'likadan' do
       expect(snapshot_file_exists?('@medium', 'baseline.png')).to be(false)
     end
   end
+
+  describe 'with custom viewports in .likadan.yaml' do
+    let(:config) do
+      {
+        'source_files' => ['examples.js'],
+        'viewports' => {
+          'foo' => {
+            'width' => 320,
+            'height' => 500
+          },
+          'bar' => {
+            'width' => 640,
+            'height' => 1000
+          }
+        }
+      }
+    end
+
+    context 'and the example has no `viewport` config' do
+      it 'uses the first viewport in the config' do
+        run_likadan
+        expect(snapshot_file_exists?('@foo', 'baseline.png')).to be(true)
+        expect(snapshot_file_exists?('@bar', 'baseline.png')).to be(false)
+      end
+    end
+
+    context 'and the example has a `viewport` config' do
+      let(:example_config) { "{ viewports: ['bar'] }" }
+
+      it 'uses the viewport to generate a baseline' do
+        run_likadan
+        expect(snapshot_file_exists?('@foo', 'baseline.png')).to be(false)
+        expect(snapshot_file_exists?('@bar', 'baseline.png')).to be(true)
+      end
+    end
+  end
 end
