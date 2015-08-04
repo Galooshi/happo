@@ -56,8 +56,8 @@ begin
       cropped = ChunkyPNG::Image.from_file(output_file)
       cropped.crop!(rendered['left'],
                     rendered['top'],
-                    rendered['width'],
-                    rendered['height'])
+                    [rendered['width'], 1].max,
+                    [rendered['height'], 1].max)
       cropped.save(output_file)
 
       print "Checking \"#{current['name']}\" at [#{viewport['name']}]... "
