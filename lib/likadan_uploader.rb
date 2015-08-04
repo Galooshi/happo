@@ -16,8 +16,10 @@ class LikadanUploader
 
     bucket = find_or_build_bucket
 
+    dir = SecureRandom.uuid
+
     diff_images = current_snapshots[:diffs].map do |diff|
-      image = bucket.objects.build("#{diff[:name]}_#{diff[:viewport]}.png")
+      image = bucket.objects.build("#{dir}/#{diff[:name]}_#{diff[:viewport]}.png")
       image.content = open(diff[:file])
       image.content_type = 'image/png'
       image.save
@@ -25,7 +27,7 @@ class LikadanUploader
       diff
     end
 
-    html = bucket.objects.build("#{SecureRandom.uuid}.html")
+    html = bucket.objects.build("#{dir}/index.html")
     html.content =
       ERB.new(
         File.read(File.expand_path(
