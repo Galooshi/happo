@@ -72,6 +72,40 @@ describe 'likadan' do
     end
 
     context 'and there is a diff' do
+      context 'and the baseline has height' do
+        before do
+          run_likadan
+
+          File.open(File.join(@tmp_dir, 'examples.js'), 'w') do |f|
+            f.write(<<-EOS)
+              likadan.define('foo', function() {
+                var elem = document.createElement('div');
+                elem.innerHTML = 'Football';
+                document.body.appendChild(elem);
+                return elem;
+              }, #{example_config})
+            EOS
+          end
+        end
+
+        it 'keeps the baseline, and generates a diff' do
+          run_likadan
+          expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
+          expect(snapshot_file_exists?('@large', 'diff.png')).to be(true)
+          expect(snapshot_file_exists?('@large', 'candidate.png')).to be(true)
+        end
+      end
+    end
+
+    context 'and the baseline does not have height' do
+      let(:examples_js) { <<-EOS }
+        likadan.define('foo', function() {
+          var elem = document.createElement('div');
+          document.body.appendChild(elem);
+          return elem;
+        }, #{example_config})
+      EOS
+
       before do
         run_likadan
 
@@ -79,7 +113,7 @@ describe 'likadan' do
           f.write(<<-EOS)
             likadan.define('foo', function() {
               var elem = document.createElement('div');
-              elem.innerHTML = 'Football';
+              elem.innerHTML = 'Foo';
               document.body.appendChild(elem);
               return elem;
             }, #{example_config})
