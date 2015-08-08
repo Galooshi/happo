@@ -17,7 +17,16 @@ def resolve_viewports(example)
   end
 end
 
-driver = Selenium::WebDriver.for LikadanUtils.config['driver'].to_sym
+begin
+  driver = Selenium::WebDriver.for LikadanUtils.config['driver'].to_sym
+rescue Selenium::WebDriver::Error::WebDriverError
+  # "unable to obtain stable firefox connection in 60 seconds"
+  #
+  # This seems to happen sporadically for some versions of Firefox, so we want
+  # to retry it in case it will work the second time around.
+  driver = Selenium::WebDriver.for LikadanUtils.config['driver'].to_sym
+end
+
 begin
   driver.navigate.to LikadanUtils.construct_url('/')
 
