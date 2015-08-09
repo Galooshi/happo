@@ -73,6 +73,22 @@ likadan.define('dialog window', function() {
 }, { snapshotEntireScreen: true });
 ```
 
+### Async examples
+
+If your examples need to do something asynchronous before they finish render,
+you can use the `done` callback passed in to the define method.
+
+```javascript
+likadan.define('async component', function(done) {
+  var elem = document.createElement('div');
+  document.body.appendChild(elem);
+  setTimeout(function() {
+    elem.innerHTML = 'Async content loaded';
+    done(elem);
+  }, 100)
+});
+```
+
 ## Installation
 
 Likadan comes bundled as a gem. To install it, run `gem install likadan`.
