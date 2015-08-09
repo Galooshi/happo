@@ -28,6 +28,7 @@ rescue Selenium::WebDriver::Error::WebDriverError
 end
 
 begin
+  driver.manage.timeouts.script_timeout = 3 # move to config?
   driver.navigate.to LikadanUtils.construct_url('/')
 
   # Check for errors during startup
@@ -42,7 +43,13 @@ begin
       driver.manage.window.resize_to(viewport['width'], viewport['height'])
 
       # Render the example
-      rendered = driver.execute_script('return window.likadan.renderCurrent()')
+
+      script = <<-EOS
+        var doneFunc = arguments[arguments.length - 1];
+        window.likadan.renderCurrent(doneFunc);
+      EOS
+      rendered = driver.execute_async_script(script)
+
       if error = rendered['error']
         puts <<-EOS
           Error while rendering "#{current['name']}" @#{viewport['name']}:

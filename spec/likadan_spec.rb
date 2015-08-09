@@ -176,4 +176,24 @@ describe 'likadan' do
       end
     end
   end
+
+  describe 'with doneCallback async argument' do
+    let(:examples_js) { <<-EOS }
+      likadan.define('foo', function(done) {
+        setTimeout(function() {
+          var elem = document.createElement('div');
+          elem.innerHTML = 'Foo';
+          document.body.appendChild(elem);
+          done(elem);
+        });
+      }, #{example_config})
+    EOS
+
+    it 'generates a baseline, but no diff' do
+      run_likadan
+      expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
+      expect(snapshot_file_exists?('@large', 'diff.png')).to be(false)
+      expect(snapshot_file_exists?('@large', 'candidate.png')).to be(false)
+    end
+  end
 end
