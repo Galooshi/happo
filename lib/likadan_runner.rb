@@ -50,14 +50,13 @@ begin
       EOS
       rendered = driver.execute_async_script(script)
 
-      if error = rendered['error']
-        puts <<-EOS
+      if rendered['error']
+        fail <<-EOS
           Error while rendering "#{current['name']}" @#{viewport['name']}:
             #{rendered['error']}
           Debug by pointing your browser to
           #{LikadanUtils.construct_url('/', name: current['name'])}
         EOS
-        next
       end
       output_file = LikadanUtils.path_to(
         current['name'], viewport['name'], 'candidate.png')
