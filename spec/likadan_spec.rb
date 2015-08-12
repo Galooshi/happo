@@ -1,5 +1,6 @@
 require 'yaml'
 require 'tmpdir'
+require 'open3'
 
 describe 'likadan' do
   let(:config) do
@@ -38,7 +39,13 @@ describe 'likadan' do
   def run_likadan
     pwd = Dir.pwd
     Dir.chdir @tmp_dir do
-      system("ruby -I#{pwd}/lib #{pwd}/bin/likadan")
+      std_out, std_err, status =
+        Open3.capture3("ruby -I#{pwd}/lib #{pwd}/bin/likadan")
+      {
+        std_out: std_out,
+        std_err: std_err,
+        exit_status: status.exitstatus
+      }
     end
   end
 
@@ -49,6 +56,10 @@ describe 'likadan' do
   end
 
   describe 'with no previous run' do
+    it 'exits with a zero exit code' do
+      expect(run_likadan[:exit_status]).to be(0)
+    end
+
     it 'generates a baseline, but no diff' do
       run_likadan
       expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
@@ -63,6 +74,10 @@ describe 'likadan' do
         run_likadan
       end
 
+      it 'exits with a zero exit code' do
+        expect(run_likadan[:exit_status]).to be(0)
+      end
+
       it 'keeps the baseline, and creates no diff' do
         run_likadan
         expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
@@ -72,6 +87,10 @@ describe 'likadan' do
     end
 
     context 'and there is a diff' do
+      it 'exits with a zero exit code' do
+        expect(run_likadan[:exit_status]).to be(0)
+      end
+
       context 'and the baseline has height' do
         before do
           run_likadan
@@ -194,6 +213,22 @@ describe 'likadan' do
       expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
       expect(snapshot_file_exists?('@large', 'diff.png')).to be(false)
       expect(snapshot_file_exists?('@large', 'candidate.png')).to be(false)
+    end
+  end
+
+  describe 'when an example fails' do
+    let(:examples_js) { <<-EOS }
+      likadan.define('foo', function() {
+        return undefined;
+      });
+    EOS
+
+    it 'exits with a non-zero exit code' do
+      expect(run_likadan[:exit_status]).to be(1)
+    end
+
+    it 'logs the error' do
+      expect(run_likadan[:std_err]).to include('Error while rendering "foo"')
     end
   end
 end
