@@ -142,3 +142,37 @@ to access those diff images. Requires the `s3_access_key_id` and
 
 Recursively removes everything in the snapshots folder (configured through
 `snapshots_folder`).
+
+## Running in a CI environment
+
+The main purpose for Likadan is for it to be run in a CI (Continuous
+Integration) environment. The command line tools provided are designed to be
+used as building blocks in a script that you can run in
+[Travis](https://travis-ci.org/), [Jenkins](https://jenkins-ci.org/) and other
+Continuous Integration environments.
+
+Below is an example of how you can use Likadan to test if a commit introduces
+any visual change.
+
+1. Check out the commit previous to the one to test (e.g. `git checkout HEAD^`)
+2. (optionally) precompile your JavaScript and/or CSS
+3. Run `likadan` to generate baseline snapshots
+4. Check out the commit to test
+5. (optionally) precompile your JavaScript and/or CSS
+6. Run `likadan` to diff against previously created snapshots
+7. Run `likadan upload_diffs` to upload diffs to a publicly accessible location
+
+There's an example script implementing these steps located in
+[likadan_ci_example.sh](likadan_ci_example.sh). Use that as a starting point
+for your own CI script.
+
+### Headless Likadan
+
+Since Likadan uses Firefox to generate its snapshots, you need a display.  If
+you are on a build server, you usually don't have a screen. To run `likadan`
+then, you can use a virtual display server such as
+[xvfb](http://www.x.org/archive/X11R7.6/doc/man/man1/Xvfb.1.xhtml).  The
+[example CI script](likadan_ci_example.sh) as well as the internal Travis test
+run for Likadan uses `xvfb-run` in order to obtain a virtual display. There are
+other tools that can help you with this as well, for example the [headless
+gem](https://github.com/leonid-shevtsov/headless).
