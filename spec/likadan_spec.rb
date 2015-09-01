@@ -214,6 +214,49 @@ describe 'likadan' do
       expect(snapshot_file_exists?('@large', 'diff.png')).to be(false)
       expect(snapshot_file_exists?('@large', 'candidate.png')).to be(false)
     end
+
+    describe 'with a previous run' do
+      context 'and no diff' do
+        before do
+          run_likadan
+        end
+
+        it 'keeps the baseline, and creates no diff' do
+          run_likadan
+          expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
+          expect(snapshot_file_exists?('@large', 'diff.png')).to be(false)
+          expect(snapshot_file_exists?('@large', 'candidate.png')).to be(false)
+        end
+      end
+
+      context 'and there is a diff' do
+        context 'and the baseline has height' do
+          before do
+            run_likadan
+
+            File.open(File.join(@tmp_dir, 'examples.js'), 'w') do |f|
+              f.write(<<-EOS)
+                likadan.define('foo', function(done) {
+                  setTimeout(function() {
+                    var elem = document.createElement('div');
+                    elem.innerHTML = 'Football';
+                    document.body.appendChild(elem);
+                    done(elem);
+                  });
+                }, #{example_config})
+              EOS
+            end
+          end
+
+          it 'keeps the baseline, and generates a diff' do
+            run_likadan
+            expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
+            expect(snapshot_file_exists?('@large', 'diff.png')).to be(true)
+            expect(snapshot_file_exists?('@large', 'candidate.png')).to be(true)
+          end
+        end
+      end
+    end
   end
 
   describe 'when an example fails' do

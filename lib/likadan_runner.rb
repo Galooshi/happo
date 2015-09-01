@@ -44,6 +44,17 @@ begin
 
       # Render the example
 
+      # WebDriver's `execute_async_script` takes a string that is executed in
+      # the context of a function. `execute_async_script` injects a callback
+      # function as this function's argument here. WebDriver will wait until
+      # this callback is called (if it is passed a value it will pass that
+      # through to Rubyland), or until WebDriver's `script_timeout` is reached,
+      # before continuing. Since we don't define the signature of this function,
+      # we can't name the argument so we access it using JavaScript's magic
+      # arguments object and pass it down to `renderCurrent()` which calls it
+      # when it is done--either synchronously if our example doesn't take an
+      # argument, or asynchronously via the Promise and `done` callback if it
+      # does.
       script = <<-EOS
         var doneFunc = arguments[arguments.length - 1];
         window.likadan.renderCurrent(doneFunc);
