@@ -1,7 +1,7 @@
 require 'yaml'
 require 'erb'
 
-class LikadanUtils
+class DiffuxCIUtils
   def self.config
     @@config ||= {
       'snapshots_folder' => './snapshots',
@@ -24,7 +24,7 @@ class LikadanUtils
         }
       }
     }.merge(YAML.load(ERB.new(File.read(
-      ENV['LIKADAN_CONFIG_FILE'] || '.likadan.yaml')).result))
+      ENV['LIKADAN_CONFIG_FILE'] || '.diffux_ci.yaml')).result))
   end
 
   def self.normalize_name(name)
@@ -61,8 +61,8 @@ class LikadanUtils
         file: file,
       }
     end
-    diff_files = Dir.glob("#{LikadanUtils.config['snapshots_folder']}/**/diff.png")
-    baselines = Dir.glob("#{LikadanUtils.config['snapshots_folder']}/**/baseline.png")
+    diff_files = Dir.glob("#{DiffuxCIUtils.config['snapshots_folder']}/**/diff.png")
+    baselines = Dir.glob("#{DiffuxCIUtils.config['snapshots_folder']}/**/baseline.png")
     {
       diffs: diff_files.map(&prepare_file),
       baselines: baselines.map(&prepare_file)
