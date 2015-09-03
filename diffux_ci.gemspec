@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'diffux_ci'
-  s.version     = '0.0.14'
+  s.version     = '0.1.0'
   s.date        = '2015-02-20'
   s.summary     = 'Diffux-CI'
   s.description = 'Diffux-CI, a perceptual diff tool for JS components'
