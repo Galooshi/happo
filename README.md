@@ -97,7 +97,7 @@ Diffux-CI comes bundled as a gem. To install it, run `gem install diffux_ci`.
 
 Diffux-CI loads configuration in one of the following ways:
 
-- From a YAML file specified via a `LIKADAN_CONFIG_FILE` environment variable
+- From a YAML file specified via a `DIFFUX_CI_CONFIG_FILE` environment variable
 - From `.diffux_ci.yaml` in the current working directory
 
 ```yaml

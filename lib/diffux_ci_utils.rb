@@ -24,7 +24,7 @@ class DiffuxCIUtils
         }
       }
     }.merge(YAML.load(ERB.new(File.read(
-      ENV['LIKADAN_CONFIG_FILE'] || '.diffux_ci.yaml')).result))
+      ENV['DIFFUX_CI_CONFIG_FILE'] || '.diffux_ci.yaml')).result))
   end
 
   def self.normalize_name(name)
