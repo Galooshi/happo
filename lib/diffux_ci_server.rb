@@ -1,21 +1,21 @@
 require 'sinatra/base'
 require 'yaml'
-require 'likadan_utils'
-require 'likadan_action'
+require 'diffux_ci_utils'
+require 'diffux_ci_action'
 
-class LikadanServer < Sinatra::Base
+class DiffuxCIServer < Sinatra::Base
   configure do
     enable :static
-    set :port, LikadanUtils.config['port']
+    set :port, DiffuxCIUtils.config['port']
   end
 
   get '/' do
-    @config = LikadanUtils.config
+    @config = DiffuxCIUtils.config
     erb :index
   end
 
   get '/review' do
-    @snapshots = LikadanUtils.current_snapshots
+    @snapshots = DiffuxCIUtils.current_snapshots
     erb :review
   end
 
@@ -29,12 +29,12 @@ class LikadanServer < Sinatra::Base
   end
 
   post '/reject' do
-    LikadanAction.new(params[:name], params[:viewport]).reject
+    DiffuxCIAction.new(params[:name], params[:viewport]).reject
     redirect back
   end
 
   post '/approve' do
-    LikadanAction.new(params[:name], params[:viewport]).approve
+    DiffuxCIAction.new(params[:name], params[:viewport]).approve
     redirect back
   end
 

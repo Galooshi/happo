@@ -1,17 +1,17 @@
-require 'likadan_utils'
+require 'diffux_ci_utils'
 require 's3'
 require 'securerandom'
 
-class LikadanUploader
-  BUCKET_NAME = 'likadan-diffs'
+class DiffuxCIUploader
+  BUCKET_NAME = 'diffux_ci-diffs'
 
   def initialize
-    @s3_access_key_id = LikadanUtils.config['s3_access_key_id']
-    @s3_secret_access_key = LikadanUtils.config['s3_secret_access_key']
+    @s3_access_key_id = DiffuxCIUtils.config['s3_access_key_id']
+    @s3_secret_access_key = DiffuxCIUtils.config['s3_secret_access_key']
   end
 
   def upload_diffs
-    current_snapshots = LikadanUtils.current_snapshots
+    current_snapshots = DiffuxCIUtils.current_snapshots
     return [] if current_snapshots[:diffs].empty?
 
     bucket = find_or_build_bucket
@@ -31,7 +31,7 @@ class LikadanUploader
     html.content =
       ERB.new(
         File.read(File.expand_path(
-          File.join(File.dirname(__FILE__), 'likadan-diffs.html.erb')))
+          File.join(File.dirname(__FILE__), 'diffux_ci-diffs.html.erb')))
       ).result(binding)
     html.content_type = 'text/html'
     html.save

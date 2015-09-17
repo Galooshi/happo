@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+
+require 'diffux_ci_utils'
+require 'diffux_ci_action'
+require 'diffux_ci_uploader'
+require 'fileutils'
+
+action = ARGV[0] || 'run'
+case action
+when 'run'
+  Thread.abort_on_exception = true
+  Thread.new do
+    require 'diffux_ci_runner'
+    exit
+  end
+  require 'diffux_ci_server'
+
+when 'review'
+  system 'open', DiffuxCIUtils.construct_url('/review')
+  require 'diffux_ci_server'
+
+when 'clean'
+  if File.directory? DiffuxCIUtils.config['snapshots_folder']
+    FileUtils.remove_entry_secure DiffuxCIUtils.config['snapshots_folder']
+  end
+
+when 'approve', 'reject'
+  abort 'Missing example name' unless example_name = ARGV[1]
+  abort 'Missing viewport name' unless viewport_name = ARGV[2]
+  DiffuxCIAction.new(example_name, viewport_name).send(action)
+
+when 'upload_diffs'
+  # `upload_diffs` returns a URL to a static html file
+  puts DiffuxCIUploader.new.upload_diffs
+else
+  abort "Unknown action \"#{action}\""
+end
