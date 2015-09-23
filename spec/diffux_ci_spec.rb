@@ -57,14 +57,14 @@ describe 'diffux_ci' do
 
   describe 'with no previous run' do
     it 'exits with a zero exit code' do
-      expect(run_diffux_ci[:exit_status]).to be(0)
+      expect(run_diffux_ci[:exit_status]).to eq(0)
     end
 
     it 'generates a baseline, but no diff' do
       run_diffux_ci
-      expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
-      expect(snapshot_file_exists?('@large', 'diff.png')).to be(false)
-      expect(snapshot_file_exists?('@large', 'candidate.png')).to be(false)
+      expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
+      expect(snapshot_file_exists?('@large', 'diff.png')).to eq(false)
+      expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(false)
     end
   end
 
@@ -75,20 +75,20 @@ describe 'diffux_ci' do
       end
 
       it 'exits with a zero exit code' do
-        expect(run_diffux_ci[:exit_status]).to be(0)
+        expect(run_diffux_ci[:exit_status]).to eq(0)
       end
 
       it 'keeps the baseline, and creates no diff' do
         run_diffux_ci
-        expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
-        expect(snapshot_file_exists?('@large', 'diff.png')).to be(false)
-        expect(snapshot_file_exists?('@large', 'candidate.png')).to be(false)
+        expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
+        expect(snapshot_file_exists?('@large', 'diff.png')).to eq(false)
+        expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(false)
       end
     end
 
     context 'and there is a diff' do
       it 'exits with a zero exit code' do
-        expect(run_diffux_ci[:exit_status]).to be(0)
+        expect(run_diffux_ci[:exit_status]).to eq(0)
       end
 
       context 'and the baseline has height' do
@@ -109,9 +109,9 @@ describe 'diffux_ci' do
 
         it 'keeps the baseline, and generates a diff' do
           run_diffux_ci
-          expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
-          expect(snapshot_file_exists?('@large', 'diff.png')).to be(true)
-          expect(snapshot_file_exists?('@large', 'candidate.png')).to be(true)
+          expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
+          expect(snapshot_file_exists?('@large', 'diff.png')).to eq(true)
+          expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(true)
         end
       end
     end
@@ -142,9 +142,9 @@ describe 'diffux_ci' do
 
       it 'keeps the baseline, and generates a diff' do
         run_diffux_ci
-        expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
-        expect(snapshot_file_exists?('@large', 'diff.png')).to be(true)
-        expect(snapshot_file_exists?('@large', 'candidate.png')).to be(true)
+        expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
+        expect(snapshot_file_exists?('@large', 'diff.png')).to eq(true)
+        expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(true)
       end
     end
   end
@@ -154,9 +154,9 @@ describe 'diffux_ci' do
 
     it 'generates the right baselines' do
       run_diffux_ci
-      expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
-      expect(snapshot_file_exists?('@small', 'baseline.png')).to be(true)
-      expect(snapshot_file_exists?('@medium', 'baseline.png')).to be(false)
+      expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
+      expect(snapshot_file_exists?('@small', 'baseline.png')).to eq(true)
+      expect(snapshot_file_exists?('@medium', 'baseline.png')).to eq(false)
     end
   end
 
@@ -180,8 +180,8 @@ describe 'diffux_ci' do
     context 'and the example has no `viewport` config' do
       it 'uses the first viewport in the config' do
         run_diffux_ci
-        expect(snapshot_file_exists?('@foo', 'baseline.png')).to be(true)
-        expect(snapshot_file_exists?('@bar', 'baseline.png')).to be(false)
+        expect(snapshot_file_exists?('@foo', 'baseline.png')).to eq(true)
+        expect(snapshot_file_exists?('@bar', 'baseline.png')).to eq(false)
       end
     end
 
@@ -190,8 +190,8 @@ describe 'diffux_ci' do
 
       it 'uses the viewport to generate a baseline' do
         run_diffux_ci
-        expect(snapshot_file_exists?('@foo', 'baseline.png')).to be(false)
-        expect(snapshot_file_exists?('@bar', 'baseline.png')).to be(true)
+        expect(snapshot_file_exists?('@foo', 'baseline.png')).to eq(false)
+        expect(snapshot_file_exists?('@bar', 'baseline.png')).to eq(true)
       end
     end
   end
@@ -210,9 +210,9 @@ describe 'diffux_ci' do
 
     it 'generates a baseline, but no diff' do
       run_diffux_ci
-      expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
-      expect(snapshot_file_exists?('@large', 'diff.png')).to be(false)
-      expect(snapshot_file_exists?('@large', 'candidate.png')).to be(false)
+      expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
+      expect(snapshot_file_exists?('@large', 'diff.png')).to eq(false)
+      expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(false)
     end
 
     describe 'with a previous run' do
@@ -223,9 +223,9 @@ describe 'diffux_ci' do
 
         it 'keeps the baseline, and creates no diff' do
           run_diffux_ci
-          expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
-          expect(snapshot_file_exists?('@large', 'diff.png')).to be(false)
-          expect(snapshot_file_exists?('@large', 'candidate.png')).to be(false)
+          expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
+          expect(snapshot_file_exists?('@large', 'diff.png')).to eq(false)
+          expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(false)
         end
       end
 
@@ -250,9 +250,9 @@ describe 'diffux_ci' do
 
           it 'keeps the baseline, and generates a diff' do
             run_diffux_ci
-            expect(snapshot_file_exists?('@large', 'baseline.png')).to be(true)
-            expect(snapshot_file_exists?('@large', 'diff.png')).to be(true)
-            expect(snapshot_file_exists?('@large', 'candidate.png')).to be(true)
+            expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
+            expect(snapshot_file_exists?('@large', 'diff.png')).to eq(true)
+            expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(true)
           end
         end
       end
@@ -267,7 +267,7 @@ describe 'diffux_ci' do
     EOS
 
     it 'exits with a non-zero exit code' do
-      expect(run_diffux_ci[:exit_status]).to be(1)
+      expect(run_diffux_ci[:exit_status]).to eq(1)
     end
 
     it 'logs the error' do
