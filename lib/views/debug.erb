@@ -1,15 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style type="text/css">
-      body {
-        background-color: #f0f0f0;
-        font-family: helvetica, arial;
-      }
-      form {
-        display: inline-block;
-      }
-    </style>
+    <link rel="stylesheet" href="/diffux_ci-styles.css"></link>
     <script src="/diffux_ci-runner.js"></script>
     <% @config['source_files'].each do |source_file| %>
       <script src="/resource?file=<%= ERB::Util.url_encode(source_file) %>"></script>
