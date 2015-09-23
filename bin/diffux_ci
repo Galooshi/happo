@@ -15,6 +15,10 @@ when 'run'
   end
   require 'diffux_ci_server'
 
+when 'debug'
+  system 'open', DiffuxCIUtils.construct_url('/debug')
+  require 'diffux_ci_server'
+
 when 'review'
   system 'open', DiffuxCIUtils.construct_url('/review')
   require 'diffux_ci_server'

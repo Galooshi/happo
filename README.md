@@ -132,6 +132,13 @@ will open a page that compares the latest run's snapshots against the
 previously accepted snapshots. You can then approve or reject the snapshots for
 the next run.
 
+### `diffux_ci debug`
+
+If you want to debug rendering your examples, you can run `diffux_ci debug`.
+This will open a browser window pointing at `/debug`, listing all your
+examples. If you click one of them, the example will be rendered in isolation
+and you can do use your developer tools to debug.
+
 ### `diffux_ci upload_diffs`
 
 Uploads all current diff images to an Amazon S3 account and reports back URLs

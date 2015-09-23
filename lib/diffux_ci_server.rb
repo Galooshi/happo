@@ -14,6 +14,11 @@ class DiffuxCIServer < Sinatra::Base
     erb :index
   end
 
+  get '/debug' do
+    @config = DiffuxCIUtils.config
+    erb :debug
+  end
+
   get '/review' do
     @snapshots = DiffuxCIUtils.current_snapshots
     erb :review

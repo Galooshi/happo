@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      body {
+        background-color: #f0f0f0;
+        font-family: helvetica, arial;
+      }
+      form {
+        display: inline-block;
+      }
+    </style>
+    <script src="/diffux_ci-runner.js"></script>
+    <% @config['source_files'].each do |source_file| %>
+      <script src="/resource?file=<%= ERB::Util.url_encode(source_file) %>"></script>
+    <% end %>
+  </head>
+  <body>
+    <h1>Diffux-CI Debug Tool</h1>
+    <p>Click on an item to render that example in isolation.</p>
+    <script>
+      (function() {
+        var ul = document.createElement('ul');
+        document.body.appendChild(ul);
+        for (var i = 0; i < diffux.defined.length; i++) {
+          var example = diffux.defined[i];
+          var li = document.createElement('li');
+          ul.appendChild(li);
+          var a = document.createElement('a');
+          li.appendChild(a);
+          a.setAttribute('href', '/?name=' + encodeURIComponent(example.name));
+          a.innerHTML = example.name;
+        }
+      }());
+    </script>
+  </body>
+</html>
