@@ -1,6 +1,9 @@
 # Diffux-CI
 
-Diffux-CI is a command-line tool to visually diff JavaScript components.
+Diffux-CI is a command-line tool to visually diff JavaScript components. [Read
+more][end-of-visual-regressions].
+
+[end-of-visual-regressions]: https://medium.com/brigade-engineering/the-end-of-visual-regressions-b6b5c3d810f
 
 You begin by defining a set of examples that Diffux-CI will grab snapshots for.
 If a previous snapshot (called a "baseline") exists for a component, Diffux-CI
