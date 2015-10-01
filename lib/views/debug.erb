@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/diffux_ci-styles.css"></link>
+    <script src="/diffux_ci-runner.js"></script>
+    <% @config['source_files'].each do |source_file| %>
+      <script src="/resource?file=<%= ERB::Util.url_encode(source_file) %>"></script>
+    <% end %>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  </head>
+  <body>
+    <h1>Diffux-CI Debug Tool</h1>
+    <p>Click on an item to render that example in isolation.</p>
+    <script>
+      (function() {
+        var ul = $('<ul>');
+        $('body').append(ul);
+        $.each(diffux.defined, function(_, example) {
+          ul.append($('<li>').append(
+            $('<a>', {
+              href: '/?name=' + encodeURIComponent(example.name)
+            }).text(example.name)
+          ));
+        });
+      }());
+    </script>
+  </body>
+</html>
