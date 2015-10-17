@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.date        = '2015-02-20'
   s.summary     = 'Diffux-CI'
   s.description = 'Diffux-CI, a perceptual diff tool for JS components'
-  s.authors     = ['Henric Trotzig']
+  s.authors     = ['Henric Trotzig', 'Joe Lencioni']
   s.email       = 'henric.trotzig@gmail.com'
   s.executables = ['diffux_ci']
   s.homepage    = 'http://rubygems.org/gems/diffux_ci'
