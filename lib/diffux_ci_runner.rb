@@ -93,7 +93,7 @@ begin
         EOS
       end
 
-      # Save and crop the screenshot
+      # Crop the screenshot to the size of the rendered element
       screenshot = ChunkyPNG::Image.from_blob(driver.screenshot_as(:png))
       screenshot.crop!(rendered['left'],
                        rendered['top'],
