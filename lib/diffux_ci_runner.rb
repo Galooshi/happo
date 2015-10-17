@@ -5,7 +5,7 @@ require 'diffux_core/snapshot_comparison_image/gutter'
 require 'diffux_core/snapshot_comparison_image/before'
 require 'diffux_core/snapshot_comparison_image/overlayed'
 require 'diffux_core/snapshot_comparison_image/after'
-require 'chunky_png'
+require 'oily_png'
 require 'diffux_ci_utils'
 require 'fileutils'
 
