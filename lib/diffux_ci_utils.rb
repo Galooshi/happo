@@ -57,9 +57,11 @@ class DiffuxCIUtils
         file: file
       }
     end
+
     snapshots_folder = DiffuxCIUtils.config['snapshots_folder']
     diff_files = Dir.glob("#{snapshots_folder}/**/diff.png")
     baselines = Dir.glob("#{snapshots_folder}/**/baseline.png")
+
     {
       diffs: diff_files.map(&prepare_file),
       baselines: baselines.map(&prepare_file)
