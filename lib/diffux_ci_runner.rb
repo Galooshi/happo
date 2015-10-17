@@ -37,23 +37,24 @@ begin
     fail "JavaScript errors found during initialization: \n#{errors.inspect}"
   end
 
-  # We use the name of the example to store the snapshot. If a name is
-  # duplicated with different code, it can cause seemingly random and confusing
-  # differences. To avoid this issue, we want to keep track of the names that
-  # we've seen and fail if we come across the same name twice.
-  seen_names = {}
+  # We use the description of the example to store the snapshot. If a
+  # description is duplicated with different code, it can cause seemingly random
+  # and confusing differences. To avoid this issue, we want to keep track of the
+  # descriptions that we've seen and fail if we come across the same description
+  # twice.
+  seen_descriptions = {}
 
   while current = driver.execute_script('return window.diffux.next()') do
     resolve_viewports(current).each do |viewport|
-      # Make sure we don't have a duplicate name
-      seen_names[current['name']] ||= {}
-      if seen_names[current['name']][viewport['name']]
+      # Make sure we don't have a duplicate description
+      seen_descriptions[current['description']] ||= {}
+      if seen_descriptions[current['description']][viewport['name']]
         fail <<-EOS
-          Error while rendering "#{current['name']}" @#{viewport['name']}:
-            Duplicate name detected
+          Error while rendering "#{current['description']}" @#{viewport['name']}:
+            Duplicate description detected
         EOS
       else
-        seen_names[current['name']][viewport['name']] = true
+        seen_descriptions[current['description']][viewport['name']] = true
       end
 
       # Resize window to the right size before rendering
@@ -80,14 +81,14 @@ begin
 
       if rendered['error']
         fail <<-EOS
-          Error while rendering "#{current['name']}" @#{viewport['name']}:
+          Error while rendering "#{current['description']}" @#{viewport['name']}:
             #{rendered['error']}
           Debug by pointing your browser to
-          #{DiffuxCIUtils.construct_url('/', name: current['name'])}
+          #{DiffuxCIUtils.construct_url('/', description: current['description'])}
         EOS
       end
       output_file = DiffuxCIUtils.path_to(
-        current['name'], viewport['name'], 'candidate.png')
+        current['description'], viewport['name'], 'candidate.png')
 
       # Create the folder structure if it doesn't already exist
       unless File.directory?(dirname = File.dirname(output_file))
@@ -103,10 +104,10 @@ begin
                     [rendered['height'], 1].max)
       cropped.save(output_file)
 
-      print "Checking \"#{current['name']}\" at [#{viewport['name']}]... "
+      print "Checking \"#{current['description']}\" at [#{viewport['name']}]... "
 
       # Run the diff if needed
-      baseline_file = DiffuxCIUtils.path_to(current['name'], viewport['name'], 'baseline.png')
+      baseline_file = DiffuxCIUtils.path_to(current['description'], viewport['name'], 'baseline.png')
 
       if File.exist? baseline_file
         comparison = Diffux::SnapshotComparer.new(
@@ -115,7 +116,7 @@ begin
         ).compare!
 
         if img = comparison[:diff_image]
-          diff_output = DiffuxCIUtils.path_to(current['name'], viewport['name'], 'diff.png')
+          diff_output = DiffuxCIUtils.path_to(current['description'], viewport['name'], 'diff.png')
           img.save(diff_output)
           puts "#{comparison[:diff_in_percent].round(1)}% (#{diff_output})"
         else

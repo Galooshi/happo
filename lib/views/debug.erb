@@ -18,8 +18,8 @@
         $.each(diffux.defined, function(_, example) {
           ul.append($('<li>').append(
             $('<a>', {
-              href: '/?name=' + encodeURIComponent(example.name)
-            }).text(example.name)
+              href: '/?description=' + encodeURIComponent(example.description)
+            }).text(example.description)
           ));
         });
       }());

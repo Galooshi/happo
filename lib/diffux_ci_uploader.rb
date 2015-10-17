@@ -19,7 +19,7 @@ class DiffuxCIUploader
     dir = SecureRandom.uuid
 
     diff_images = current_snapshots[:diffs].map do |diff|
-      image = bucket.objects.build("#{dir}/#{diff[:name]}_#{diff[:viewport]}.png")
+      image = bucket.objects.build("#{dir}/#{diff[:description]}_#{diff[:viewport]}.png")
       image.content = open(diff[:file])
       image.content_type = 'image/png'
       image.save

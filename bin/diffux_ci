@@ -29,9 +29,9 @@ when 'clean'
   end
 
 when 'approve', 'reject'
-  abort 'Missing example name' unless example_name = ARGV[1]
+  abort 'Missing example description' unless example_description = ARGV[1]
   abort 'Missing viewport name' unless viewport_name = ARGV[2]
-  DiffuxCIAction.new(example_name, viewport_name).send(action)
+  DiffuxCIAction.new(example_description, viewport_name).send(action)
 
 when 'upload_diffs'
   # `upload_diffs` returns a URL to a static html file

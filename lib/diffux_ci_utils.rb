@@ -27,14 +27,14 @@ class DiffuxCIUtils
       ENV['DIFFUX_CI_CONFIG_FILE'] || '.diffux_ci.yaml')).result))
   end
 
-  def self.normalize_name(name)
-    name.gsub(/[^a-zA-Z0-9\-_]/, '_')
+  def self.normalize_description(description)
+    description.gsub(/[^a-zA-Z0-9\-_]/, '_')
   end
 
-  def self.path_to(name, viewport_name, file_name)
+  def self.path_to(description, viewport_name, file_name)
     File.join(
       config['snapshots_folder'],
-      normalize_name(name),
+      normalize_description(description),
       "@#{viewport_name}",
       file_name
     )
@@ -54,9 +54,9 @@ class DiffuxCIUtils
   def self.current_snapshots
     prepare_file = lambda do |file|
       viewport_dir = File.expand_path('..', file)
-      name_dir = File.expand_path('..', viewport_dir)
+      description_dir = File.expand_path('..', viewport_dir)
       {
-        name: File.basename(name_dir),
+        description: File.basename(description_dir),
         viewport: File.basename(viewport_dir).sub('@', ''),
         file: file,
       }

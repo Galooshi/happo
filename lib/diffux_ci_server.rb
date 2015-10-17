@@ -34,12 +34,12 @@ class DiffuxCIServer < Sinatra::Base
   end
 
   post '/reject' do
-    DiffuxCIAction.new(params[:name], params[:viewport]).reject
+    DiffuxCIAction.new(params[:description], params[:viewport]).reject
     redirect back
   end
 
   post '/approve' do
-    DiffuxCIAction.new(params[:name], params[:viewport]).approve
+    DiffuxCIAction.new(params[:description], params[:viewport]).approve
     redirect back
   end
 
