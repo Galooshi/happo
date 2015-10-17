@@ -92,47 +92,56 @@ begin
           #{DiffuxCIUtils.construct_url('/', description: description)}
         EOS
       end
-      output_file = DiffuxCIUtils.path_to(
-        description, viewport['name'], 'candidate.png')
-
-      # Create the folder structure if it doesn't already exist
-      unless File.directory?(dirname = File.dirname(output_file))
-        FileUtils.mkdir_p(dirname)
-      end
 
       # Save and crop the screenshot
-      driver.save_screenshot(output_file)
-      cropped = ChunkyPNG::Image.from_file(output_file)
-      cropped.crop!(rendered['left'],
-                    rendered['top'],
-                    [rendered['width'], 1].max,
-                    [rendered['height'], 1].max)
-      cropped.save(output_file)
+      screenshot = ChunkyPNG::Image.from_blob(driver.screenshot_as(:png))
+      screenshot.crop!(rendered['left'],
+                       rendered['top'],
+                       [rendered['width'], 1].max,
+                       [rendered['height'], 1].max)
 
       print "Checking \"#{description}\" at [#{viewport['name']}]... "
 
       # Run the diff if needed
-      baseline_file = DiffuxCIUtils.path_to(
+      baseline_path = DiffuxCIUtils.path_to(
         description, viewport['name'], 'baseline.png')
 
-      if File.exist? baseline_file
+      if File.exist? baseline_path
+        # A baseline image exists, so we want to compare the new snapshot
+        # against the baseline.
         comparison = Diffux::SnapshotComparer.new(
-          ChunkyPNG::Image.from_file(baseline_file),
-          cropped
+          ChunkyPNG::Image.from_file(baseline_path),
+          screenshot
         ).compare!
 
         if comparison[:diff_image]
-          diff_output = DiffuxCIUtils.path_to(
+          # There was a visual difference between the new snapshot and the
+          # baseline, so we want to write the diff image and the new snapshot
+          # image to disk. This will allow it to be reviewed by someone.
+          diff_path = DiffuxCIUtils.path_to(
             description, viewport['name'], 'diff.png')
-          comparison[:diff_image].save(diff_output)
+          comparison[:diff_image].save(diff_path)
+
+          candidate_path = DiffuxCIUtils.path_to(
+            description, viewport['name'], 'candidate.png')
+          screenshot.save(candidate_path)
+
           puts "#{comparison[:diff_in_percent].round(1)}% (#{diff_output})"
         else
-          File.delete(output_file)
+          # No visual difference was found, so we don't need to do any more
+          # work.
           puts 'No diff.'
         end
       else
-        File.rename(output_file, baseline_file)
-        puts "First snapshot created (#{baseline_file})"
+        # There was no baseline image yet, so we want to start by saving a new
+        # baseline image.
+
+        # Create the folder structure if it doesn't already exist
+        unless File.directory?(dirname = File.dirname(baseline_path))
+          FileUtils.mkdir_p(dirname)
+        end
+        screenshot.save(baseline_path)
+        puts "First snapshot created (#{baseline_path})"
       end
     end
   end
