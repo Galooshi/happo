@@ -1,5 +1,7 @@
 # Diffux-CI
 
+[![Build Status](https://travis-ci.org/diffux/diffux_ci.svg)](https://travis-ci.org/diffux/diffux_ci)
+
 Diffux-CI is a command-line tool to visually diff JavaScript components. [Read
 more][end-of-visual-regressions].
 
