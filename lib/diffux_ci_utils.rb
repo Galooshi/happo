@@ -41,12 +41,10 @@ class DiffuxCIUtils
   end
 
   def self.construct_url(absolute_path, params = {})
-    params_str = params.map do |key, value|
-      "#{key}=#{URI.escape(value)}"
-    end.join('&')
-    params_str = "?#{params_str}" unless params_str.empty?
-
-    "http://localhost:#{config['port']}#{absolute_path}#{params_str}"
+    URI::HTTP.build(host: 'localhost',
+                    port: config['port'],
+                    path: absolute_path,
+                    query: URI.encode_www_form(params))
   end
 
   def self.current_snapshots
