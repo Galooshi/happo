@@ -1,4 +1,3 @@
-require 'tilt/erubis' # used by sinatra, required to avoid thread-safe warning
 require 'sinatra/base'
 require 'yaml'
 require 'diffux_ci_utils'
