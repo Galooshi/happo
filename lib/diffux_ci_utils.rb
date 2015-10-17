@@ -3,6 +3,7 @@ require 'erb'
 
 class DiffuxCIUtils
   def self.config
+    config_file_name = ENV['DIFFUX_CI_CONFIG_FILE'] || '.diffux_ci.yaml'
     @@config ||= {
       'snapshots_folder' => './snapshots',
       'source_files' => [],
@@ -23,18 +24,17 @@ class DiffuxCIUtils
           'height' => 444
         }
       }
-    }.merge(YAML.load(ERB.new(File.read(
-      ENV['DIFFUX_CI_CONFIG_FILE'] || '.diffux_ci.yaml')).result))
+    }.merge(YAML.load(ERB.new(File.read(config_file_name)).result))
   end
 
-  def self.normalize_name(name)
-    name.gsub(/[^a-zA-Z0-9\-_]/, '_')
+  def self.normalize_description(description)
+    description.gsub(/[^a-zA-Z0-9\-_]/, '_')
   end
 
-  def self.path_to(name, viewport_name, file_name)
+  def self.path_to(description, viewport_name, file_name)
     File.join(
       config['snapshots_folder'],
-      normalize_name(name),
+      normalize_description(description),
       "@#{viewport_name}",
       file_name
     )
@@ -44,25 +44,24 @@ class DiffuxCIUtils
     params_str = params.map do |key, value|
       "#{key}=#{URI.escape(value)}"
     end.join('&')
-    unless params_str.empty?
-      params_str = "?#{params_str}"
-    end
+    params_str = "?#{params_str}" unless params_str.empty?
 
-    return "http://localhost:#{config['port']}#{absolute_path}#{params_str}"
+    "http://localhost:#{config['port']}#{absolute_path}#{params_str}"
   end
 
   def self.current_snapshots
     prepare_file = lambda do |file|
       viewport_dir = File.expand_path('..', file)
-      name_dir = File.expand_path('..', viewport_dir)
+      description_dir = File.expand_path('..', viewport_dir)
       {
-        name: File.basename(name_dir),
+        description: File.basename(description_dir),
         viewport: File.basename(viewport_dir).sub('@', ''),
-        file: file,
+        file: file
       }
     end
-    diff_files = Dir.glob("#{DiffuxCIUtils.config['snapshots_folder']}/**/diff.png")
-    baselines = Dir.glob("#{DiffuxCIUtils.config['snapshots_folder']}/**/baseline.png")
+    snapshots_folder = DiffuxCIUtils.config['snapshots_folder']
+    diff_files = Dir.glob("#{snapshots_folder}/**/diff.png")
+    baselines = Dir.glob("#{snapshots_folder}/**/baseline.png")
     {
       diffs: diff_files.map(&prepare_file),
       baselines: baselines.map(&prepare_file)

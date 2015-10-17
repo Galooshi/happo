@@ -8,16 +8,16 @@
     <h2>DIFFS</h2>
     <% @snapshots[:diffs].each do |diff| %>
       <h3>
-        <%= diff[:name] %> @ <%= diff[:viewport] %>
+        <%= diff[:description] %> @ <%= diff[:viewport] %>
       </h3>
       <p><img src="/resource?file=<%= ERB::Util.url_encode(diff[:file]) %>"></p>
       <form style="display: inline-block"
-            action="/approve?name=<%= diff[:name] %>&viewport=<%= diff[:viewport] %>"
+            action="/approve?description=<%= diff[:description] %>&viewport=<%= diff[:viewport] %>"
             method="POST">
         <button type="submit">Approve</button>
       </form>
       <form style="display: inline-block"
-            action="/reject?name=<%= diff[:name] %>&viewport=<%= diff[:viewport] %>"
+            action="/reject?description=<%= diff[:description] %>&viewport=<%= diff[:viewport] %>"
             method="POST">
         <button type="submit">Reject</button>
       </form>
@@ -28,7 +28,7 @@
     <h2>BASELINES</h2>
     <% @snapshots[:baselines].each do |baseline| %>
       <h3>
-        <%= baseline[:name] %> @ <%= baseline[:viewport] %>
+        <%= baseline[:description] %> @ <%= baseline[:viewport] %>
       </h3>
       <p><img src="/resource?file=<%= ERB::Util.url_encode(baseline[:file]) %>"></p>
     <% end %>

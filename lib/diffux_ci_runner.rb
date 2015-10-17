@@ -12,7 +12,10 @@ require 'fileutils'
 def resolve_viewports(example)
   configured_viewports = DiffuxCIUtils.config['viewports']
 
-  (example['options']['viewports'] || [configured_viewports.first.first]).map do |viewport|
+  viewports =
+    example['options']['viewports'] || [configured_viewports.first.first]
+
+  viewports.map do |viewport|
     configured_viewports[viewport].merge('name' => viewport)
   end
 end
@@ -37,8 +40,28 @@ begin
     fail "JavaScript errors found during initialization: \n#{errors.inspect}"
   end
 
+  # We use the description of the example to store the snapshot. If a
+  # description is duplicated with different code, it can cause seemingly random
+  # and confusing differences. To avoid this issue, we want to keep track of the
+  # descriptions that we've seen and fail if we come across the same description
+  # twice.
+  seen_descriptions = {}
+
   while current = driver.execute_script('return window.diffux.next()') do
+    description = current['description']
+
     resolve_viewports(current).each do |viewport|
+      # Make sure we don't have a duplicate description
+      seen_descriptions[description] ||= {}
+      if seen_descriptions[description][viewport['name']]
+        fail <<-EOS
+          Error while rendering "#{description}" @#{viewport['name']}:
+            Duplicate description detected
+        EOS
+      else
+        seen_descriptions[description][viewport['name']] = true
+      end
+
       # Resize window to the right size before rendering
       driver.manage.window.resize_to(viewport['width'], viewport['height'])
 
@@ -63,14 +86,14 @@ begin
 
       if rendered['error']
         fail <<-EOS
-          Error while rendering "#{current['name']}" @#{viewport['name']}:
+          Error while rendering "#{description}" @#{viewport['name']}:
             #{rendered['error']}
           Debug by pointing your browser to
-          #{DiffuxCIUtils.construct_url('/', name: current['name'])}
+          #{DiffuxCIUtils.construct_url('/', description: description)}
         EOS
       end
       output_file = DiffuxCIUtils.path_to(
-        current['name'], viewport['name'], 'candidate.png')
+        description, viewport['name'], 'candidate.png')
 
       # Create the folder structure if it doesn't already exist
       unless File.directory?(dirname = File.dirname(output_file))
@@ -86,10 +109,11 @@ begin
                     [rendered['height'], 1].max)
       cropped.save(output_file)
 
-      print "Checking \"#{current['name']}\" at [#{viewport['name']}]... "
+      print "Checking \"#{description}\" at [#{viewport['name']}]... "
 
       # Run the diff if needed
-      baseline_file = DiffuxCIUtils.path_to(current['name'], viewport['name'], 'baseline.png')
+      baseline_file = DiffuxCIUtils.path_to(
+        description, viewport['name'], 'baseline.png')
 
       if File.exist? baseline_file
         comparison = Diffux::SnapshotComparer.new(
@@ -97,9 +121,10 @@ begin
           cropped
         ).compare!
 
-        if img = comparison[:diff_image]
-          diff_output = DiffuxCIUtils.path_to(current['name'], viewport['name'], 'diff.png')
-          img.save(diff_output)
+        if comparison[:diff_image]
+          diff_output = DiffuxCIUtils.path_to(
+            description, viewport['name'], 'diff.png')
+          comparison[:diff_image].save(diff_output)
           puts "#{comparison[:diff_in_percent].round(1)}% (#{diff_output})"
         else
           File.delete(output_file)
