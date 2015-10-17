@@ -274,4 +274,30 @@ describe 'diffux_ci' do
       expect(run_diffux_ci[:std_err]).to include('Error while rendering "foo"')
     end
   end
+
+  describe 'when there are two examples with the same description' do
+    let(:examples_js) { <<-EOS }
+      diffux.define('foo', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Foo';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config})
+
+      diffux.define('foo', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Bar';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config})
+    EOS
+
+    it 'exits with a non-zero exit code' do
+      expect(run_diffux_ci[:exit_status]).to eq(1)
+    end
+
+    it 'logs the error' do
+      expect(run_diffux_ci[:std_err]).to include('Error while rendering "foo"')
+    end
+  end
 end

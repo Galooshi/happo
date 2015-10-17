@@ -37,8 +37,25 @@ begin
     fail "JavaScript errors found during initialization: \n#{errors.inspect}"
   end
 
+  # We use the name of the example to store the snapshot. If a name is
+  # duplicated with different code, it can cause seemingly random and confusing
+  # differences. To avoid this issue, we want to keep track of the names that
+  # we've seen and fail if we come across the same name twice.
+  seen_names = {}
+
   while current = driver.execute_script('return window.diffux.next()') do
     resolve_viewports(current).each do |viewport|
+      # Make sure we don't have a duplicate name
+      seen_names[current['name']] ||= {}
+      if seen_names[current['name']][viewport['name']]
+        fail <<-EOS
+          Error while rendering "#{current['name']}" @#{viewport['name']}:
+            Duplicate name detected
+        EOS
+      else
+        seen_names[current['name']][viewport['name']] = true
+      end
+
       # Resize window to the right size before rendering
       driver.manage.window.resize_to(viewport['width'], viewport['height'])
 
