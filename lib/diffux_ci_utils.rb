@@ -3,6 +3,7 @@ require 'erb'
 
 class DiffuxCIUtils
   def self.config
+    config_file_name = ENV['DIFFUX_CI_CONFIG_FILE'] || '.diffux_ci.yaml'
     @@config ||= {
       'snapshots_folder' => './snapshots',
       'source_files' => [],
@@ -23,8 +24,7 @@ class DiffuxCIUtils
           'height' => 444
         }
       }
-    }.merge(YAML.load(ERB.new(File.read(
-      ENV['DIFFUX_CI_CONFIG_FILE'] || '.diffux_ci.yaml')).result))
+    }.merge(YAML.load(ERB.new(File.read(config_file_name)).result))
   end
 
   def self.normalize_description(description)
@@ -44,11 +44,9 @@ class DiffuxCIUtils
     params_str = params.map do |key, value|
       "#{key}=#{URI.escape(value)}"
     end.join('&')
-    unless params_str.empty?
-      params_str = "?#{params_str}"
-    end
+    params_str = "?#{params_str}" unless params_str.empty?
 
-    return "http://localhost:#{config['port']}#{absolute_path}#{params_str}"
+    "http://localhost:#{config['port']}#{absolute_path}#{params_str}"
   end
 
   def self.current_snapshots
@@ -58,11 +56,12 @@ class DiffuxCIUtils
       {
         description: File.basename(description_dir),
         viewport: File.basename(viewport_dir).sub('@', ''),
-        file: file,
+        file: file
       }
     end
-    diff_files = Dir.glob("#{DiffuxCIUtils.config['snapshots_folder']}/**/diff.png")
-    baselines = Dir.glob("#{DiffuxCIUtils.config['snapshots_folder']}/**/baseline.png")
+    snapshots_folder = DiffuxCIUtils.config['snapshots_folder']
+    diff_files = Dir.glob("#{snapshots_folder}/**/diff.png")
+    baselines = Dir.glob("#{snapshots_folder}/**/baseline.png")
     {
       diffs: diff_files.map(&prepare_file),
       baselines: baselines.map(&prepare_file)

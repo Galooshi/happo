@@ -8,20 +8,22 @@ class DiffuxCIAction
   end
 
   def approve
-    diff_path = DiffuxCIUtils.path_to(@example_description, @viewport_name, 'diff.png')
-    baseline_path = DiffuxCIUtils.path_to(@example_description, @viewport_name, 'baseline.png')
-    candidate_path = DiffuxCIUtils.path_to(@example_description, @viewport_name, 'candidate.png')
+    diff_path = DiffuxCIUtils.path_to(
+      @example_description, @viewport_name, 'diff.png')
+    baseline_path = DiffuxCIUtils.path_to(
+      @example_description, @viewport_name, 'baseline.png')
+    candidate_path = DiffuxCIUtils.path_to(
+      @example_description, @viewport_name, 'candidate.png')
 
     FileUtils.rm(diff_path, force: true)
-
-    if File.exist? candidate_path
-      FileUtils.mv(candidate_path, baseline_path)
-    end
+    FileUtils.mv(candidate_path, baseline_path) if File.exist? candidate_path
   end
 
   def reject
-    diff_path = DiffuxCIUtils.path_to(@example_description, @viewport_name, 'diff.png')
-    candidate_path = DiffuxCIUtils.path_to(@example_description, @viewport_name, 'candidate.png')
+    diff_path = DiffuxCIUtils.path_to(
+      @example_description, @viewport_name, 'diff.png')
+    candidate_path = DiffuxCIUtils.path_to(
+      @example_description, @viewport_name, 'candidate.png')
 
     FileUtils.rm(diff_path, force: true)
     FileUtils.rm(candidate_path, force: true)
