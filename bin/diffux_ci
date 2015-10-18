@@ -38,6 +38,19 @@ when 'approve', 'reject'
 when 'upload_diffs'
   # `upload_diffs` returns a URL to a static html file
   puts DiffuxCIUploader.new.upload_diffs
+
+when '--help'
+  puts <<-EOS
+Commands:
+  run (default)
+  debug
+  review
+  clean
+  approve
+  reject
+  upload_diffs
+  --help
+  EOS
 else
   abort "Unknown action \"#{action}\""
 end
