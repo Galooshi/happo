@@ -1,14 +1,16 @@
+require './lib/diffux_ci_version'
+
 Gem::Specification.new do |s|
-  s.name        = 'diffux_ci'
-  s.version     = '0.2.0'
-  s.date        = '2015-02-20'
-  s.summary     = 'Diffux-CI'
-  s.description = 'Diffux-CI, a perceptual diff tool for JS components'
-  s.authors     = ['Henric Trotzig', 'Joe Lencioni']
-  s.email       = 'henric.trotzig@gmail.com'
-  s.executables = ['diffux_ci']
-  s.homepage    = 'http://rubygems.org/gems/diffux_ci'
-  s.license     = 'MIT'
+  s.name          = 'diffux_ci'
+  s.version       = DiffuxCI::VERSION
+  s.date          = '2015-02-20'
+  s.summary       = 'Diffux-CI'
+  s.description   = 'Diffux-CI, a perceptual diff tool for JS components'
+  s.authors       = ['Henric Trotzig', 'Joe Lencioni']
+  s.email         = 'henric.trotzig@gmail.com'
+  s.executables   = ['diffux_ci']
+  s.homepage      = 'http://rubygems.org/gems/diffux_ci'
+  s.license       = 'MIT'
   s.require_paths = ['lib']
   s.files         = Dir['lib/**/*']
   s.add_runtime_dependency 'diffux-core', '~> 0.0', '>= 0.0.2'
