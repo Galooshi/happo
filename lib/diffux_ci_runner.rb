@@ -136,7 +136,7 @@ begin
             description, viewport['name'], 'candidate.png')
           screenshot.save(candidate_path)
 
-          puts "#{comparison[:diff_in_percent].round(1)}% (#{diff_output})"
+          puts "#{comparison[:diff_in_percent].round(1)}% (#{candidate_path})"
         else
           # No visual difference was found, so we don't need to do any more
           # work.
