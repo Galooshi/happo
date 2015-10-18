@@ -3,6 +3,7 @@
 require 'diffux_ci_utils'
 require 'diffux_ci_action'
 require 'diffux_ci_uploader'
+require 'diffux_ci_version'
 require 'fileutils'
 
 action = ARGV[0] || 'run'
@@ -39,6 +40,9 @@ when 'upload_diffs'
   # `upload_diffs` returns a URL to a static html file
   puts DiffuxCIUploader.new.upload_diffs
 
+when '--version'
+  puts "diffux_ci version #{DiffuxCI::VERSION}"
+
 when '--help'
   puts <<-EOS
 Commands:
@@ -50,6 +54,7 @@ Commands:
   reject
   upload_diffs
   --help
+  --version
   EOS
 else
   abort "Unknown action \"#{action}\""
