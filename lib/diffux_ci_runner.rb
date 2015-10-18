@@ -105,10 +105,23 @@ begin
 
       # Crop the screenshot to the size of the rendered element
       screenshot = ChunkyPNG::Image.from_blob(driver.screenshot_as(:png))
+
+      # In our JavScript we are rounding up, which can sometimes give us a
+      # dimensions that are larger than the screenshot dimensions. We need to
+      # guard against that here.
+      crop_width = [
+        [rendered['width'], 1].max,
+        screenshot.width - rendered['left']
+      ].min
+      crop_height = [
+        [rendered['height'], 1].max,
+        screenshot.height - rendered['top']
+      ].min
+
       screenshot.crop!(rendered['left'],
                        rendered['top'],
-                       [rendered['width'], 1].max,
-                       [rendered['height'], 1].max)
+                       crop_width,
+                       crop_height)
 
       print "Checking \"#{description}\" at [#{viewport['name']}]... "
 
