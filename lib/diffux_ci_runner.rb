@@ -20,21 +20,28 @@ def resolve_viewports(example)
   end
 end
 
-tries = 0
-begin
-  driver = Selenium::WebDriver.for DiffuxCIUtils.config['driver'].to_sym
-rescue Selenium::WebDriver::Error::WebDriverError => e
-  # "unable to obtain stable firefox connection in 60 seconds"
-  #
-  # This seems to happen sporadically for some versions of Firefox, so we want
-  # to retry a couple of times it in case it will work the second time around.
-  tries += 1
-  retry if tries <= 3
-  raise e
+def init_driver
+  tries = 0
+  begin
+    driver = Selenium::WebDriver.for DiffuxCIUtils.config['driver'].to_sym
+  rescue Selenium::WebDriver::Error::WebDriverError => e
+    # "unable to obtain stable firefox connection in 60 seconds"
+    #
+    # This seems to happen sporadically for some versions of Firefox, so we want
+    # to retry a couple of times it in case it will work the second time around.
+    tries += 1
+    retry if tries <= 3
+    raise e
+  end
+
+  driver.manage.timeouts.script_timeout = 3 # move to config?
+
+  driver
 end
 
+driver = init_driver
+
 begin
-  driver.manage.timeouts.script_timeout = 3 # move to config?
   driver.navigate.to DiffuxCIUtils.construct_url('/')
 
   # Check for errors during startup
