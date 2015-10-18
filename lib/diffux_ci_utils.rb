@@ -1,9 +1,9 @@
 require 'yaml'
 require 'erb'
+require 'uri'
 
 class DiffuxCIUtils
   def self.config
-    config_file_name = ENV['DIFFUX_CI_CONFIG_FILE'] || '.diffux_ci.yaml'
     @@config ||= {
       'snapshots_folder' => './snapshots',
       'source_files' => [],
@@ -24,7 +24,12 @@ class DiffuxCIUtils
           'height' => 444
         }
       }
-    }.merge(YAML.load(ERB.new(File.read(config_file_name)).result))
+    }.merge(config_from_file)
+  end
+
+  def self.config_from_file
+    config_file_name = ENV['DIFFUX_CI_CONFIG_FILE'] || '.diffux_ci.yaml'
+    YAML.load(ERB.new(File.read(config_file_name)).result)
   end
 
   def self.normalize_description(description)
@@ -41,10 +46,12 @@ class DiffuxCIUtils
   end
 
   def self.construct_url(absolute_path, params = {})
+    query = URI.encode_www_form(params) unless params.empty?
+
     URI::HTTP.build(host: 'localhost',
                     port: config['port'],
                     path: absolute_path,
-                    query: URI.encode_www_form(params))
+                    query: query).to_s
   end
 
   def self.current_snapshots
