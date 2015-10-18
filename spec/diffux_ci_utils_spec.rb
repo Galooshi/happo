@@ -41,4 +41,21 @@ describe 'DiffuxCIUtils' do
       it { should eq('http://localhost:4567?revolution=yes+%26+absolutely') }
     end
   end
+
+  describe 'normalize_description' do
+    subject { DiffuxCIUtils.normalize_description(description) }
+
+    context 'with special characters' do
+      let(:description) { '<MyComponent> something interesting' }
+      it { should eq('_MyComponent__something_interesting') }
+    end
+  end
+
+  describe 'path_to' do
+    subject { DiffuxCIUtils.path_to(description, viewport_name, file_name) }
+    let(:description) { '<MyComponent>' }
+    let(:viewport_name) { 'large' }
+    let(:file_name) { 'diff.png' }
+    it { should eq('./snapshots/_MyComponent_/@large/diff.png') }
+  end
 end
