@@ -3,7 +3,7 @@ require './lib/diffux_ci_version'
 Gem::Specification.new do |s|
   s.name          = 'diffux_ci'
   s.version       = DiffuxCI::VERSION
-  s.date          = '2015-02-20'
+  s.date          = '2015-10-19'
   s.summary       = 'Diffux-CI'
   s.description   = 'Diffux-CI, a perceptual diff tool for JS components'
   s.authors       = ['Henric Trotzig', 'Joe Lencioni']
