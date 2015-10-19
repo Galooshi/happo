@@ -143,11 +143,11 @@ begin
           # image to disk. This will allow it to be reviewed by someone.
           diff_path = DiffuxCIUtils.path_to(
             description, viewport['name'], 'diff.png')
-          comparison[:diff_image].save(diff_path, :fast_rgb)
+          comparison[:diff_image].save(diff_path, :fast_rgba)
 
           candidate_path = DiffuxCIUtils.path_to(
             description, viewport['name'], 'candidate.png')
-          screenshot.save(candidate_path, :fast_rgb)
+          screenshot.save(candidate_path, :fast_rgba)
 
           puts "#{comparison[:diff_in_percent].round(1)}% (#{candidate_path})"
         else
@@ -163,7 +163,7 @@ begin
         unless File.directory?(dirname = File.dirname(baseline_path))
           FileUtils.mkdir_p(dirname)
         end
-        screenshot.save(baseline_path, :fast_rgb)
+        screenshot.save(baseline_path, :fast_rgba)
         puts "First snapshot created (#{baseline_path})"
       end
     end
