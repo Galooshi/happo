@@ -11,9 +11,9 @@ run-diffux-ci() {
   npm install
   webpack ./entry.js bundle.js
 
-  # Run diffux_ci for the current commit. We use `xvfb-run` so that we can run
-  # diffux_ci (which uses Firefox) in a headless display environment.
-  xvfb-run diffux_ci
+  # Run diffux for the current commit. We use `xvfb-run` so that we can run
+  # diffux (which uses Firefox) in a headless display environment.
+  xvfb-run diffux
 }
 
 # Check out the previous version and generate baseline snapshots
@@ -23,7 +23,7 @@ run-diffux-ci HEAD^
 run-diffux-ci -
 
 # Finally, upload any diffs to s3
-url_to_diffs=`diffux_ci upload_diffs`
+url_to_diffs=`diffux upload_diffs`
 if [ -n "$url_to_diffs" ]; then
   # We have a URL to the diff(s) found for the commit. We can choose to do one
   # of a few things here. We either exit the script with a non-zero exit code.

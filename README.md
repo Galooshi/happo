@@ -41,7 +41,7 @@ in your project.
 
 During development, you might want to zoom in/focus on a single example. In
 those situations, you can use the `diffux.fdefine` function instead of
-`diffux.define`. Using `fdefine` will cause `diffux_ci` to only run for that
+`diffux.define`. Using `fdefine` will cause `diffux` to only run for that
 example.
 
 ### Setting viewport sizes
@@ -125,32 +125,32 @@ s3_secret_access_key: <your secret acccess key>
 
 ## Command line tools
 
-### `diffux_ci`
+### `diffux`
 
 This command will fire up a Firefox instance and take snapshots of all your
 diffux examples.
 
-### `diffux_ci review`
+### `diffux review`
 
-Once `diffux_ci` has finished, run `diffux_ci review` from the command line. This
+Once `diffux` has finished, run `diffux review` from the command line. This
 will open a page that compares the latest run's snapshots against the
 previously accepted snapshots. You can then approve or reject the snapshots for
 the next run.
 
-### `diffux_ci debug`
+### `diffux debug`
 
-If you want to debug rendering your examples, you can run `diffux_ci debug`.
+If you want to debug rendering your examples, you can run `diffux debug`.
 This will open a browser window pointing at `/debug`, listing all your
 examples. If you click one of them, the example will be rendered in isolation
 and you can do use your developer tools to debug.
 
-### `diffux_ci upload_diffs`
+### `diffux upload_diffs`
 
 Uploads all current diff images to an Amazon S3 account and reports back URLs
 to access those diff images. Requires the `s3_access_key_id` and
 `s3_secret_access_key` configuration options.
 
-### `diffux_ci clean`
+### `diffux clean`
 
 Recursively removes everything in the snapshots folder (configured through
 `snapshots_folder`).
@@ -168,11 +168,11 @@ any visual change.
 
 1. Check out the commit previous to the one to test (e.g. `git checkout HEAD^`)
 2. (optionally) precompile your JavaScript and/or CSS
-3. Run `diffux_ci` to generate baseline snapshots
+3. Run `diffux` to generate baseline snapshots
 4. Check out the commit to test
 5. (optionally) precompile your JavaScript and/or CSS
-6. Run `diffux_ci` to diff against previously created snapshots
-7. Run `diffux_ci upload_diffs` to upload diffs to a publicly accessible location
+6. Run `diffux` to diff against previously created snapshots
+7. Run `diffux upload_diffs` to upload diffs to a publicly accessible location
 
 There's an example script implementing these steps located in
 [diffux_ci_example.sh](diffux_ci_example.sh). Use that as a starting point
@@ -181,7 +181,7 @@ for your own CI script.
 ### Headless Diffux-CI
 
 Since Diffux-CI uses Firefox to generate its snapshots, you need a display.  If
-you are on a build server, you usually don't have a screen. To run `diffux_ci`
+you are on a build server, you usually don't have a screen. To run `diffux`
 then, you can use a virtual display server such as
 [xvfb](http://www.x.org/archive/X11R7.6/doc/man/man1/Xvfb.1.xhtml).  The
 [example CI script](diffux_ci_example.sh) as well as the internal Travis test
