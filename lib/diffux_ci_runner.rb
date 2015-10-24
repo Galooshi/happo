@@ -10,8 +10,6 @@ require 'diffux_ci_utils'
 require 'fileutils'
 require 'thread'
 
-END_OF_QUEUE = 1
-
 def resolve_viewports(example)
   configured_viewports = DiffuxCIUtils.config['viewports']
 
@@ -42,13 +40,14 @@ def init_driver
   driver
 end
 
-screenshot_queue = Queue.new
-threads = []
+reader, writer = IO.pipe
 
-threads << Thread.new do
-  # This thread is responsible for rendering examples in the browser, taking and
-  # cropping a screenshot if the example, and pushing it onto the queue for the
-  # comparer thread to consume.
+fork do
+  # This process is responsible for rendering examples in the browser, taking
+  # and cropping a screenshot if the example, and outputting it for the comparer
+  # process to consume.
+  reader.close
+
   driver = init_driver
 
   begin
@@ -133,72 +132,81 @@ threads << Thread.new do
                          crop_width,
                          crop_height)
 
-        screenshot_queue << {
+        writer.puts [Marshal.dump(
           screenshot: screenshot,
           description: description,
           viewport_name: viewport['name']
-        }
+        )].pack('m0')
       end
     end
+  rescue StandardError => e
+    $stderr.puts e
   ensure
-    screenshot_queue << END_OF_QUEUE
     driver.quit
   end
 end
 
-threads << Thread.new do
-  # This thread is responsible for consuming the screenshot queue, comparing the
+writer.close
+
+fork do
+  # This process is responsible for consuming the screenshots, comparing the
   # screenshot to the baseline if it exists, or saving it as the baseline if
   # this is the first time we've seen the example.
-  while (item = screenshot_queue.pop) != END_OF_QUEUE do
-    screenshot, description, viewport_name =
-      item.values_at(:screenshot, :description, :viewport_name)
+  begin
+    while message = reader.gets
+      item = Marshal.load(message.strip.unpack('m0')[0])
 
-    print "Checking \"#{description}\" at [#{viewport_name}]... "
+      screenshot, description, viewport_name =
+        item.values_at(:screenshot, :description, :viewport_name)
 
-    # Run the diff if needed
-    baseline_path = DiffuxCIUtils.path_to(
-      description, viewport_name, 'baseline.png')
+      print "Checking \"#{description}\" at [#{viewport_name}]... "
 
-    if File.exist? baseline_path
-      # A baseline image exists, so we want to compare the new snapshot
-      # against the baseline.
-      comparison = Diffux::SnapshotComparer.new(
-        ChunkyPNG::Image.from_file(baseline_path),
-        screenshot
-      ).compare!
+      # Run the diff if needed
+      baseline_path = DiffuxCIUtils.path_to(
+        description, viewport_name, 'baseline.png')
 
-      if comparison[:diff_image]
-        # There was a visual difference between the new snapshot and the
-        # baseline, so we want to write the diff image and the new snapshot
-        # image to disk. This will allow it to be reviewed by someone.
-        diff_path = DiffuxCIUtils.path_to(
-          description, viewport_name, 'diff.png')
-        comparison[:diff_image].save(diff_path, :fast_rgba)
+      if File.exist? baseline_path
+        # A baseline image exists, so we want to compare the new snapshot
+        # against the baseline.
+        comparison = Diffux::SnapshotComparer.new(
+          ChunkyPNG::Image.from_file(baseline_path),
+          screenshot
+        ).compare!
 
-        candidate_path = DiffuxCIUtils.path_to(
-          description, viewport_name, 'candidate.png')
-        screenshot.save(candidate_path, :fast_rgba)
+        if comparison[:diff_image]
+          # There was a visual difference between the new snapshot and the
+          # baseline, so we want to write the diff image and the new snapshot
+          # image to disk. This will allow it to be reviewed by someone.
+          diff_path = DiffuxCIUtils.path_to(
+            description, viewport_name, 'diff.png')
+          comparison[:diff_image].save(diff_path, :fast_rgba)
 
-        puts "#{comparison[:diff_in_percent].round(1)}% (#{candidate_path})"
+          candidate_path = DiffuxCIUtils.path_to(
+            description, viewport_name, 'candidate.png')
+          screenshot.save(candidate_path, :fast_rgba)
+
+          $stdout.puts "#{comparison[:diff_in_percent].round(1)}% (#{candidate_path})"
+        else
+          # No visual difference was found, so we don't need to do any more
+          # work.
+          $stdout.puts 'No diff.'
+        end
       else
-        # No visual difference was found, so we don't need to do any more
-        # work.
-        puts 'No diff.'
-      end
-    else
-      # There was no baseline image yet, so we want to start by saving a new
-      # baseline image.
+        # There was no baseline image yet, so we want to start by saving a new
+        # baseline image.
 
-      # Create the folder structure if it doesn't already exist
-      unless File.directory?(dirname = File.dirname(baseline_path))
-        FileUtils.mkdir_p(dirname)
+        # Create the folder structure if it doesn't already exist
+        unless File.directory?(dirname = File.dirname(baseline_path))
+          FileUtils.mkdir_p(dirname)
+        end
+        screenshot.save(baseline_path, :fast_rgba)
+        $stdout.puts "First snapshot created (#{baseline_path})"
       end
-      screenshot.save(baseline_path, :fast_rgba)
-      puts "First snapshot created (#{baseline_path})"
     end
+  rescue StandardError => e
+    $stderr.puts e
   end
 end
 
-# Wait until all threads have completed processing
-threads.each(&:join)
+# Wait until all processess have completed
+Process.waitall
