@@ -36,11 +36,11 @@ describe 'diffux_ci' do
     FileUtils.remove_entry_secure @tmp_dir
   end
 
-  def run_diffux_ci
+  def run_diffux
     pwd = Dir.pwd
     Dir.chdir @tmp_dir do
       std_out, std_err, status =
-        Open3.capture3("ruby -I#{pwd}/lib #{pwd}/bin/diffux_ci")
+        Open3.capture3("ruby -I#{pwd}/lib #{pwd}/bin/diffux")
       {
         std_out: std_out,
         std_err: std_err,
@@ -57,11 +57,11 @@ describe 'diffux_ci' do
 
   describe 'with no previous run' do
     it 'exits with a zero exit code' do
-      expect(run_diffux_ci[:exit_status]).to eq(0)
+      expect(run_diffux[:exit_status]).to eq(0)
     end
 
     it 'generates a baseline, but no diff' do
-      run_diffux_ci
+      run_diffux
       expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
       expect(snapshot_file_exists?('@large', 'diff.png')).to eq(false)
       expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(false)
@@ -71,15 +71,15 @@ describe 'diffux_ci' do
   describe 'with a previous run' do
     context 'and no diff' do
       before do
-        run_diffux_ci
+        run_diffux
       end
 
       it 'exits with a zero exit code' do
-        expect(run_diffux_ci[:exit_status]).to eq(0)
+        expect(run_diffux[:exit_status]).to eq(0)
       end
 
       it 'keeps the baseline, and creates no diff' do
-        run_diffux_ci
+        run_diffux
         expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
         expect(snapshot_file_exists?('@large', 'diff.png')).to eq(false)
         expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(false)
@@ -88,12 +88,12 @@ describe 'diffux_ci' do
 
     context 'and there is a diff' do
       it 'exits with a zero exit code' do
-        expect(run_diffux_ci[:exit_status]).to eq(0)
+        expect(run_diffux[:exit_status]).to eq(0)
       end
 
       context 'and the baseline has height' do
         before do
-          run_diffux_ci
+          run_diffux
 
           File.open(File.join(@tmp_dir, 'examples.js'), 'w') do |f|
             f.write(<<-EOS)
@@ -108,7 +108,7 @@ describe 'diffux_ci' do
         end
 
         it 'keeps the baseline, and generates a diff' do
-          run_diffux_ci
+          run_diffux
           expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
           expect(snapshot_file_exists?('@large', 'diff.png')).to eq(true)
           expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(true)
@@ -126,7 +126,7 @@ describe 'diffux_ci' do
       EOS
 
       before do
-        run_diffux_ci
+        run_diffux
 
         File.open(File.join(@tmp_dir, 'examples.js'), 'w') do |f|
           f.write(<<-EOS)
@@ -141,7 +141,7 @@ describe 'diffux_ci' do
       end
 
       it 'keeps the baseline, and generates a diff' do
-        run_diffux_ci
+        run_diffux
         expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
         expect(snapshot_file_exists?('@large', 'diff.png')).to eq(true)
         expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(true)
@@ -153,7 +153,7 @@ describe 'diffux_ci' do
     let(:example_config) { "{ viewports: ['large', 'small'] }" }
 
     it 'generates the right baselines' do
-      run_diffux_ci
+      run_diffux
       expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
       expect(snapshot_file_exists?('@small', 'baseline.png')).to eq(true)
       expect(snapshot_file_exists?('@medium', 'baseline.png')).to eq(false)
@@ -179,7 +179,7 @@ describe 'diffux_ci' do
 
     context 'and the example has no `viewport` config' do
       it 'uses the first viewport in the config' do
-        run_diffux_ci
+        run_diffux
         expect(snapshot_file_exists?('@foo', 'baseline.png')).to eq(true)
         expect(snapshot_file_exists?('@bar', 'baseline.png')).to eq(false)
       end
@@ -189,7 +189,7 @@ describe 'diffux_ci' do
       let(:example_config) { "{ viewports: ['bar'] }" }
 
       it 'uses the viewport to generate a baseline' do
-        run_diffux_ci
+        run_diffux
         expect(snapshot_file_exists?('@foo', 'baseline.png')).to eq(false)
         expect(snapshot_file_exists?('@bar', 'baseline.png')).to eq(true)
       end
@@ -209,7 +209,7 @@ describe 'diffux_ci' do
     EOS
 
     it 'generates a baseline, but no diff' do
-      run_diffux_ci
+      run_diffux
       expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
       expect(snapshot_file_exists?('@large', 'diff.png')).to eq(false)
       expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(false)
@@ -218,11 +218,11 @@ describe 'diffux_ci' do
     describe 'with a previous run' do
       context 'and no diff' do
         before do
-          run_diffux_ci
+          run_diffux
         end
 
         it 'keeps the baseline, and creates no diff' do
-          run_diffux_ci
+          run_diffux
           expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
           expect(snapshot_file_exists?('@large', 'diff.png')).to eq(false)
           expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(false)
@@ -232,7 +232,7 @@ describe 'diffux_ci' do
       context 'and there is a diff' do
         context 'and the baseline has height' do
           before do
-            run_diffux_ci
+            run_diffux
 
             File.open(File.join(@tmp_dir, 'examples.js'), 'w') do |f|
               f.write(<<-EOS)
@@ -249,7 +249,7 @@ describe 'diffux_ci' do
           end
 
           it 'keeps the baseline, and generates a diff' do
-            run_diffux_ci
+            run_diffux
             expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
             expect(snapshot_file_exists?('@large', 'diff.png')).to eq(true)
             expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(true)
@@ -267,11 +267,11 @@ describe 'diffux_ci' do
     EOS
 
     it 'exits with a non-zero exit code' do
-      expect(run_diffux_ci[:exit_status]).to eq(1)
+      expect(run_diffux[:exit_status]).to eq(1)
     end
 
     it 'logs the error' do
-      expect(run_diffux_ci[:std_err]).to include('Error while rendering "foo"')
+      expect(run_diffux[:std_err]).to include('Error while rendering "foo"')
     end
   end
 
@@ -293,11 +293,11 @@ describe 'diffux_ci' do
     EOS
 
     it 'exits with a non-zero exit code' do
-      expect(run_diffux_ci[:exit_status]).to eq(1)
+      expect(run_diffux[:exit_status]).to eq(1)
     end
 
     it 'logs the error' do
-      expect(run_diffux_ci[:std_err]).to include('Error while rendering "foo"')
+      expect(run_diffux[:std_err]).to include('Error while rendering "foo"')
     end
   end
 end

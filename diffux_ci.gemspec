@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.description   = 'Diffux-CI, a perceptual diff tool for JS components'
   s.authors       = ['Henric Trotzig', 'Joe Lencioni']
   s.email         = ['henric.trotzig@gmail.com', 'joe.lencioni@gmail.com']
-  s.executables   = ['diffux_ci']
+  s.executables   = ['diffux']
   s.homepage      = 'http://rubygems.org/gems/diffux_ci'
   s.license       = 'MIT'
   s.require_paths = ['lib']
