@@ -373,6 +373,13 @@ describe 'diffux_ci' do
         return elem;
       }, #{example_config});
 
+      diffux.fdefine('fiz', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Fiz';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+
       diffux.fdefine('bar', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Bar';
@@ -388,10 +395,13 @@ describe 'diffux_ci' do
       }, #{example_config});
     EOS
 
-    it 'generates baselines for the fdefined example' do
+    it 'generates baselines for the fdefined examples' do
       run_diffux
+
       expect(snapshot_file_exists?('foo', '@large', 'baseline.png'))
         .to eq(false)
+      expect(snapshot_file_exists?('fiz', '@large', 'baseline.png'))
+        .to eq(true)
       expect(snapshot_file_exists?('bar', '@large', 'baseline.png'))
         .to eq(true)
       expect(snapshot_file_exists?('baz', '@large', 'baseline.png'))

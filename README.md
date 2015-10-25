@@ -41,8 +41,8 @@ in your project.
 
 During development, you might want to zoom in/focus on a single example. In
 those situations, you can use the `diffux.fdefine` function instead of
-`diffux.define`. Using `fdefine` will cause `diffux` to only run for that
-example.
+`diffux.define`. Using `fdefine` will cause `diffux` to only run for the
+examples that are using `fdefine` and skip all examples using `define`.
 
 ### Setting viewport sizes
 
