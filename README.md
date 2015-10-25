@@ -94,6 +94,20 @@ diffux.define('async component', function(done) {
 });
 ```
 
+### Cleaning up the DOM
+
+Diffux-CI will clean up the DOM in between rendered examples. If you need more
+control over the clean-up process you can override `diffux.cleanOutElement`
+with your own implementation. This is useful if you need to clean up event
+listeners for instance, or if you use
+[React](https://facebook.github.io/react/) and need to unmount components.
+
+```javascript
+diffux.cleanOutElement = function(element) {
+  React.unmountComponentAtNode(element);
+};
+```
+
 ## Installation
 
 Diffux-CI comes bundled as a gem. To install it, run `gem install diffux_ci`.
