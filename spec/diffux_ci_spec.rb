@@ -305,6 +305,38 @@ describe 'diffux_ci' do
     end
   end
 
+  describe 'when multiple examples are defined' do
+    let(:examples_js) { <<-EOS }
+      diffux.define('foo', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Foo';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+
+      diffux.define('bar', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Bar';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+
+      diffux.define('baz', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Baz';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+    EOS
+
+    it 'generates baselines for each example' do
+      run_diffux
+      expect(snapshot_file_exists?('foo', '@large', 'baseline.png')).to eq(true)
+      expect(snapshot_file_exists?('bar', '@large', 'baseline.png')).to eq(true)
+      expect(snapshot_file_exists?('baz', '@large', 'baseline.png')).to eq(true)
+    end
+  end
+
   describe 'when there are two examples with the same description' do
     let(:examples_js) { <<-EOS }
       diffux.define('#{description}', function() {
