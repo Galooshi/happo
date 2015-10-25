@@ -52,22 +52,40 @@ begin
 
   all_examples = driver.execute_script('return window.diffux.getAllExamples()')
 
+  # To avoid the overhead of resizing the window all the time, we are going to
+  # render all examples for each given viewport size all in one go.
+  examples_by_viewport = {}
+
   all_examples.each do |example|
-    description = example['description']
-    puts description
-
     viewports = resolve_viewports(example)
-    viewports.each do |viewport|
-      if viewport == viewports.last
-        print '└'
-      else
-        print '├'
-      end
-      print "─ #{viewport['name']} "
-      print "(#{viewport['width']}x#{viewport['height']}) "
 
-      # Resize window to the right size before rendering
-      driver.manage.window.resize_to(viewport['width'], viewport['height'])
+    viewports.each do |viewport|
+      examples_by_viewport[viewport['name']] ||= {}
+      examples_by_viewport[viewport['name']][:viewport] ||= viewport
+      examples_by_viewport[viewport['name']][:examples] ||= []
+
+      examples_by_viewport[viewport['name']][:examples] << example
+    end
+  end
+
+  examples_by_viewport.each do |_, example_by_viewport|
+    viewport = example_by_viewport[:viewport]
+    examples = example_by_viewport[:examples]
+
+    puts "#{viewport['name']} (#{viewport['width']}x#{viewport['height']})"
+
+    # Resize window to the right size before rendering
+    driver.manage.window.resize_to(viewport['width'], viewport['height'])
+
+    examples.each do |example|
+      if example == examples.last
+        print '└─ '
+      else
+        print '├─ '
+      end
+      description = example['description']
+      print " #{description} "
+
       print '.'
 
       # Render the example
