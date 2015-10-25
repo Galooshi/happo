@@ -6,6 +6,19 @@ require 'diffux_ci_uploader'
 require 'diffux_ci_version'
 require 'fileutils'
 
+help_text = <<-EOS
+Commands:
+  run (default)
+  debug
+  review
+  clean
+  approve
+  reject
+  upload_diffs
+  --help
+  --version
+  EOS
+
 action = ARGV[0] || 'run'
 case action
 when 'run'
@@ -44,18 +57,7 @@ when '--version'
   puts "diffux_ci version #{DiffuxCI::VERSION}"
 
 when '--help'
-  puts <<-EOS
-Commands:
-  run (default)
-  debug
-  review
-  clean
-  approve
-  reject
-  upload_diffs
-  --help
-  --version
-  EOS
+  puts help_text
 else
-  abort "Unknown action \"#{action}\""
+  abort "Unknown action \"#{action}\"\n\n#{help_text}"
 end
