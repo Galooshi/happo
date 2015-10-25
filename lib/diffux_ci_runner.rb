@@ -50,27 +50,12 @@ begin
     fail "JavaScript errors found during initialization: \n#{errors.inspect}"
   end
 
-  # We use the description of the example to store the snapshot. If a
-  # description is duplicated with different code, it can cause seemingly random
-  # and confusing differences. To avoid this issue, we want to keep track of the
-  # descriptions that we've seen and fail if we come across the same description
-  # twice.
-  seen_descriptions = {}
+  all_examples = driver.execute_script('return window.diffux.getAllExamples()')
 
-  while current = driver.execute_script('return window.diffux.next()') do
-    description = current['description']
+  all_examples.each do |example|
+    description = example['description']
 
-    resolve_viewports(current).each do |viewport|
-      # Make sure we don't have a duplicate description
-      seen_descriptions[description] ||= {}
-      if seen_descriptions[description][viewport['name']]
-        fail <<-EOS
-          Error while rendering "#{description}" @#{viewport['name']}:
-            Duplicate description detected
-        EOS
-      else
-        seen_descriptions[description][viewport['name']] = true
-      end
+    resolve_viewports(example).each do |viewport|
 
       # Resize window to the right size before rendering
       driver.manage.window.resize_to(viewport['width'], viewport['height'])
@@ -84,15 +69,15 @@ begin
       # through to Rubyland), or until WebDriver's `script_timeout` is reached,
       # before continuing. Since we don't define the signature of this function,
       # we can't name the argument so we access it using JavaScript's magic
-      # arguments object and pass it down to `renderCurrent()` which calls it
+      # arguments object and pass it down to `renderExample()` which calls it
       # when it is done--either synchronously if our example doesn't take an
       # argument, or asynchronously via the Promise and `done` callback if it
       # does.
       script = <<-EOS
         var doneFunc = arguments[arguments.length - 1];
-        window.diffux.renderCurrent(doneFunc);
+        window.diffux.renderExample(arguments[0], doneFunc);
       EOS
-      rendered = driver.execute_async_script(script)
+      rendered = driver.execute_async_script(script, description)
 
       if rendered['error']
         fail <<-EOS

@@ -297,7 +297,7 @@ describe 'diffux_ci' do
     end
 
     it 'logs the error' do
-      expect(run_diffux[:std_err]).to include('Error while rendering "foo"')
+      expect(run_diffux[:std_err]).to include('Error while defining \"foo\"')
     end
   end
 end
