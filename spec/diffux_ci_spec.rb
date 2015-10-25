@@ -363,4 +363,39 @@ describe 'diffux_ci' do
         .to include("Error while defining \\\"#{description}\\\"")
     end
   end
+
+  describe 'when using fdefine' do
+    let(:examples_js) { <<-EOS }
+      diffux.define('foo', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Foo';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+
+      diffux.fdefine('bar', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Bar';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+
+      diffux.define('baz', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Baz';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+    EOS
+
+    it 'generates baselines for the fdefined example' do
+      run_diffux
+      expect(snapshot_file_exists?('foo', '@large', 'baseline.png'))
+        .to eq(false)
+      expect(snapshot_file_exists?('bar', '@large', 'baseline.png'))
+        .to eq(true)
+      expect(snapshot_file_exists?('baz', '@large', 'baseline.png'))
+        .to eq(false)
+    end
+  end
 end
