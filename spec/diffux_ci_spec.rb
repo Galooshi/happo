@@ -10,14 +10,15 @@ describe 'diffux_ci' do
   end
 
   let(:example_config) { '{}' }
+  let(:description) { 'foo' }
 
   let(:examples_js) { <<-EOS }
-    diffux.define('foo', function() {
+    diffux.define('#{description}', function() {
       var elem = document.createElement('div');
       elem.innerHTML = 'Foo';
       document.body.appendChild(elem);
       return elem;
-    }, #{example_config})
+    }, #{example_config});
   EOS
 
   before do
@@ -49,9 +50,9 @@ describe 'diffux_ci' do
     end
   end
 
-  def snapshot_file_exists?(size, file_name)
+  def snapshot_file_exists?(description, size, file_name)
     File.exist?(
-      File.join(@tmp_dir, 'snapshots', 'foo', size, file_name)
+      File.join(@tmp_dir, 'snapshots', description, size, file_name)
     )
   end
 
@@ -62,9 +63,12 @@ describe 'diffux_ci' do
 
     it 'generates a baseline, but no diff' do
       run_diffux
-      expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
-      expect(snapshot_file_exists?('@large', 'diff.png')).to eq(false)
-      expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(false)
+      expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+        .to eq(true)
+      expect(snapshot_file_exists?(description, '@large', 'diff.png'))
+        .to eq(false)
+      expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+        .to eq(false)
     end
   end
 
@@ -80,9 +84,12 @@ describe 'diffux_ci' do
 
       it 'keeps the baseline, and creates no diff' do
         run_diffux
-        expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
-        expect(snapshot_file_exists?('@large', 'diff.png')).to eq(false)
-        expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(false)
+        expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+          .to eq(true)
+        expect(snapshot_file_exists?(description, '@large', 'diff.png'))
+          .to eq(false)
+        expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+          .to eq(false)
       end
     end
 
@@ -97,32 +104,35 @@ describe 'diffux_ci' do
 
           File.open(File.join(@tmp_dir, 'examples.js'), 'w') do |f|
             f.write(<<-EOS)
-              diffux.define('foo', function() {
+              diffux.define('#{description}', function() {
                 var elem = document.createElement('div');
                 elem.innerHTML = 'Football';
                 document.body.appendChild(elem);
                 return elem;
-              }, #{example_config})
+              }, #{example_config});
             EOS
           end
         end
 
         it 'keeps the baseline, and generates a diff' do
           run_diffux
-          expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
-          expect(snapshot_file_exists?('@large', 'diff.png')).to eq(true)
-          expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(true)
+          expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+            .to eq(true)
+          expect(snapshot_file_exists?(description, '@large', 'diff.png'))
+            .to eq(true)
+          expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+            .to eq(true)
         end
       end
     end
 
     context 'and the baseline does not have height' do
       let(:examples_js) { <<-EOS }
-        diffux.define('foo', function() {
+        diffux.define('#{description}', function() {
           var elem = document.createElement('div');
           document.body.appendChild(elem);
           return elem;
-        }, #{example_config})
+        }, #{example_config});
       EOS
 
       before do
@@ -130,21 +140,24 @@ describe 'diffux_ci' do
 
         File.open(File.join(@tmp_dir, 'examples.js'), 'w') do |f|
           f.write(<<-EOS)
-            diffux.define('foo', function() {
+            diffux.define('#{description}', function() {
               var elem = document.createElement('div');
               elem.innerHTML = 'Foo';
               document.body.appendChild(elem);
               return elem;
-            }, #{example_config})
+            }, #{example_config});
           EOS
         end
       end
 
       it 'keeps the baseline, and generates a diff' do
         run_diffux
-        expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
-        expect(snapshot_file_exists?('@large', 'diff.png')).to eq(true)
-        expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(true)
+        expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+          .to eq(true)
+        expect(snapshot_file_exists?(description, '@large', 'diff.png'))
+          .to eq(true)
+        expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+          .to eq(true)
       end
     end
   end
@@ -154,9 +167,12 @@ describe 'diffux_ci' do
 
     it 'generates the right baselines' do
       run_diffux
-      expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
-      expect(snapshot_file_exists?('@small', 'baseline.png')).to eq(true)
-      expect(snapshot_file_exists?('@medium', 'baseline.png')).to eq(false)
+      expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+        .to eq(true)
+      expect(snapshot_file_exists?(description, '@small', 'baseline.png'))
+        .to eq(true)
+      expect(snapshot_file_exists?(description, '@medium', 'baseline.png'))
+        .to eq(false)
     end
   end
 
@@ -180,8 +196,10 @@ describe 'diffux_ci' do
     context 'and the example has no `viewport` config' do
       it 'uses the first viewport in the config' do
         run_diffux
-        expect(snapshot_file_exists?('@foo', 'baseline.png')).to eq(true)
-        expect(snapshot_file_exists?('@bar', 'baseline.png')).to eq(false)
+        expect(snapshot_file_exists?(description, '@foo', 'baseline.png'))
+          .to eq(true)
+        expect(snapshot_file_exists?(description, '@bar', 'baseline.png'))
+          .to eq(false)
       end
     end
 
@@ -190,29 +208,34 @@ describe 'diffux_ci' do
 
       it 'uses the viewport to generate a baseline' do
         run_diffux
-        expect(snapshot_file_exists?('@foo', 'baseline.png')).to eq(false)
-        expect(snapshot_file_exists?('@bar', 'baseline.png')).to eq(true)
+        expect(snapshot_file_exists?(description, '@foo', 'baseline.png'))
+          .to eq(false)
+        expect(snapshot_file_exists?(description, '@bar', 'baseline.png'))
+          .to eq(true)
       end
     end
   end
 
   describe 'with doneCallback async argument' do
     let(:examples_js) { <<-EOS }
-      diffux.define('foo', function(done) {
+      diffux.define('#{description}', function(done) {
         setTimeout(function() {
           var elem = document.createElement('div');
           elem.innerHTML = 'Foo';
           document.body.appendChild(elem);
           done(elem);
         });
-      }, #{example_config})
+      }, #{example_config});
     EOS
 
     it 'generates a baseline, but no diff' do
       run_diffux
-      expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
-      expect(snapshot_file_exists?('@large', 'diff.png')).to eq(false)
-      expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(false)
+      expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+        .to eq(true)
+      expect(snapshot_file_exists?(description, '@large', 'diff.png'))
+        .to eq(false)
+      expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+        .to eq(false)
     end
 
     describe 'with a previous run' do
@@ -223,9 +246,12 @@ describe 'diffux_ci' do
 
         it 'keeps the baseline, and creates no diff' do
           run_diffux
-          expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
-          expect(snapshot_file_exists?('@large', 'diff.png')).to eq(false)
-          expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(false)
+          expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+            .to eq(true)
+          expect(snapshot_file_exists?(description, '@large', 'diff.png'))
+            .to eq(false)
+          expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+            .to eq(false)
         end
       end
 
@@ -236,23 +262,26 @@ describe 'diffux_ci' do
 
             File.open(File.join(@tmp_dir, 'examples.js'), 'w') do |f|
               f.write(<<-EOS)
-                diffux.define('foo', function(done) {
+                diffux.define('#{description}', function(done) {
                   setTimeout(function() {
                     var elem = document.createElement('div');
                     elem.innerHTML = 'Football';
                     document.body.appendChild(elem);
                     done(elem);
                   });
-                }, #{example_config})
+                }, #{example_config});
               EOS
             end
           end
 
           it 'keeps the baseline, and generates a diff' do
             run_diffux
-            expect(snapshot_file_exists?('@large', 'baseline.png')).to eq(true)
-            expect(snapshot_file_exists?('@large', 'diff.png')).to eq(true)
-            expect(snapshot_file_exists?('@large', 'candidate.png')).to eq(true)
+            expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+              .to eq(true)
+            expect(snapshot_file_exists?(description, '@large', 'diff.png'))
+              .to eq(true)
+            expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+              .to eq(true)
           end
         end
       end
@@ -261,7 +290,7 @@ describe 'diffux_ci' do
 
   describe 'when an example fails' do
     let(:examples_js) { <<-EOS }
-      diffux.define('foo', function() {
+      diffux.define('#{description}', function() {
         return undefined;
       });
     EOS
@@ -271,25 +300,58 @@ describe 'diffux_ci' do
     end
 
     it 'logs the error' do
-      expect(run_diffux[:std_err]).to include('Error while rendering "foo"')
+      expect(run_diffux[:std_err])
+        .to include("Error while rendering \"#{description}\"")
     end
   end
 
-  describe 'when there are two examples with the same description' do
+  describe 'when multiple examples are defined' do
     let(:examples_js) { <<-EOS }
       diffux.define('foo', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Foo';
         document.body.appendChild(elem);
         return elem;
-      }, #{example_config})
+      }, #{example_config});
 
-      diffux.define('foo', function() {
+      diffux.define('bar', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Bar';
         document.body.appendChild(elem);
         return elem;
-      }, #{example_config})
+      }, #{example_config});
+
+      diffux.define('baz', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Baz';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+    EOS
+
+    it 'generates baselines for each example' do
+      run_diffux
+      expect(snapshot_file_exists?('foo', '@large', 'baseline.png')).to eq(true)
+      expect(snapshot_file_exists?('bar', '@large', 'baseline.png')).to eq(true)
+      expect(snapshot_file_exists?('baz', '@large', 'baseline.png')).to eq(true)
+    end
+  end
+
+  describe 'when there are two examples with the same description' do
+    let(:examples_js) { <<-EOS }
+      diffux.define('#{description}', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Foo';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+
+      diffux.define('#{description}', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Bar';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
     EOS
 
     it 'exits with a non-zero exit code' do
@@ -297,7 +359,53 @@ describe 'diffux_ci' do
     end
 
     it 'logs the error' do
-      expect(run_diffux[:std_err]).to include('Error while defining \"foo\"')
+      expect(run_diffux[:std_err])
+        .to include("Error while defining \\\"#{description}\\\"")
+    end
+  end
+
+  describe 'when using fdefine' do
+    let(:examples_js) { <<-EOS }
+      diffux.define('foo', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Foo';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+
+      diffux.fdefine('fiz', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Fiz';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+
+      diffux.fdefine('bar', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Bar';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+
+      diffux.define('baz', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Baz';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+    EOS
+
+    it 'generates baselines for the fdefined examples' do
+      run_diffux
+
+      expect(snapshot_file_exists?('foo', '@large', 'baseline.png'))
+        .to eq(false)
+      expect(snapshot_file_exists?('fiz', '@large', 'baseline.png'))
+        .to eq(true)
+      expect(snapshot_file_exists?('bar', '@large', 'baseline.png'))
+        .to eq(true)
+      expect(snapshot_file_exists?('baz', '@large', 'baseline.png'))
+        .to eq(false)
     end
   end
 end
