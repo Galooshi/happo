@@ -54,11 +54,21 @@ begin
 
   all_examples.each do |example|
     description = example['description']
+    puts description
 
-    resolve_viewports(example).each do |viewport|
+    viewports = resolve_viewports(example)
+    viewports.each do |viewport|
+      if viewport == viewports.last
+        print '└'
+      else
+        print '├'
+      end
+      print "─ #{viewport['name']} "
+      print "(#{viewport['width']}x#{viewport['height']}) "
 
       # Resize window to the right size before rendering
       driver.manage.window.resize_to(viewport['width'], viewport['height'])
+      print '.'
 
       # Render the example
 
@@ -78,6 +88,7 @@ begin
         window.diffux.renderExample(arguments[0], doneFunc);
       EOS
       rendered = driver.execute_async_script(script, description)
+      print '.'
 
       if rendered['error']
         fail <<-EOS
@@ -90,6 +101,7 @@ begin
 
       # Crop the screenshot to the size of the rendered element
       screenshot = ChunkyPNG::Image.from_blob(driver.screenshot_as(:png))
+      print '.'
 
       # In our JavScript we are rounding up, which can sometimes give us a
       # dimensions that are larger than the screenshot dimensions. We need to
@@ -107,8 +119,7 @@ begin
                        rendered['top'],
                        crop_width,
                        crop_height)
-
-      print "Checking \"#{description}\" at [#{viewport['name']}]... "
+      print '.'
 
       # Run the diff if needed
       baseline_path = DiffuxCIUtils.path_to(
@@ -121,6 +132,7 @@ begin
           ChunkyPNG::Image.from_file(baseline_path),
           screenshot
         ).compare!
+        print '.'
 
         if comparison[:diff_image]
           # There was a visual difference between the new snapshot and the
@@ -129,16 +141,18 @@ begin
           diff_path = DiffuxCIUtils.path_to(
             description, viewport['name'], 'diff.png')
           comparison[:diff_image].save(diff_path, :fast_rgba)
+          print '.'
 
           candidate_path = DiffuxCIUtils.path_to(
             description, viewport['name'], 'candidate.png')
           screenshot.save(candidate_path, :fast_rgba)
+          print '.'
 
-          puts "#{comparison[:diff_in_percent].round(1)}% (#{candidate_path})"
+          puts " #{comparison[:diff_in_percent].round(1)}% (#{candidate_path})"
         else
           # No visual difference was found, so we don't need to do any more
           # work.
-          puts 'No diff.'
+          puts ' No diff.'
         end
       else
         # There was no baseline image yet, so we want to start by saving a new
@@ -149,7 +163,8 @@ begin
           FileUtils.mkdir_p(dirname)
         end
         screenshot.save(baseline_path, :fast_rgba)
-        puts "First snapshot created (#{baseline_path})"
+        print '.'
+        puts " First snapshot created (#{baseline_path})"
       end
     end
   end
