@@ -133,11 +133,13 @@ begin
         screenshot.height - rendered['top']
       ].min
 
-      screenshot.crop!(rendered['left'],
-                       rendered['top'],
-                       crop_width,
-                       crop_height)
-      print '.'
+      if crop_width < screenshot.width || crop_height < screenshot.height
+        screenshot.crop!(rendered['left'],
+                         rendered['top'],
+                         crop_width,
+                         crop_height)
+        print '.'
+      end
 
       # Run the diff if needed
       baseline_path = DiffuxCIUtils.path_to(
