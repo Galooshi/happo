@@ -121,7 +121,7 @@ begin
       screenshot = ChunkyPNG::Image.from_blob(driver.screenshot_as(:png))
       print '.'
 
-      # In our JavScript we are rounding up, which can sometimes give us a
+      # In our JavaScript we are rounding up, which can sometimes give us a
       # dimensions that are larger than the screenshot dimensions. We need to
       # guard against that here.
       crop_width = [
