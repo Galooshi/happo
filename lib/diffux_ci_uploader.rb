@@ -3,11 +3,10 @@ require 's3'
 require 'securerandom'
 
 class DiffuxCIUploader
-  BUCKET_NAME = 'diffux_ci-diffs'
-
   def initialize
     @s3_access_key_id = DiffuxCIUtils.config['s3_access_key_id']
     @s3_secret_access_key = DiffuxCIUtils.config['s3_secret_access_key']
+    @s3_bucket_name = DiffuxCIUtils.config['s3_bucket_name']
   end
 
   def upload_diffs
@@ -42,10 +41,10 @@ class DiffuxCIUploader
   def find_or_build_bucket
     service = S3::Service.new(access_key_id: @s3_access_key_id,
                               secret_access_key: @s3_secret_access_key)
-    bucket = service.buckets.find(BUCKET_NAME)
+    bucket = service.buckets.find(@s3_bucket_name)
 
     if bucket.nil?
-      bucket = service.buckets.build(BUCKET_NAME)
+      bucket = service.buckets.build(@s3_bucket_name)
       bucket.save(location: :us)
     end
 
