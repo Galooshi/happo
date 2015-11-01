@@ -148,7 +148,7 @@ begin
       baseline_hash_path = DiffuxCIUtils.path_to(
         description, viewport['name'], 'baseline.hash')
 
-      screenshot_hash = image_hash(screenshot.to_s)
+      screenshot_hash = XXhash.xxh32(screenshot.pixels.join(' '))
 
       if File.exist? baseline_hash_path
         # A baseline image exists, so we want to compare the new snapshot
