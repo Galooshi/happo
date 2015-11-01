@@ -135,6 +135,7 @@ viewports:
     height: 444
 s3_access_key_id: <your acccess key id>
 s3_secret_access_key: <your secret acccess key>
+s3_bucket_name: <a globally unique bucket name>
 ```
 
 ## Command line tools
@@ -161,8 +162,8 @@ and you can do use your developer tools to debug.
 ### `diffux upload_diffs`
 
 Uploads all current diff images to an Amazon S3 account and reports back URLs
-to access those diff images. Requires the `s3_access_key_id` and
-`s3_secret_access_key` configuration options.
+to access those diff images. Requires the `s3_access_key_id`,
+`s3_secret_access_key`, and `s3_bucket_name` configuration options.
 
 ### `diffux clean`
 
