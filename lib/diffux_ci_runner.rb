@@ -8,6 +8,7 @@ require 'diffux_core/snapshot_comparison_image/after'
 require 'oily_png'
 require 'diffux_ci_utils'
 require 'fileutils'
+require 'xxhash'
 
 def resolve_viewports(example)
   configured_viewports = DiffuxCIUtils.config['viewports']
@@ -144,35 +145,48 @@ begin
       # Run the diff if needed
       baseline_path = DiffuxCIUtils.path_to(
         description, viewport['name'], 'baseline.png')
+      baseline_hash_path = DiffuxCIUtils.path_to(
+        description, viewport['name'], 'baseline.hash')
 
-      if File.exist? baseline_path
+      screenshot_hash = image_hash(screenshot.to_s)
+
+      if File.exist? baseline_hash_path
         # A baseline image exists, so we want to compare the new snapshot
         # against the baseline.
-        comparison = Diffux::SnapshotComparer.new(
-          ChunkyPNG::Image.from_file(baseline_path),
-          screenshot
-        ).compare!
-        print '.'
 
-        if comparison[:diff_image]
-          # There was a visual difference between the new snapshot and the
-          # baseline, so we want to write the diff image and the new snapshot
-          # image to disk. This will allow it to be reviewed by someone.
-          diff_path = DiffuxCIUtils.path_to(
-            description, viewport['name'], 'diff.png')
-          comparison[:diff_image].save(diff_path, :fast_rgba)
-          print '.'
+        # compare the candidate hash against the baseline hash
+        baseline_hash = File.read(baseline_hash_path).to_i
 
-          candidate_path = DiffuxCIUtils.path_to(
-            description, viewport['name'], 'candidate.png')
-          screenshot.save(candidate_path, :fast_rgba)
-          print '.'
-
-          puts " #{comparison[:diff_in_percent].round(1)}% (#{candidate_path})"
-        else
-          # No visual difference was found, so we don't need to do any more
-          # work.
+        if baseline_hash == screenshot_hash
           puts ' No diff.'
+        else
+          # if they are not identical, then we need an actual comparison
+          comparison = Diffux::SnapshotComparer.new(
+            ChunkyPNG::Image.from_file(baseline_path),
+            screenshot
+          ).compare!
+          print '.'
+
+          if comparison[:diff_image]
+            # There was a visual difference between the new snapshot and the
+            # baseline, so we want to write the diff image and the new snapshot
+            # image to disk. This will allow it to be reviewed by someone.
+            diff_path = DiffuxCIUtils.path_to(
+              description, viewport['name'], 'diff.png')
+            comparison[:diff_image].save(diff_path, :fast_rgba)
+            print '.'
+
+            candidate_path = DiffuxCIUtils.path_to(
+              description, viewport['name'], 'candidate.png')
+            screenshot.save(candidate_path, :fast_rgba)
+            print '.'
+
+            puts " #{comparison[:diff_in_percent].round(1)}% (#{candidate_path})"
+          else
+            # No visual difference was found, so we don't need to do any more
+            # work.
+            puts ' No diff.'
+          end
         end
       else
         # There was no baseline image yet, so we want to start by saving a new
@@ -183,6 +197,7 @@ begin
           FileUtils.mkdir_p(dirname)
         end
         screenshot.save(baseline_path, :fast_rgba)
+        File.write(baseline_hash_path, screenshot_hash)
         print '.'
         puts " First snapshot created (#{baseline_path})"
       end
