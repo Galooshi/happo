@@ -9,7 +9,7 @@
     <h2>DIFFS</h2>
     <% @snapshots[:diffs].each do |diff| %>
       <h3>
-        <%= diff[:description] %> @ <%= diff[:viewport] %>
+        <%= h diff[:description] %> @ <%= diff[:viewport] %>
       </h3>
       <p><img src="/resource?file=<%= ERB::Util.url_encode(diff[:file]) %>"></p>
       <form style="display: inline-block"
@@ -29,7 +29,7 @@
     <h2>BASELINES</h2>
     <% @snapshots[:baselines].each do |baseline| %>
       <h3>
-        <%= baseline[:description] %> @ <%= baseline[:viewport] %>
+        <%= h baseline[:description] %> @ <%= baseline[:viewport] %>
       </h3>
       <p><img src="/resource?file=<%= ERB::Util.url_encode(baseline[:file]) %>"></p>
     <% end %>

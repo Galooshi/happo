@@ -1,6 +1,7 @@
 require 'yaml'
 require 'tmpdir'
 require 'open3'
+require 'base64'
 
 describe 'diffux_ci' do
   let(:config) do
@@ -52,7 +53,8 @@ describe 'diffux_ci' do
 
   def snapshot_file_exists?(description, size, file_name)
     File.exist?(
-      File.join(@tmp_dir, 'snapshots', description, size, file_name)
+      File.join(@tmp_dir, 'snapshots',
+                Base64.encode64(description), size, file_name)
     )
   end
 
