@@ -1,6 +1,7 @@
 require 'yaml'
 require 'erb'
 require 'uri'
+require 'base64'
 
 class DiffuxCIUtils
   def self.config
@@ -33,7 +34,7 @@ class DiffuxCIUtils
   end
 
   def self.normalize_description(description)
-    description.gsub(/[^a-zA-Z0-9\-_]/, '_')
+    Base64.encode64(description)
   end
 
   def self.path_to(description, viewport_name, file_name)
@@ -59,7 +60,7 @@ class DiffuxCIUtils
       viewport_dir = File.expand_path('..', file)
       description_dir = File.expand_path('..', viewport_dir)
       {
-        description: File.basename(description_dir),
+        description: Base64.decode64(File.basename(description_dir)),
         viewport: File.basename(viewport_dir).sub('@', ''),
         file: file
       }

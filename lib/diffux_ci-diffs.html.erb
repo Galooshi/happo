@@ -1,3 +1,4 @@
+<% require 'rack' %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -9,7 +10,7 @@
 
     <% diff_images.each do |diff| %>
       <h3>
-        <%= diff[:description] %> @ <%= diff[:viewport] %>
+        <%= Rack::Utils.escape_html(diff[:description]) %> @ <%= diff[:viewport] %>
       </h3>
       <p><img src="<%= diff[:url] %>"></p>
     <% end %>

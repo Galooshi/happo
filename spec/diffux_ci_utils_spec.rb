@@ -1,4 +1,5 @@
 require 'diffux_ci_utils'
+require 'base64'
 
 describe 'DiffuxCIUtils' do
   before do
@@ -47,7 +48,7 @@ describe 'DiffuxCIUtils' do
 
     context 'with special characters' do
       let(:description) { '<MyComponent> something interesting' }
-      it { should eq('_MyComponent__something_interesting') }
+      it { should eq(Base64.encode64(description)) }
     end
   end
 
@@ -56,6 +57,6 @@ describe 'DiffuxCIUtils' do
     let(:description) { '<MyComponent>' }
     let(:viewport_name) { 'large' }
     let(:file_name) { 'diff.png' }
-    it { should eq('./snapshots/_MyComponent_/@large/diff.png') }
+    it { should eq("./snapshots/#{Base64.encode64(description)}/@large/diff.png") }
   end
 end
