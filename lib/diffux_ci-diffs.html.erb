@@ -8,11 +8,22 @@
     <h1>Diffux-CI diffs</h1>
     <p>File generated: <%= Time.now %></p>
 
+    <h2>Diffs</h2>
     <% diff_images.each do |diff| %>
       <h3>
         <%= Rack::Utils.escape_html(diff[:description]) %> @ <%= diff[:viewport] %>
       </h3>
       <p><img src="<%= diff[:url] %>"></p>
+    <% end %>
+
+    <hr>
+
+    <h2>New examples</h2>
+    <% new_images.each do |image| %>
+      <h3>
+        <%= Rack::Utils.escape_html(image[:description]) %> @ <%= image[:viewport] %>
+      </h3>
+      <p><img src="<%= image[:url] %>"></p>
     <% end %>
   </body>
 </html>

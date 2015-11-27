@@ -17,14 +17,30 @@ class DiffuxCIUploader
 
     dir = SecureRandom.uuid
 
-    diff_images = current_snapshots[:diffs].map do |diff|
+    result_summary = YAML.load(File.read(File.join(
+      DiffuxCIUtils.config['snapshots_folder'], 'result_summary.yaml')))
+    diff_images = result_summary[:diff_examples].map do |diff|
       image = bucket.objects.build(
         "#{dir}/#{diff[:description]}_#{diff[:viewport]}.png")
-      image.content = open(diff[:file])
+      image.content = open(DiffuxCIUtils.path_to(diff[:description],
+                                                 diff[:viewport],
+                                                 'diff.png'))
       image.content_type = 'image/png'
       image.save
       diff[:url] = image.url
       diff
+    end
+
+    new_images = result_summary[:new_examples].map do |example|
+      image = bucket.objects.build(
+        "#{dir}/#{example[:description]}_#{example[:viewport]}.png")
+      image.content = open(DiffuxCIUtils.path_to(example[:description],
+                                                 example[:viewport],
+                                                 'baseline.png'))
+      image.content_type = 'image/png'
+      image.save
+      example[:url] = image.url
+      example
     end
 
     html = bucket.objects.build("#{dir}/index.html")
