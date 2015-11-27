@@ -48,7 +48,7 @@ describe 'DiffuxCIUtils' do
 
     context 'with special characters' do
       let(:description) { '<MyComponent> something interesting' }
-      it { should eq(Base64.encode64(description)) }
+      it { should eq(Base64.encode64(description).strip) }
     end
   end
 
@@ -57,6 +57,6 @@ describe 'DiffuxCIUtils' do
     let(:description) { '<MyComponent>' }
     let(:viewport_name) { 'large' }
     let(:file_name) { 'diff.png' }
-    it { should eq("./snapshots/#{Base64.encode64(description)}/@large/diff.png") }
+    it { should eq("./snapshots/#{Base64.encode64(description).strip}/@large/diff.png") }
   end
 end

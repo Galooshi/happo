@@ -34,7 +34,7 @@ class DiffuxCIUtils
   end
 
   def self.normalize_description(description)
-    Base64.encode64(description)
+    Base64.encode64(description).strip
   end
 
   def self.path_to(description, viewport_name, file_name)
