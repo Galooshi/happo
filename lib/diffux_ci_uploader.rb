@@ -10,15 +10,15 @@ class DiffuxCIUploader
   end
 
   def upload_diffs
-    current_snapshots = DiffuxCIUtils.current_snapshots
-    return [] if current_snapshots[:diffs].empty?
-
-    bucket = find_or_build_bucket
-
-    dir = SecureRandom.uuid
-
     result_summary = YAML.load(File.read(File.join(
       DiffuxCIUtils.config['snapshots_folder'], 'result_summary.yaml')))
+
+    return [] if result_summary[:diff_examples].empty? &&
+                 result_summary[:new_examples].empty?
+
+    bucket = find_or_build_bucket
+    dir = SecureRandom.uuid
+
     diff_images = result_summary[:diff_examples].map do |diff|
       image = bucket.objects.build(
         "#{dir}/#{diff[:description]}_#{diff[:viewport]}.png")
