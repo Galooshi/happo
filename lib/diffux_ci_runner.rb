@@ -8,6 +8,7 @@ require 'diffux_core/snapshot_comparison_image/after'
 require 'oily_png'
 require 'diffux_ci_utils'
 require 'fileutils'
+require 'yaml'
 
 def resolve_viewports(example)
   configured_viewports = DiffuxCIUtils.config['viewports']
@@ -49,6 +50,13 @@ begin
   unless errors.empty?
     fail "JavaScript errors found during initialization: \n#{errors.inspect}"
   end
+
+  # Initialize a hash to store a summary of the results from the run
+  result_summary = {
+    new_examples: [],
+    diff_examples: [],
+    okay_examples: []
+  }
 
   all_examples = driver.execute_script('return window.diffux.getAllExamples()')
 
@@ -169,10 +177,18 @@ begin
           print '.'
 
           puts " #{comparison[:diff_in_percent].round(1)}% (#{candidate_path})"
+          result_summary[:diff_examples] << {
+            description: description,
+            viewport: viewport['name']
+          }
         else
           # No visual difference was found, so we don't need to do any more
           # work.
           puts ' No diff.'
+          result_summary[:okay_examples] << {
+            description: description,
+            viewport: viewport['name']
+          }
         end
       else
         # There was no baseline image yet, so we want to start by saving a new
@@ -185,8 +201,18 @@ begin
         screenshot.save(baseline_path, :fast_rgba)
         print '.'
         puts " First snapshot created (#{baseline_path})"
+        result_summary[:new_examples] << {
+          description: description,
+          viewport: viewport['name']
+        }
       end
     end
+  end
+
+  result_summary_file = File.join(DiffuxCIUtils.config['snapshots_folder'],
+                                  'result_summary.yaml')
+  File.open(result_summary_file, 'w') do |file|
+    file.write result_summary.to_yaml
   end
 ensure
   driver.quit

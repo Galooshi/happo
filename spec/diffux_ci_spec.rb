@@ -54,7 +54,7 @@ describe 'diffux_ci' do
   def snapshot_file_exists?(description, size, file_name)
     File.exist?(
       File.join(@tmp_dir, 'snapshots',
-                Base64.encode64(description), size, file_name)
+                Base64.encode64(description).strip, size, file_name)
     )
   end
 
@@ -63,7 +63,7 @@ describe 'diffux_ci' do
       expect(run_diffux[:exit_status]).to eq(0)
     end
 
-    it 'generates a baseline, but no diff' do
+    it 'generates a new baseline, but no diff' do
       run_diffux
       expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
         .to eq(true)
@@ -71,6 +71,19 @@ describe 'diffux_ci' do
         .to eq(false)
       expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
         .to eq(false)
+      expect(
+        YAML.load(File.read(File.join(
+          @tmp_dir, 'snapshots', 'result_summary.yaml')))
+      ).to eq(
+        new_examples: [
+          {
+            description: description,
+            viewport: 'large'
+          }
+        ],
+        diff_examples: [],
+        okay_examples: []
+      )
     end
   end
 
@@ -92,6 +105,19 @@ describe 'diffux_ci' do
           .to eq(false)
         expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
           .to eq(false)
+        expect(
+          YAML.load(File.read(File.join(
+            @tmp_dir, 'snapshots', 'result_summary.yaml')))
+        ).to eq(
+          okay_examples: [
+            {
+              description: description,
+              viewport: 'large'
+            }
+          ],
+          new_examples: [],
+          diff_examples: []
+        )
       end
     end
 
@@ -124,6 +150,19 @@ describe 'diffux_ci' do
             .to eq(true)
           expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
             .to eq(true)
+          expect(
+            YAML.load(File.read(File.join(
+              @tmp_dir, 'snapshots', 'result_summary.yaml')))
+          ).to eq(
+            diff_examples: [
+              {
+                description: description,
+                viewport: 'large'
+              }
+            ],
+            new_examples: [],
+            okay_examples: []
+          )
         end
       end
     end
