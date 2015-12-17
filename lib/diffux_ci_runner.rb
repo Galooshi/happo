@@ -179,7 +179,7 @@ begin
           log.log '.', false
 
           percent = comparison[:diff_in_percent].round(1)
-          log.log " #{percent}% (#{candidate_path})"
+          log.log log.cyan(" #{percent}% (#{candidate_path})")
           result_summary[:diff_examples] << {
             description: description,
             viewport: viewport['name']
