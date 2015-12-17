@@ -1,4 +1,4 @@
-require './lib/diffux_ci_version'
+require './lib/diffux_ci/version'
 
 Gem::Specification.new do |s|
   s.name          = 'diffux_ci'

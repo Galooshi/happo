@@ -1,13 +1,13 @@
-require 'diffux_ci_utils'
+require 'diffux_ci/utils'
 require 'base64'
 
-describe 'DiffuxCIUtils' do
+describe 'DiffuxCI::Utils' do
   before do
-    allow(DiffuxCIUtils).to receive(:config_from_file).and_return({})
+    allow(DiffuxCI::Utils).to receive(:config_from_file).and_return({})
   end
 
   describe 'construct_url' do
-    subject { DiffuxCIUtils.construct_url(absolute_path, params) }
+    subject { DiffuxCI::Utils.construct_url(absolute_path, params) }
 
     context 'without absolute_path or params' do
       let(:absolute_path) { '' }
@@ -44,7 +44,7 @@ describe 'DiffuxCIUtils' do
   end
 
   describe 'normalize_description' do
-    subject { DiffuxCIUtils.normalize_description(description) }
+    subject { DiffuxCI::Utils.normalize_description(description) }
 
     context 'with special characters' do
       let(:description) { '<MyComponent> something interesting' }
@@ -53,7 +53,7 @@ describe 'DiffuxCIUtils' do
   end
 
   describe 'path_to' do
-    subject { DiffuxCIUtils.path_to(description, viewport_name, file_name) }
+    subject { DiffuxCI::Utils.path_to(description, viewport_name, file_name) }
     let(:description) { '<MyComponent>' }
     let(:viewport_name) { 'large' }
     let(:file_name) { 'diff.png' }
