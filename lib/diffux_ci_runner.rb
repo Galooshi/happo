@@ -7,6 +7,7 @@ require 'diffux_core/snapshot_comparison_image/overlayed'
 require 'diffux_core/snapshot_comparison_image/after'
 require 'oily_png'
 require 'diffux_ci_utils'
+require 'diffux_ci_logger'
 require 'fileutils'
 require 'yaml'
 
@@ -40,6 +41,7 @@ def init_driver
   driver
 end
 
+log = DiffuxCILogger.new(STDOUT)
 driver = init_driver
 
 begin
@@ -80,21 +82,21 @@ begin
     viewport = example_by_viewport[:viewport]
     examples = example_by_viewport[:examples]
 
-    puts "#{viewport['name']} (#{viewport['width']}x#{viewport['height']})"
+    log.log "#{viewport['name']} (#{viewport['width']}x#{viewport['height']})"
 
     # Resize window to the right size before rendering
     driver.manage.window.resize_to(viewport['width'], viewport['height'])
 
     examples.each do |example|
       if example == examples.last
-        print '└─ '
+        log.log '└─ ', false
       else
-        print '├─ '
+        log.log '├─ ', false
       end
       description = example['description']
-      print " #{description} "
+      log.log " #{description} ", false
 
-      print '.'
+      log.log '.', false
 
       # Render the example
 
@@ -114,7 +116,7 @@ begin
         window.diffux.renderExample(arguments[0], doneFunc);
       EOS
       rendered = driver.execute_async_script(script, description)
-      print '.'
+      log.log '.', false
 
       if rendered['error']
         fail <<-EOS
@@ -127,7 +129,7 @@ begin
 
       # Crop the screenshot to the size of the rendered element
       screenshot = ChunkyPNG::Image.from_blob(driver.screenshot_as(:png))
-      print '.'
+      log.log '.', false
 
       # In our JavaScript we are rounding up, which can sometimes give us a
       # dimensions that are larger than the screenshot dimensions. We need to
@@ -146,7 +148,7 @@ begin
                          rendered['top'],
                          crop_width,
                          crop_height)
-        print '.'
+        log.log '.', false
       end
 
       # Run the diff if needed
@@ -160,7 +162,7 @@ begin
           ChunkyPNG::Image.from_file(baseline_path),
           screenshot
         ).compare!
-        print '.'
+        log.log '.', false
 
         if comparison[:diff_image]
           # There was a visual difference between the new snapshot and the
@@ -169,14 +171,15 @@ begin
           diff_path = DiffuxCIUtils.path_to(
             description, viewport['name'], 'diff.png')
           comparison[:diff_image].save(diff_path, :fast_rgba)
-          print '.'
+          log.log '.', false
 
           candidate_path = DiffuxCIUtils.path_to(
             description, viewport['name'], 'candidate.png')
           screenshot.save(candidate_path, :fast_rgba)
-          print '.'
+          log.log '.', false
 
-          puts " #{comparison[:diff_in_percent].round(1)}% (#{candidate_path})"
+          percent = comparison[:diff_in_percent].round(1)
+          log.log log.cyan(" #{percent}% (#{candidate_path})")
           result_summary[:diff_examples] << {
             description: description,
             viewport: viewport['name']
@@ -184,7 +187,7 @@ begin
         else
           # No visual difference was found, so we don't need to do any more
           # work.
-          puts ' No diff.'
+          log.log ' No diff.'
           result_summary[:okay_examples] << {
             description: description,
             viewport: viewport['name']
@@ -199,8 +202,8 @@ begin
           FileUtils.mkdir_p(dirname)
         end
         screenshot.save(baseline_path, :fast_rgba)
-        print '.'
-        puts " First snapshot created (#{baseline_path})"
+        log.log '.', false
+        log.log " First snapshot created (#{baseline_path})"
         result_summary[:new_examples] << {
           description: description,
           viewport: viewport['name']
