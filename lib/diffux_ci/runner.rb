@@ -6,13 +6,12 @@ require 'diffux_core/snapshot_comparison_image/before'
 require 'diffux_core/snapshot_comparison_image/overlayed'
 require 'diffux_core/snapshot_comparison_image/after'
 require 'oily_png'
-require 'diffux_ci_utils'
-require 'diffux_ci_logger'
+require 'diffux_ci'
 require 'fileutils'
 require 'yaml'
 
 def resolve_viewports(example)
-  configured_viewports = DiffuxCIUtils.config['viewports']
+  configured_viewports = DiffuxCI::Utils.config['viewports']
 
   viewports =
     example['options']['viewports'] || [configured_viewports.first.first]
@@ -25,7 +24,7 @@ end
 def init_driver
   tries = 0
   begin
-    driver = Selenium::WebDriver.for DiffuxCIUtils.config['driver'].to_sym
+    driver = Selenium::WebDriver.for DiffuxCI::Utils.config['driver'].to_sym
   rescue Selenium::WebDriver::Error::WebDriverError => e
     # "unable to obtain stable firefox connection in 60 seconds"
     #
@@ -41,11 +40,11 @@ def init_driver
   driver
 end
 
-log = DiffuxCILogger.new(STDOUT)
+log = DiffuxCI::Logger.new(STDOUT)
 driver = init_driver
 
 begin
-  driver.navigate.to DiffuxCIUtils.construct_url('/')
+  driver.navigate.to DiffuxCI::Utils.construct_url('/')
 
   # Check for errors during startup
   errors = driver.execute_script('return window.diffux.errors;')
@@ -123,7 +122,7 @@ begin
           Error while rendering "#{description}" @#{viewport['name']}:
             #{rendered['error']}
           Debug by pointing your browser to
-          #{DiffuxCIUtils.construct_url('/', description: description)}
+          #{DiffuxCI::Utils.construct_url('/', description: description)}
         EOS
       end
 
@@ -152,7 +151,7 @@ begin
       end
 
       # Run the diff if needed
-      baseline_path = DiffuxCIUtils.path_to(
+      baseline_path = DiffuxCI::Utils.path_to(
         description, viewport['name'], 'baseline.png')
 
       if File.exist? baseline_path
@@ -168,12 +167,12 @@ begin
           # There was a visual difference between the new snapshot and the
           # baseline, so we want to write the diff image and the new snapshot
           # image to disk. This will allow it to be reviewed by someone.
-          diff_path = DiffuxCIUtils.path_to(
+          diff_path = DiffuxCI::Utils.path_to(
             description, viewport['name'], 'diff.png')
           comparison[:diff_image].save(diff_path, :fast_rgba)
           log.log '.', false
 
-          candidate_path = DiffuxCIUtils.path_to(
+          candidate_path = DiffuxCI::Utils.path_to(
             description, viewport['name'], 'candidate.png')
           screenshot.save(candidate_path, :fast_rgba)
           log.log '.', false
@@ -212,7 +211,7 @@ begin
     end
   end
 
-  result_summary_file = File.join(DiffuxCIUtils.config['snapshots_folder'],
+  result_summary_file = File.join(DiffuxCI::Utils.config['snapshots_folder'],
                                   'result_summary.yaml')
   File.open(result_summary_file, 'w') do |file|
     file.write result_summary.to_yaml
