@@ -45,7 +45,7 @@ module DiffuxCI
 
       html = bucket.objects.build("#{dir}/index.html")
       path = File.expand_path(
-        File.join(File.dirname(__FILE__), 'diffux_ci-diffs.html.erb'))
+        File.join(File.dirname(__FILE__), 'diffs.html.erb'))
       html.content = ERB.new(File.read(path)).result(binding)
       html.content_type = 'text/html'
       html.save
