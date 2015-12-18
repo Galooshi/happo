@@ -1,7 +1,7 @@
 require 'diffux_ci/utils'
 require 'base64'
 
-describe 'DiffuxCI::Utils' do
+describe DiffuxCI::Utils do
   before do
     allow(DiffuxCI::Utils).to receive(:config_from_file).and_return({})
   end
