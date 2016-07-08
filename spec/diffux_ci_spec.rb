@@ -329,6 +329,80 @@ describe 'diffux_ci' do
     end
   end
 
+  describe 'when returning a Promise' do
+    let(:examples_js) { <<-EOS }
+      diffux.define('#{description}', function() {
+        return new Promise(function(resolve) {
+          setTimeout(function() {
+            var elem = document.createElement('div');
+            elem.innerHTML = 'Daenerys Targaryen';
+            document.body.appendChild(elem);
+            resolve(elem);
+          });
+        });
+      }, #{example_config});
+    EOS
+
+    it 'generates a baseline, but no diff' do
+      run_diffux
+      expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+        .to eq(true)
+      expect(snapshot_file_exists?(description, '@large', 'diff.png'))
+        .to eq(false)
+      expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+        .to eq(false)
+    end
+
+    describe 'with a previous run' do
+      context 'and no diff' do
+        before do
+          run_diffux
+        end
+
+        it 'keeps the baseline, and creates no diff' do
+          run_diffux
+          expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+            .to eq(true)
+          expect(snapshot_file_exists?(description, '@large', 'diff.png'))
+            .to eq(false)
+          expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+            .to eq(false)
+        end
+      end
+
+      context 'and there is a diff' do
+        context 'and the baseline has height' do
+          before do
+            run_diffux
+
+            File.open(File.join(@tmp_dir, 'examples.js'), 'w') do |f|
+              f.write(<<-EOS)
+                diffux.define('#{description}', function(done) {
+                  setTimeout(function() {
+                    var elem = document.createElement('div');
+                    elem.innerHTML = 'Jon Snow';
+                    document.body.appendChild(elem);
+                    done(elem);
+                  });
+                }, #{example_config});
+              EOS
+            end
+          end
+
+          it 'keeps the baseline, and generates a diff' do
+            run_diffux
+            expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+              .to eq(true)
+            expect(snapshot_file_exists?(description, '@large', 'diff.png'))
+              .to eq(true)
+            expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+              .to eq(true)
+          end
+        end
+      end
+    end
+  end
+
   describe 'when an example fails' do
     let(:examples_js) { <<-EOS }
       diffux.define('#{description}', function() {
