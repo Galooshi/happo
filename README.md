@@ -79,7 +79,23 @@ diffux.define('dialog window', function() {
 ### Async examples
 
 If your examples need to do something asynchronous before they finish render,
-you can use the `done` callback passed in to the define method.
+you can return a `Promise` from your define method that resolves with the
+element.
+
+```javascript
+diffux.define('async component', function() {
+  return new Promise(function(resolve) {
+    var elem = document.createElement('div');
+    document.body.appendChild(elem);
+    setTimeout(function() {
+      elem.innerHTML = 'Async content loaded';
+      resolve(elem);
+    }, 100);
+  });
+});
+```
+
+Alternatively, use the `done` callback passed in to the define method.
 
 ```javascript
 diffux.define('async component', function(done) {
@@ -88,7 +104,7 @@ diffux.define('async component', function(done) {
   setTimeout(function() {
     elem.innerHTML = 'Async content loaded';
     done(elem);
-  }, 100)
+  }, 100);
 });
 ```
 
