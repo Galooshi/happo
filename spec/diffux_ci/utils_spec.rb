@@ -48,7 +48,17 @@ describe DiffuxCI::Utils do
 
     context 'with special characters' do
       let(:description) { '<MyComponent> something interesting' }
-      it { should eq(Base64.encode64(description).strip) }
+      it { should eq(Base64.strict_encode64(description).strip) }
+    end
+
+    context 'when very long' do
+      let(:description) { <<-EOS }
+        <MyComponent> something interesting and something that ends up being
+        very very long for some reason which might end up causing problems
+        depending on how we encode the description
+      EOS
+
+      it { is_expected.to_not include "\n" }
     end
   end
 
@@ -57,6 +67,6 @@ describe DiffuxCI::Utils do
     let(:description) { '<MyComponent>' }
     let(:viewport_name) { 'large' }
     let(:file_name) { 'diff.png' }
-    it { should eq("./snapshots/#{Base64.encode64(description).strip}/@large/diff.png") }
+    it { should eq("./snapshots/#{Base64.strict_encode64(description).strip}/@large/diff.png") }
   end
 end

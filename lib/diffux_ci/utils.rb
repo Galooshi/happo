@@ -35,7 +35,7 @@ module DiffuxCI
     end
 
     def self.normalize_description(description)
-      Base64.encode64(description).strip
+      Base64.strict_encode64(description).strip
     end
 
     def self.path_to(description, viewport_name, file_name)

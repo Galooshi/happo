@@ -54,7 +54,7 @@ describe 'diffux_ci' do
   def snapshot_file_exists?(description, size, file_name)
     File.exist?(
       File.join(@tmp_dir, 'snapshots',
-                Base64.encode64(description).strip, size, file_name)
+                Base64.strict_encode64(description).strip, size, file_name)
     )
   end
 
