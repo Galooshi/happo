@@ -10,6 +10,7 @@ module DiffuxCI
         'snapshots_folder' => './snapshots',
         'source_files' => [],
         'stylesheets' => [],
+        'public_directories' => [],
         'port' => 4567,
         'driver' => :firefox,
         'viewports' => {

@@ -523,4 +523,74 @@ describe 'diffux_ci' do
         .to eq(false)
     end
   end
+
+  describe 'when additional files are served from public directories' do
+    before do
+      tmp_pub_dir = File.join(@tmp_dir, 'public')
+      Dir.mkdir(tmp_pub_dir)
+
+      File.open(File.join(tmp_pub_dir, 'picture.gif'), 'wb') do |f|
+        tiny_gif = 'R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+        f.write(Base64.decode64(tiny_gif))
+      end
+    end
+
+    let(:config) do
+      {
+        'source_files' => ['examples.js'],
+        'public_directories' => ['public']
+      }
+    end
+
+    let(:examples_js) { <<-EOS }
+      diffux.define('img', function() {
+        return new Promise(function(resolve, reject) {
+          var image = new Image();
+          image.onload = function() {
+            // Continue to process the image once it is found without any errors
+            resolve(image);
+          };
+          image.onerror = function() {
+            // Throws an error if the image is not found.
+            // The error message will then show up in std_err, so for our test,
+            // we can check that the error message should not show up.
+            reject(new Error('image not found'));
+          };
+          image.src = 'picture.gif';
+          document.body.appendChild(image);
+        });
+      }, #{example_config});
+    EOS
+
+    it 'gets file from other directory' do
+      output = run_diffux
+      expect(output[:std_err]).not_to include('image not found');
+    end
+  end
+
+  describe 'when other files cannot be found in public directories' do
+    let(:examples_js) { <<-EOS }
+      diffux.define('img', function() {
+        return new Promise( function(resolve, reject) {
+          var image = new Image();
+          image.onload = function() {
+            // Continue to process the image once it is found without any errors
+            resolve(image);
+          };
+          image.onerror = function() {
+            // Throws an error if the image is not found.
+            // The error message will then show up in std_err, so for our test,
+            // we can check that the error message should show up
+            reject(new Error('image not found'));
+          };
+          image.src = 'wrong_picture.png';
+          document.body.appendChild(image);
+        });
+      }, #{example_config});
+    EOS
+
+    it 'gets error when trying to get file from other directory' do
+      expect(run_diffux[:std_err]).to include('image not found');
+    end
+  end
 end

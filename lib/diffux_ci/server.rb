@@ -38,6 +38,21 @@ module DiffuxCI
       end
     end
 
+    get '/*' do
+      config = DiffuxCI::Utils.config
+      file = params[:splat].first
+      if File.exist?(file)
+        send_file file
+      else
+        config['public_directories'].each do |pub_dir|
+          filepath = File.join(Dir.pwd, pub_dir, file)
+          if File.exist?(filepath)
+            send_file filepath
+          end
+        end
+      end
+    end
+
     post '/reject' do
       DiffuxCI::Action.new(params[:description], params[:viewport]).reject
       redirect back
