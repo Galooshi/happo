@@ -135,10 +135,12 @@ Diffux-CI loads configuration in one of the following ways:
 
 ```yaml
 source_files:
- - application.js
- - diffux_ci-examples.js
+  - application.js
+  - diffux_ci-examples.js
 stylesheets:
- - application.css
+  - application.css
+public_directories:
+  - public
 snapshots_folder: ./snapshots
 viewports:
   large:
