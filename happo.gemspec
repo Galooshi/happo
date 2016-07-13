@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'chunky_png', '~>1.3.1'
   s.add_runtime_dependency 'diff-lcs', '~> 1.2'
-  s.add_runtime_dependency 'oily_png', '~> 1.2.0'
+  s.add_runtime_dependency 'oily_png', '~> 1.2'
   s.add_runtime_dependency 's3', '~> 0.3', '>= 0.3.22'
   s.add_runtime_dependency 'selenium-webdriver', '~> 2.53', '>= 2.53.0'
   s.add_runtime_dependency 'sinatra', '~> 1.4', '>= 1.4.5'
