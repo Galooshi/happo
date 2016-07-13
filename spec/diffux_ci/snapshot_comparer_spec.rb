@@ -22,10 +22,6 @@ describe DiffuxCI::SnapshotComparer do
       it 'reports no diff image' do
         expect(subject[:diff_image]).to eq(nil)
       end
-
-      it 'reports no cluster differences' do
-        expect(subject[:diff_clusters]).to be_empty
-      end
     end
 
     context 'with entirely different snapshots' do
@@ -38,10 +34,6 @@ describe DiffuxCI::SnapshotComparer do
       it 'reports a diff image' do
         expect(subject[:diff_image]).to_not eq(nil)
       end
-
-      it 'reports one cluster difference' do
-        expect(subject[:diff_clusters].count).to eq(1)
-      end
     end
 
     context 'when the after snapshot is half as tall as the before snapshot' do
@@ -49,10 +41,6 @@ describe DiffuxCI::SnapshotComparer do
 
       it 'reports a 50% difference' do
         expect(subject[:diff_in_percent]).to eq(50.0)
-      end
-
-      it 'reports one cluster difference' do
-        expect(subject[:diff_clusters].count).to eq(1)
       end
     end
 
@@ -65,10 +53,6 @@ describe DiffuxCI::SnapshotComparer do
 
       it 'returns an image of the correct height' do
         expect(subject[:diff_image].height).to eq(4)
-      end
-
-      it 'reports one cluster difference' do
-        expect(subject[:diff_clusters].count).to eq(1)
       end
     end
 

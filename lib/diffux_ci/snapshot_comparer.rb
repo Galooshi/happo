@@ -1,6 +1,5 @@
 require 'oily_png'
 require 'diff-lcs'
-require_relative 'diff_cluster_finder'
 require_relative 'snapshot_comparison_image/base'
 require_relative 'snapshot_comparison_image/gutter'
 require_relative 'snapshot_comparison_image/before'
@@ -22,7 +21,6 @@ module DiffuxCI
       no_diff = {
         diff_in_percent: 0,
         diff_image: nil,
-        diff_clusters: []
       }
 
       # If these images are totally identical, we don't need to do any more
@@ -37,21 +35,21 @@ module DiffuxCI
       return no_diff if array_before == array_after
 
       sdiff = Diff::LCS.sdiff(array_before, array_after)
-      cluster_finder  = DiffuxCI::DiffClusterFinder.new(sdiff.size)
+      number_of_different_rows = 0
+
       sprite, all_comparisons = initialize_comparison_images(
         [@png_after.width, @png_before.width].max, sdiff.size)
 
       sdiff.each_with_index do |row, y|
         # each row is a Diff::LCS::ContextChange instance
         all_comparisons.each { |image| image.render_row(y, row) }
-        cluster_finder.row_is_different(y) unless row.unchanged?
+        number_of_different_rows += 1 unless row.unchanged?
       end
 
-      percent_changed = cluster_finder.percent_of_rows_different
+      percent_changed = number_of_different_rows.to_f / sdiff.size * 100
       {
         diff_in_percent: percent_changed,
         diff_image:      (sprite if percent_changed > 0),
-        diff_clusters:   cluster_finder.clusters,
       }
     end
 
