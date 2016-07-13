@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Happo Review Tool</title>
+    <link rel="stylesheet" href="/happo-styles.css"></link>
+  </head>
+  <body>
+    <h1>Happo Review Tool</h1>
+    <h2>DIFFS</h2>
+    <% @snapshots[:diffs].each do |diff| %>
+      <h3>
+        <%= h diff[:description] %> @ <%= diff[:viewport] %>
+      </h3>
+      <p><img src="/resource?file=<%= ERB::Util.url_encode(diff[:file]) %>"></p>
+      <form style="display: inline-block"
+            action="/approve?description=<%= diff[:description] %>&viewport=<%= diff[:viewport] %>"
+            method="POST">
+        <button type="submit">Approve</button>
+      </form>
+      <form style="display: inline-block"
+            action="/reject?description=<%= diff[:description] %>&viewport=<%= diff[:viewport] %>"
+            method="POST">
+        <button type="submit">Reject</button>
+      </form>
+    <% end %>
+
+    <hr>
+
+    <h2>BASELINES</h2>
+    <% @snapshots[:baselines].each do |baseline| %>
+      <h3>
+        <%= h baseline[:description] %> @ <%= baseline[:viewport] %>
+      </h3>
+      <p><img src="/resource?file=<%= ERB::Util.url_encode(baseline[:file]) %>"></p>
+    <% end %>
+  </body>
+</html>

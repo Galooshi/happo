@@ -1,6 +1,0 @@
-require 'diffux_ci/utils'
-require 'diffux_ci/action'
-require 'diffux_ci/uploader'
-require 'diffux_ci/version'
-require 'diffux_ci/logger'
-require 'diffux_ci/snapshot_comparer'
