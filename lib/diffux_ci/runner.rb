@@ -1,10 +1,4 @@
 require 'selenium-webdriver'
-require 'diffux_core/snapshot_comparer'
-require 'diffux_core/snapshot_comparison_image/base'
-require 'diffux_core/snapshot_comparison_image/gutter'
-require 'diffux_core/snapshot_comparison_image/before'
-require 'diffux_core/snapshot_comparison_image/overlayed'
-require 'diffux_core/snapshot_comparison_image/after'
 require 'oily_png'
 require 'diffux_ci'
 require 'fileutils'
@@ -157,7 +151,7 @@ begin
       if File.exist? baseline_path
         # A baseline image exists, so we want to compare the new snapshot
         # against the baseline.
-        comparison = Diffux::SnapshotComparer.new(
+        comparison = DiffuxCI::SnapshotComparer.new(
           ChunkyPNG::Image.from_file(baseline_path),
           screenshot
         ).compare!
