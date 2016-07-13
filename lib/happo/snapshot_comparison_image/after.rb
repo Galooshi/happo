@@ -1,4 +1,4 @@
-module DiffuxCI
+module Happo
   module SnapshotComparisonImage
     # This subclass of `SnapshotComparisonImage` knows how to draw the
     # representation of the "after" image.

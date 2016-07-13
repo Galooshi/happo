@@ -1,4 +1,4 @@
-module DiffuxCI
+module Happo
   module SnapshotComparisonImage
     # This class renders a gutter-column with a color representing the type of
     # change that has happened.

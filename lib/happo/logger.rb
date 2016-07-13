@@ -1,4 +1,4 @@
-module DiffuxCI
+module Happo
   # Used for all CLI output
   class Logger
     # @param out [IO] the output destination

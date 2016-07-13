@@ -1,7 +1,7 @@
-require 'diffux_ci/snapshot_comparer'
+require 'happo/snapshot_comparer'
 require 'oily_png'
 
-describe DiffuxCI::SnapshotComparer do
+describe Happo::SnapshotComparer do
   def image(width: 2, height: 2, color: ChunkyPNG::Color::WHITE)
     ChunkyPNG::Image.new(width, height, color)
   end

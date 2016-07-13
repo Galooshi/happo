@@ -1,13 +1,13 @@
-require 'diffux_ci/utils'
+require 'happo/utils'
 require 'base64'
 
-describe DiffuxCI::Utils do
+describe Happo::Utils do
   before do
-    allow(DiffuxCI::Utils).to receive(:config_from_file).and_return({})
+    allow(Happo::Utils).to receive(:config_from_file).and_return({})
   end
 
   describe 'construct_url' do
-    subject { DiffuxCI::Utils.construct_url(absolute_path, params) }
+    subject { Happo::Utils.construct_url(absolute_path, params) }
 
     context 'without absolute_path or params' do
       let(:absolute_path) { '' }
@@ -44,7 +44,7 @@ describe DiffuxCI::Utils do
   end
 
   describe 'normalize_description' do
-    subject { DiffuxCI::Utils.normalize_description(description) }
+    subject { Happo::Utils.normalize_description(description) }
 
     context 'with special characters' do
       let(:description) { '<MyComponent> something interesting' }
@@ -63,7 +63,7 @@ describe DiffuxCI::Utils do
   end
 
   describe 'path_to' do
-    subject { DiffuxCI::Utils.path_to(description, viewport_name, file_name) }
+    subject { Happo::Utils.path_to(description, viewport_name, file_name) }
     let(:description) { '<MyComponent>' }
     let(:viewport_name) { 'large' }
     let(:file_name) { 'diff.png' }

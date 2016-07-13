@@ -1,14 +1,14 @@
-require './lib/diffux_ci/version'
+require './lib/happo/version'
 
 Gem::Specification.new do |s|
-  s.name          = 'diffux_ci'
-  s.version       = DiffuxCI::VERSION
-  s.summary       = 'Diffux-CI'
-  s.description   = 'Diffux-CI, a perceptual diff tool for JS components'
+  s.name          = 'happo'
+  s.version       = Happo::VERSION
+  s.summary       = 'Happo'
+  s.description   = 'Happo, a perceptual diff tool for JS components'
   s.authors       = ['Henric Trotzig', 'Joe Lencioni']
   s.email         = ['henric.trotzig@gmail.com', 'joe.lencioni@gmail.com']
-  s.executables   = ['diffux']
-  s.homepage      = 'http://rubygems.org/gems/diffux_ci'
+  s.executables   = ['happo']
+  s.homepage      = 'http://rubygems.org/gems/happo'
   s.license       = 'MIT'
   s.require_paths = ['lib']
   s.files         = Dir['lib/**/*']

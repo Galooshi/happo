@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'diffux_ci'
+require 'happo'
 require 'fileutils'
 
 help_text = <<-EOS
@@ -21,22 +21,22 @@ case action
 when 'run'
   Thread.abort_on_exception = true
   Thread.new do
-    require 'diffux_ci/runner'
+    require 'happo/runner'
     exit
   end
-  require 'diffux_ci/server'
+  require 'happo/server'
 
 when 'debug'
-  system 'open', DiffuxCI::Utils.construct_url('/debug')
-  require 'diffux_ci/server'
+  system 'open', Happo::Utils.construct_url('/debug')
+  require 'happo/server'
 
 when 'review'
-  system 'open', DiffuxCI::Utils.construct_url('/review')
-  require 'diffux_ci/server'
+  system 'open', Happo::Utils.construct_url('/review')
+  require 'happo/server'
 
 when 'clean'
-  if File.directory? DiffuxCI::Utils.config['snapshots_folder']
-    FileUtils.remove_entry_secure DiffuxCI::Utils.config['snapshots_folder']
+  if File.directory? Happo::Utils.config['snapshots_folder']
+    FileUtils.remove_entry_secure Happo::Utils.config['snapshots_folder']
   end
 
 when 'approve', 'reject'
@@ -44,14 +44,14 @@ when 'approve', 'reject'
   abort 'Missing example description' unless example_description
   viewport_name = ARGV[2]
   abort 'Missing viewport name' unless viewport_name
-  DiffuxCI::Action.new(example_description, viewport_name).send(action)
+  Happo::Action.new(example_description, viewport_name).send(action)
 
 when 'upload_diffs'
   # `upload_diffs` returns a URL to a static html file
-  puts DiffuxCI::Uploader.new.upload_diffs
+  puts Happo::Uploader.new.upload_diffs
 
 when '--version'
-  puts "diffux_ci version #{DiffuxCI::VERSION}"
+  puts "happo version #{Happo::VERSION}"
 
 when '--help'
   puts help_text

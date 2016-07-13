@@ -1,6 +1,6 @@
 require 'chunky_png'
 
-module DiffuxCI
+module Happo
   module SnapshotComparisonImage
     # This model represents a "comparison image". Basically it's just a wrapper
     # around a ChunkyPNG image with some nice methods to make life easier in the

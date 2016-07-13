@@ -6,7 +6,7 @@ require_relative 'snapshot_comparison_image/before'
 require_relative 'snapshot_comparison_image/overlayed'
 require_relative 'snapshot_comparison_image/after'
 
-module DiffuxCI
+module Happo
   # This class is responsible for comparing two Snapshots and generating a diff.
   class SnapshotComparer
     # @param png_before [ChunkyPNG::Image]
@@ -68,22 +68,22 @@ module DiffuxCI
     # @param canvas [ChunkyPNG::Image] The output image to draw pixels on
     # @return [Array<SnapshotComparisonImage>]
     def initialize_comparison_images(width, height)
-      gutter_width = DiffuxCI::SnapshotComparisonImage::Gutter::WIDTH
+      gutter_width = Happo::SnapshotComparisonImage::Gutter::WIDTH
       total_width = (width * 3) + (gutter_width * 3)
 
       sprite = ChunkyPNG::Image.new(total_width, height)
       offset, comparison_images = 0, []
-      comparison_images << DiffuxCI::SnapshotComparisonImage::Gutter.new(offset, sprite)
+      comparison_images << Happo::SnapshotComparisonImage::Gutter.new(offset, sprite)
       offset += gutter_width
-      comparison_images << DiffuxCI::SnapshotComparisonImage::Before.new(offset, sprite)
+      comparison_images << Happo::SnapshotComparisonImage::Before.new(offset, sprite)
       offset += width
-      comparison_images << DiffuxCI::SnapshotComparisonImage::Gutter.new(offset, sprite)
+      comparison_images << Happo::SnapshotComparisonImage::Gutter.new(offset, sprite)
       offset += gutter_width
-      comparison_images << DiffuxCI::SnapshotComparisonImage::Overlayed.new(offset, sprite)
+      comparison_images << Happo::SnapshotComparisonImage::Overlayed.new(offset, sprite)
       offset += width
-      comparison_images << DiffuxCI::SnapshotComparisonImage::Gutter.new(offset, sprite)
+      comparison_images << Happo::SnapshotComparisonImage::Gutter.new(offset, sprite)
       offset += gutter_width
-      comparison_images << DiffuxCI::SnapshotComparisonImage::After.new(offset, sprite)
+      comparison_images << Happo::SnapshotComparisonImage::After.new(offset, sprite)
 
       [sprite, comparison_images]
     end

@@ -3,7 +3,7 @@ require 'tmpdir'
 require 'open3'
 require 'base64'
 
-describe 'diffux_ci' do
+describe 'happo' do
   let(:config) do
     {
       'source_files' => ['examples.js']
@@ -14,7 +14,7 @@ describe 'diffux_ci' do
   let(:description) { 'foo' }
 
   let(:examples_js) { <<-EOS }
-    diffux.define('#{description}', function() {
+    happo.define('#{description}', function() {
       var elem = document.createElement('div');
       elem.innerHTML = 'Foo';
       document.body.appendChild(elem);
@@ -25,7 +25,7 @@ describe 'diffux_ci' do
   before do
     @tmp_dir = Dir.mktmpdir
 
-    File.open(File.join(@tmp_dir, '.diffux_ci.yaml'), 'w') do |f|
+    File.open(File.join(@tmp_dir, '.happo.yaml'), 'w') do |f|
       f.write(config.to_yaml)
     end
 
@@ -38,11 +38,11 @@ describe 'diffux_ci' do
     FileUtils.remove_entry_secure @tmp_dir
   end
 
-  def run_diffux
+  def run_happo
     pwd = Dir.pwd
     Dir.chdir @tmp_dir do
       std_out, std_err, status =
-        Open3.capture3("ruby -I#{pwd}/lib #{pwd}/bin/diffux")
+        Open3.capture3("ruby -I#{pwd}/lib #{pwd}/bin/happo")
       {
         std_out: std_out,
         std_err: std_err,
@@ -60,11 +60,11 @@ describe 'diffux_ci' do
 
   describe 'with no previous run' do
     it 'exits with a zero exit code' do
-      expect(run_diffux[:exit_status]).to eq(0)
+      expect(run_happo[:exit_status]).to eq(0)
     end
 
     it 'generates a new baseline, but no diff' do
-      run_diffux
+      run_happo
       expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
         .to eq(true)
       expect(snapshot_file_exists?(description, '@large', 'diff.png'))
@@ -90,15 +90,15 @@ describe 'diffux_ci' do
   describe 'with a previous run' do
     context 'and no diff' do
       before do
-        run_diffux
+        run_happo
       end
 
       it 'exits with a zero exit code' do
-        expect(run_diffux[:exit_status]).to eq(0)
+        expect(run_happo[:exit_status]).to eq(0)
       end
 
       it 'keeps the baseline, and creates no diff' do
-        run_diffux
+        run_happo
         expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
           .to eq(true)
         expect(snapshot_file_exists?(description, '@large', 'diff.png'))
@@ -123,16 +123,16 @@ describe 'diffux_ci' do
 
     context 'and there is a diff' do
       it 'exits with a zero exit code' do
-        expect(run_diffux[:exit_status]).to eq(0)
+        expect(run_happo[:exit_status]).to eq(0)
       end
 
       context 'and the baseline has height' do
         before do
-          run_diffux
+          run_happo
 
           File.open(File.join(@tmp_dir, 'examples.js'), 'w') do |f|
             f.write(<<-EOS)
-              diffux.define('#{description}', function() {
+              happo.define('#{description}', function() {
                 var elem = document.createElement('div');
                 elem.innerHTML = 'Football';
                 document.body.appendChild(elem);
@@ -143,7 +143,7 @@ describe 'diffux_ci' do
         end
 
         it 'keeps the baseline, and generates a diff' do
-          run_diffux
+          run_happo
           expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
             .to eq(true)
           expect(snapshot_file_exists?(description, '@large', 'diff.png'))
@@ -169,7 +169,7 @@ describe 'diffux_ci' do
 
     context 'and the baseline does not have height' do
       let(:examples_js) { <<-EOS }
-        diffux.define('#{description}', function() {
+        happo.define('#{description}', function() {
           var elem = document.createElement('div');
           document.body.appendChild(elem);
           return elem;
@@ -177,11 +177,11 @@ describe 'diffux_ci' do
       EOS
 
       before do
-        run_diffux
+        run_happo
 
         File.open(File.join(@tmp_dir, 'examples.js'), 'w') do |f|
           f.write(<<-EOS)
-            diffux.define('#{description}', function() {
+            happo.define('#{description}', function() {
               var elem = document.createElement('div');
               elem.innerHTML = 'Foo';
               document.body.appendChild(elem);
@@ -192,7 +192,7 @@ describe 'diffux_ci' do
       end
 
       it 'keeps the baseline, and generates a diff' do
-        run_diffux
+        run_happo
         expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
           .to eq(true)
         expect(snapshot_file_exists?(description, '@large', 'diff.png'))
@@ -207,7 +207,7 @@ describe 'diffux_ci' do
     let(:example_config) { "{ viewports: ['large', 'small'] }" }
 
     it 'generates the right baselines' do
-      run_diffux
+      run_happo
       expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
         .to eq(true)
       expect(snapshot_file_exists?(description, '@small', 'baseline.png'))
@@ -217,7 +217,7 @@ describe 'diffux_ci' do
     end
   end
 
-  describe 'with custom viewports in .diffux_ci.yaml' do
+  describe 'with custom viewports in .happo.yaml' do
     let(:config) do
       {
         'source_files' => ['examples.js'],
@@ -236,7 +236,7 @@ describe 'diffux_ci' do
 
     context 'and the example has no `viewport` config' do
       it 'uses the first viewport in the config' do
-        run_diffux
+        run_happo
         expect(snapshot_file_exists?(description, '@foo', 'baseline.png'))
           .to eq(true)
         expect(snapshot_file_exists?(description, '@bar', 'baseline.png'))
@@ -248,7 +248,7 @@ describe 'diffux_ci' do
       let(:example_config) { "{ viewports: ['bar'] }" }
 
       it 'uses the viewport to generate a baseline' do
-        run_diffux
+        run_happo
         expect(snapshot_file_exists?(description, '@foo', 'baseline.png'))
           .to eq(false)
         expect(snapshot_file_exists?(description, '@bar', 'baseline.png'))
@@ -259,7 +259,7 @@ describe 'diffux_ci' do
 
   describe 'with doneCallback async argument' do
     let(:examples_js) { <<-EOS }
-      diffux.define('#{description}', function(done) {
+      happo.define('#{description}', function(done) {
         setTimeout(function() {
           var elem = document.createElement('div');
           elem.innerHTML = 'Foo';
@@ -270,7 +270,7 @@ describe 'diffux_ci' do
     EOS
 
     it 'generates a baseline, but no diff' do
-      run_diffux
+      run_happo
       expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
         .to eq(true)
       expect(snapshot_file_exists?(description, '@large', 'diff.png'))
@@ -282,11 +282,11 @@ describe 'diffux_ci' do
     describe 'with a previous run' do
       context 'and no diff' do
         before do
-          run_diffux
+          run_happo
         end
 
         it 'keeps the baseline, and creates no diff' do
-          run_diffux
+          run_happo
           expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
             .to eq(true)
           expect(snapshot_file_exists?(description, '@large', 'diff.png'))
@@ -299,11 +299,11 @@ describe 'diffux_ci' do
       context 'and there is a diff' do
         context 'and the baseline has height' do
           before do
-            run_diffux
+            run_happo
 
             File.open(File.join(@tmp_dir, 'examples.js'), 'w') do |f|
               f.write(<<-EOS)
-                diffux.define('#{description}', function(done) {
+                happo.define('#{description}', function(done) {
                   setTimeout(function() {
                     var elem = document.createElement('div');
                     elem.innerHTML = 'Football';
@@ -316,7 +316,7 @@ describe 'diffux_ci' do
           end
 
           it 'keeps the baseline, and generates a diff' do
-            run_diffux
+            run_happo
             expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
               .to eq(true)
             expect(snapshot_file_exists?(description, '@large', 'diff.png'))
@@ -331,7 +331,7 @@ describe 'diffux_ci' do
 
   describe 'when returning a Promise' do
     let(:examples_js) { <<-EOS }
-      diffux.define('#{description}', function() {
+      happo.define('#{description}', function() {
         return new Promise(function(resolve) {
           setTimeout(function() {
             var elem = document.createElement('div');
@@ -344,7 +344,7 @@ describe 'diffux_ci' do
     EOS
 
     it 'generates a baseline, but no diff' do
-      run_diffux
+      run_happo
       expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
         .to eq(true)
       expect(snapshot_file_exists?(description, '@large', 'diff.png'))
@@ -356,11 +356,11 @@ describe 'diffux_ci' do
     describe 'with a previous run' do
       context 'and no diff' do
         before do
-          run_diffux
+          run_happo
         end
 
         it 'keeps the baseline, and creates no diff' do
-          run_diffux
+          run_happo
           expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
             .to eq(true)
           expect(snapshot_file_exists?(description, '@large', 'diff.png'))
@@ -373,11 +373,11 @@ describe 'diffux_ci' do
       context 'and there is a diff' do
         context 'and the baseline has height' do
           before do
-            run_diffux
+            run_happo
 
             File.open(File.join(@tmp_dir, 'examples.js'), 'w') do |f|
               f.write(<<-EOS)
-                diffux.define('#{description}', function(done) {
+                happo.define('#{description}', function(done) {
                   setTimeout(function() {
                     var elem = document.createElement('div');
                     elem.innerHTML = 'Jon Snow';
@@ -390,7 +390,7 @@ describe 'diffux_ci' do
           end
 
           it 'keeps the baseline, and generates a diff' do
-            run_diffux
+            run_happo
             expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
               .to eq(true)
             expect(snapshot_file_exists?(description, '@large', 'diff.png'))
@@ -405,38 +405,38 @@ describe 'diffux_ci' do
 
   describe 'when an example fails' do
     let(:examples_js) { <<-EOS }
-      diffux.define('#{description}', function() {
+      happo.define('#{description}', function() {
         return undefined;
       });
     EOS
 
     it 'exits with a non-zero exit code' do
-      expect(run_diffux[:exit_status]).to eq(1)
+      expect(run_happo[:exit_status]).to eq(1)
     end
 
     it 'logs the error' do
-      expect(run_diffux[:std_err])
+      expect(run_happo[:std_err])
         .to include("Error while rendering \"#{description}\"")
     end
   end
 
   describe 'when multiple examples are defined' do
     let(:examples_js) { <<-EOS }
-      diffux.define('foo', function() {
+      happo.define('foo', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Foo';
         document.body.appendChild(elem);
         return elem;
       }, #{example_config});
 
-      diffux.define('bar', function() {
+      happo.define('bar', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Bar';
         document.body.appendChild(elem);
         return elem;
       }, #{example_config});
 
-      diffux.define('baz', function() {
+      happo.define('baz', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Baz';
         document.body.appendChild(elem);
@@ -445,7 +445,7 @@ describe 'diffux_ci' do
     EOS
 
     it 'generates baselines for each example' do
-      run_diffux
+      run_happo
       expect(snapshot_file_exists?('foo', '@large', 'baseline.png')).to eq(true)
       expect(snapshot_file_exists?('bar', '@large', 'baseline.png')).to eq(true)
       expect(snapshot_file_exists?('baz', '@large', 'baseline.png')).to eq(true)
@@ -454,14 +454,14 @@ describe 'diffux_ci' do
 
   describe 'when there are two examples with the same description' do
     let(:examples_js) { <<-EOS }
-      diffux.define('#{description}', function() {
+      happo.define('#{description}', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Foo';
         document.body.appendChild(elem);
         return elem;
       }, #{example_config});
 
-      diffux.define('#{description}', function() {
+      happo.define('#{description}', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Bar';
         document.body.appendChild(elem);
@@ -470,39 +470,39 @@ describe 'diffux_ci' do
     EOS
 
     it 'exits with a non-zero exit code' do
-      expect(run_diffux[:exit_status]).to eq(1)
+      expect(run_happo[:exit_status]).to eq(1)
     end
 
     it 'logs the error' do
-      expect(run_diffux[:std_err])
+      expect(run_happo[:std_err])
         .to include("Error while defining \\\"#{description}\\\"")
     end
   end
 
   describe 'when using fdefine' do
     let(:examples_js) { <<-EOS }
-      diffux.define('foo', function() {
+      happo.define('foo', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Foo';
         document.body.appendChild(elem);
         return elem;
       }, #{example_config});
 
-      diffux.fdefine('fiz', function() {
+      happo.fdefine('fiz', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Fiz';
         document.body.appendChild(elem);
         return elem;
       }, #{example_config});
 
-      diffux.fdefine('bar', function() {
+      happo.fdefine('bar', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Bar';
         document.body.appendChild(elem);
         return elem;
       }, #{example_config});
 
-      diffux.define('baz', function() {
+      happo.define('baz', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Baz';
         document.body.appendChild(elem);
@@ -511,7 +511,7 @@ describe 'diffux_ci' do
     EOS
 
     it 'generates baselines for the fdefined examples' do
-      run_diffux
+      run_happo
 
       expect(snapshot_file_exists?('foo', '@large', 'baseline.png'))
         .to eq(false)
@@ -543,7 +543,7 @@ describe 'diffux_ci' do
     end
 
     let(:examples_js) { <<-EOS }
-      diffux.define('img', function() {
+      happo.define('img', function() {
         return new Promise(function(resolve, reject) {
           var image = new Image();
           image.onload = function() {
@@ -563,14 +563,14 @@ describe 'diffux_ci' do
     EOS
 
     it 'gets file from other directory' do
-      output = run_diffux
+      output = run_happo
       expect(output[:std_err]).not_to include('image not found');
     end
   end
 
   describe 'when other files cannot be found in public directories' do
     let(:examples_js) { <<-EOS }
-      diffux.define('img', function() {
+      happo.define('img', function() {
         return new Promise( function(resolve, reject) {
           var image = new Image();
           image.onload = function() {
@@ -590,7 +590,7 @@ describe 'diffux_ci' do
     EOS
 
     it 'gets error when trying to get file from other directory' do
-      expect(run_diffux[:std_err]).to include('image not found');
+      expect(run_happo[:std_err]).to include('image not found');
     end
   end
 end

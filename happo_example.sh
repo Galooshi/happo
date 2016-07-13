@@ -1,9 +1,9 @@
 #!/bin/bash -ex
 
-# This is an example script that generates and uploads Diffux-CI diffs for the
+# This is an example script that generates and uploads Happo diffs for the
 # differences between the previous and current commit.
 
-run-diffux-ci() {
+run-happo() {
   # Checkout the commit
   git checkout --quiet $1
 
@@ -11,19 +11,19 @@ run-diffux-ci() {
   npm install
   webpack ./entry.js bundle.js
 
-  # Run diffux for the current commit. We use `xvfb-run` so that we can run
-  # diffux (which uses Firefox) in a headless display environment.
-  xvfb-run diffux
+  # Run happo for the current commit. We use `xvfb-run` so that we can run
+  # happo (which uses Firefox) in a headless display environment.
+  xvfb-run happo
 }
 
 # Check out the previous version and generate baseline snapshots
-run-diffux-ci HEAD^
+run-happo HEAD^
 
 # Check out the latest version and check for diffs
-run-diffux-ci -
+run-happo -
 
 # Finally, upload any diffs to s3
-url_to_diffs=`diffux upload_diffs`
+url_to_diffs=`happo upload_diffs`
 if [ -n "$url_to_diffs" ]; then
   # We have a URL to the diff(s) found for the commit. We can choose to do one
   # of a few things here. We either exit the script with a non-zero exit code.
@@ -31,7 +31,7 @@ if [ -n "$url_to_diffs" ]; then
   # but instead post a comment to the commit with the URL to the diff(s). Below
   # is an example of the latter, where we post back a comment to a Gerrit patch
   # set.
-  message="Diffux-CI diff(s) were found: $link_to_diffs"
+  message="Happo diff(s) were found: $link_to_diffs"
 
   ssh -p 29418 jenkins@example.com \
     gerrit review \'--message="$message"\' $GERRIT_PATCHSET_REVISION

@@ -1,4 +1,4 @@
 # Defines the gem version.
-module DiffuxCI
+module Happo
   VERSION = '0.6.0'
 end

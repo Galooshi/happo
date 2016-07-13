@@ -1,11 +1,11 @@
 require 'sinatra/base'
 require 'yaml'
 
-module DiffuxCI
+module Happo
   class Server < Sinatra::Base
     configure do
       enable :static
-      set :port, DiffuxCI::Utils.config['port']
+      set :port, Happo::Utils.config['port']
     end
 
     helpers do
@@ -15,17 +15,17 @@ module DiffuxCI
     end
 
     get '/' do
-      @config = DiffuxCI::Utils.config
+      @config = Happo::Utils.config
       erb :index
     end
 
     get '/debug' do
-      @config = DiffuxCI::Utils.config
+      @config = Happo::Utils.config
       erb :debug
     end
 
     get '/review' do
-      @snapshots = DiffuxCI::Utils.current_snapshots
+      @snapshots = Happo::Utils.current_snapshots
       erb :review
     end
 
@@ -39,7 +39,7 @@ module DiffuxCI
     end
 
     get '/*' do
-      config = DiffuxCI::Utils.config
+      config = Happo::Utils.config
       file = params[:splat].first
       if File.exist?(file)
         send_file file
@@ -54,12 +54,12 @@ module DiffuxCI
     end
 
     post '/reject' do
-      DiffuxCI::Action.new(params[:description], params[:viewport]).reject
+      Happo::Action.new(params[:description], params[:viewport]).reject
       redirect back
     end
 
     post '/approve' do
-      DiffuxCI::Action.new(params[:description], params[:viewport]).approve
+      Happo::Action.new(params[:description], params[:viewport]).approve
       redirect back
     end
 

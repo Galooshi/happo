@@ -1,17 +1,17 @@
 require 's3'
 require 'securerandom'
 
-module DiffuxCI
+module Happo
   class Uploader
     def initialize
-      @s3_access_key_id = DiffuxCI::Utils.config['s3_access_key_id']
-      @s3_secret_access_key = DiffuxCI::Utils.config['s3_secret_access_key']
-      @s3_bucket_name = DiffuxCI::Utils.config['s3_bucket_name']
+      @s3_access_key_id = Happo::Utils.config['s3_access_key_id']
+      @s3_secret_access_key = Happo::Utils.config['s3_secret_access_key']
+      @s3_bucket_name = Happo::Utils.config['s3_bucket_name']
     end
 
     def upload_diffs
       result_summary = YAML.load(File.read(File.join(
-        DiffuxCI::Utils.config['snapshots_folder'], 'result_summary.yaml')))
+        Happo::Utils.config['snapshots_folder'], 'result_summary.yaml')))
 
       return [] if result_summary[:diff_examples].empty? &&
                    result_summary[:new_examples].empty?
@@ -22,7 +22,7 @@ module DiffuxCI
       diff_images = result_summary[:diff_examples].map do |diff|
         image = bucket.objects.build(
           "#{dir}/#{diff[:description]}_#{diff[:viewport]}.png")
-        image.content = open(DiffuxCI::Utils.path_to(diff[:description],
+        image.content = open(Happo::Utils.path_to(diff[:description],
                                                      diff[:viewport],
                                                      'diff.png'))
         image.content_type = 'image/png'
@@ -34,7 +34,7 @@ module DiffuxCI
       new_images = result_summary[:new_examples].map do |example|
         image = bucket.objects.build(
           "#{dir}/#{example[:description]}_#{example[:viewport]}.png")
-        image.content = open(DiffuxCI::Utils.path_to(example[:description],
+        image.content = open(Happo::Utils.path_to(example[:description],
                                                      example[:viewport],
                                                      'baseline.png'))
         image.content_type = 'image/png'

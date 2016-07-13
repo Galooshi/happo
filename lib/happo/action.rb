@@ -1,7 +1,7 @@
-require 'diffux_ci/utils'
+require 'happo/utils'
 require 'fileutils'
 
-module DiffuxCI
+module Happo
   class Action
     def initialize(example_description, viewport_name)
       @example_description = example_description
@@ -9,11 +9,11 @@ module DiffuxCI
     end
 
     def approve
-      diff_path = DiffuxCI::Utils.path_to(
+      diff_path = Happo::Utils.path_to(
         @example_description, @viewport_name, 'diff.png')
-      baseline_path = DiffuxCI::Utils.path_to(
+      baseline_path = Happo::Utils.path_to(
         @example_description, @viewport_name, 'baseline.png')
-      candidate_path = DiffuxCI::Utils.path_to(
+      candidate_path = Happo::Utils.path_to(
         @example_description, @viewport_name, 'candidate.png')
 
       FileUtils.rm(diff_path, force: true)
@@ -21,9 +21,9 @@ module DiffuxCI
     end
 
     def reject
-      diff_path = DiffuxCI::Utils.path_to(
+      diff_path = Happo::Utils.path_to(
         @example_description, @viewport_name, 'diff.png')
-      candidate_path = DiffuxCI::Utils.path_to(
+      candidate_path = Happo::Utils.path_to(
         @example_description, @viewport_name, 'candidate.png')
 
       FileUtils.rm(diff_path, force: true)

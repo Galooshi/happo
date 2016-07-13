@@ -3,7 +3,7 @@ require 'erb'
 require 'uri'
 require 'base64'
 
-module DiffuxCI
+module Happo
   class Utils
     def self.config
       @@config ||= {
@@ -31,7 +31,7 @@ module DiffuxCI
     end
 
     def self.config_from_file
-      config_file_name = ENV['DIFFUX_CI_CONFIG_FILE'] || '.diffux_ci.yaml'
+      config_file_name = ENV['HAPPO_CONFIG_FILE'] || '.happo.yaml'
       YAML.load(ERB.new(File.read(config_file_name)).result)
     end
 
@@ -68,7 +68,7 @@ module DiffuxCI
         }
       end
 
-      snapshots_folder = DiffuxCI::Utils.config['snapshots_folder']
+      snapshots_folder = Happo::Utils.config['snapshots_folder']
       diff_files = Dir.glob("#{snapshots_folder}/**/diff.png")
       baselines = Dir.glob("#{snapshots_folder}/**/baseline.png")
 

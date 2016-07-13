@@ -1,6 +1,6 @@
-require 'diffux_ci/logger'
+require 'happo/logger'
 
-describe DiffuxCI::Logger do
+describe Happo::Logger do
   let(:io)     { StringIO.new }
   let(:logger) { described_class.new(io) }
 

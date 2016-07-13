@@ -1,4 +1,4 @@
-module DiffuxCI
+module Happo
   module SnapshotComparisonImage
     # This subclass of `SnapshotComparisonImage` knows how to overlay the
     # after-image on top of the before-image, and render the difference in a
