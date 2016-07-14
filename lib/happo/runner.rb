@@ -145,34 +145,34 @@ begin
       end
 
       # Run the diff if needed
-      baseline_path = Happo::Utils.path_to(
-        description, viewport['name'], 'baseline.png')
+      previous_image_path = Happo::Utils.path_to(
+        description, viewport['name'], 'previous.png')
 
-      if File.exist? baseline_path
-        # A baseline image exists, so we want to compare the new snapshot
-        # against the baseline.
+      if File.exist? previous_image_path
+        # A previous image exists, so we want to compare the new snapshot
+        # against the previous.
         comparison = Happo::SnapshotComparer.new(
-          ChunkyPNG::Image.from_file(baseline_path),
+          ChunkyPNG::Image.from_file(previous_image_path),
           screenshot
         ).compare!
         log.log '.', false
 
         if comparison[:diff_image]
           # There was a visual difference between the new snapshot and the
-          # baseline, so we want to write the diff image and the new snapshot
+          # previous, so we want to write the diff image and the new snapshot
           # image to disk. This will allow it to be reviewed by someone.
           diff_path = Happo::Utils.path_to(
             description, viewport['name'], 'diff.png')
           comparison[:diff_image].save(diff_path, :fast_rgba)
           log.log '.', false
 
-          candidate_path = Happo::Utils.path_to(
-            description, viewport['name'], 'candidate.png')
-          screenshot.save(candidate_path, :fast_rgba)
+          current_image_path = Happo::Utils.path_to(
+            description, viewport['name'], 'current.png')
+          screenshot.save(current_image_path, :fast_rgba)
           log.log '.', false
 
           percent = comparison[:diff_in_percent].round(1)
-          log.log log.cyan(" #{percent}% (#{candidate_path})")
+          log.log log.cyan(" #{percent}% (#{current_image_path})")
           result_summary[:diff_examples] << {
             description: description,
             viewport: viewport['name']
@@ -187,16 +187,16 @@ begin
           }
         end
       else
-        # There was no baseline image yet, so we want to start by saving a new
-        # baseline image.
+        # There was no previous image yet, so we want to start by saving a new
+        # previous image.
 
         # Create the folder structure if it doesn't already exist
-        unless File.directory?(dirname = File.dirname(baseline_path))
+        unless File.directory?(dirname = File.dirname(previous_image_path))
           FileUtils.mkdir_p(dirname)
         end
-        screenshot.save(baseline_path, :fast_rgba)
+        screenshot.save(previous_image_path, :fast_rgba)
         log.log '.', false
-        log.log " First snapshot created (#{baseline_path})"
+        log.log " First snapshot created (#{previous_image_path})"
         result_summary[:new_examples] << {
           description: description,
           viewport: viewport['name']

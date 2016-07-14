@@ -16,12 +16,12 @@
 
     <hr>
 
-    <h2>BASELINES</h2>
-    <% @snapshots[:baselines].each do |baseline| %>
+    <h2>PREVIOUS</h2>
+    <% @snapshots[:previous_images].each do |previous_image| %>
       <h3>
-        <%= h baseline[:description] %> @ <%= baseline[:viewport] %>
+        <%= h previous_image[:description] %> @ <%= previous_image[:viewport] %>
       </h3>
-      <p><img src="/resource?file=<%= ERB::Util.url_encode(baseline[:file]) %>"></p>
+      <p><img src="/resource?file=<%= ERB::Util.url_encode(previous_image[:file]) %>"></p>
     <% end %>
   </body>
 </html>

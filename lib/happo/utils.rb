@@ -70,11 +70,11 @@ module Happo
 
       snapshots_folder = Happo::Utils.config['snapshots_folder']
       diff_files = Dir.glob("#{snapshots_folder}/**/diff.png")
-      baselines = Dir.glob("#{snapshots_folder}/**/baseline.png")
+      previous_images = Dir.glob("#{snapshots_folder}/**/previous.png")
 
       {
         diffs: diff_files.map(&prepare_file),
-        baselines: baselines.map(&prepare_file)
+        previous_images: previous_images.map(&prepare_file)
       }
     end
   end

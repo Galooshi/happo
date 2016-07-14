@@ -63,13 +63,13 @@ describe 'happo' do
       expect(run_happo[:exit_status]).to eq(0)
     end
 
-    it 'generates a new baseline, but no diff' do
+    it 'generates a new previous, but no diff' do
       run_happo
-      expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+      expect(snapshot_file_exists?(description, '@large', 'previous.png'))
         .to eq(true)
       expect(snapshot_file_exists?(description, '@large', 'diff.png'))
         .to eq(false)
-      expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+      expect(snapshot_file_exists?(description, '@large', 'current.png'))
         .to eq(false)
       expect(
         YAML.load(File.read(File.join(
@@ -97,13 +97,13 @@ describe 'happo' do
         expect(run_happo[:exit_status]).to eq(0)
       end
 
-      it 'keeps the baseline, and creates no diff' do
+      it 'keeps the previous, and creates no diff' do
         run_happo
-        expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+        expect(snapshot_file_exists?(description, '@large', 'previous.png'))
           .to eq(true)
         expect(snapshot_file_exists?(description, '@large', 'diff.png'))
           .to eq(false)
-        expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+        expect(snapshot_file_exists?(description, '@large', 'current.png'))
           .to eq(false)
         expect(
           YAML.load(File.read(File.join(
@@ -126,7 +126,7 @@ describe 'happo' do
         expect(run_happo[:exit_status]).to eq(0)
       end
 
-      context 'and the baseline has height' do
+      context 'and the previous has height' do
         before do
           run_happo
 
@@ -142,13 +142,13 @@ describe 'happo' do
           end
         end
 
-        it 'keeps the baseline, and generates a diff' do
+        it 'keeps the previous, and generates a diff' do
           run_happo
-          expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+          expect(snapshot_file_exists?(description, '@large', 'previous.png'))
             .to eq(true)
           expect(snapshot_file_exists?(description, '@large', 'diff.png'))
             .to eq(true)
-          expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+          expect(snapshot_file_exists?(description, '@large', 'current.png'))
             .to eq(true)
           expect(
             YAML.load(File.read(File.join(
@@ -167,7 +167,7 @@ describe 'happo' do
       end
     end
 
-    context 'and the baseline does not have height' do
+    context 'and the previous does not have height' do
       let(:examples_js) { <<-EOS }
         happo.define('#{description}', function() {
           var elem = document.createElement('div');
@@ -191,13 +191,13 @@ describe 'happo' do
         end
       end
 
-      it 'keeps the baseline, and generates a diff' do
+      it 'keeps the previous, and generates a diff' do
         run_happo
-        expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+        expect(snapshot_file_exists?(description, '@large', 'previous.png'))
           .to eq(true)
         expect(snapshot_file_exists?(description, '@large', 'diff.png'))
           .to eq(true)
-        expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+        expect(snapshot_file_exists?(description, '@large', 'current.png'))
           .to eq(true)
       end
     end
@@ -206,13 +206,13 @@ describe 'happo' do
   describe 'with more than one viewport' do
     let(:example_config) { "{ viewports: ['large', 'small'] }" }
 
-    it 'generates the right baselines' do
+    it 'generates the right previous' do
       run_happo
-      expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+      expect(snapshot_file_exists?(description, '@large', 'previous.png'))
         .to eq(true)
-      expect(snapshot_file_exists?(description, '@small', 'baseline.png'))
+      expect(snapshot_file_exists?(description, '@small', 'previous.png'))
         .to eq(true)
-      expect(snapshot_file_exists?(description, '@medium', 'baseline.png'))
+      expect(snapshot_file_exists?(description, '@medium', 'previous.png'))
         .to eq(false)
     end
   end
@@ -237,9 +237,9 @@ describe 'happo' do
     context 'and the example has no `viewport` config' do
       it 'uses the first viewport in the config' do
         run_happo
-        expect(snapshot_file_exists?(description, '@foo', 'baseline.png'))
+        expect(snapshot_file_exists?(description, '@foo', 'previous.png'))
           .to eq(true)
-        expect(snapshot_file_exists?(description, '@bar', 'baseline.png'))
+        expect(snapshot_file_exists?(description, '@bar', 'previous.png'))
           .to eq(false)
       end
     end
@@ -247,11 +247,11 @@ describe 'happo' do
     context 'and the example has a `viewport` config' do
       let(:example_config) { "{ viewports: ['bar'] }" }
 
-      it 'uses the viewport to generate a baseline' do
+      it 'uses the viewport to generate a previous' do
         run_happo
-        expect(snapshot_file_exists?(description, '@foo', 'baseline.png'))
+        expect(snapshot_file_exists?(description, '@foo', 'previous.png'))
           .to eq(false)
-        expect(snapshot_file_exists?(description, '@bar', 'baseline.png'))
+        expect(snapshot_file_exists?(description, '@bar', 'previous.png'))
           .to eq(true)
       end
     end
@@ -269,13 +269,13 @@ describe 'happo' do
       }, #{example_config});
     EOS
 
-    it 'generates a baseline, but no diff' do
+    it 'generates a previous, but no diff' do
       run_happo
-      expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+      expect(snapshot_file_exists?(description, '@large', 'previous.png'))
         .to eq(true)
       expect(snapshot_file_exists?(description, '@large', 'diff.png'))
         .to eq(false)
-      expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+      expect(snapshot_file_exists?(description, '@large', 'current.png'))
         .to eq(false)
     end
 
@@ -285,19 +285,19 @@ describe 'happo' do
           run_happo
         end
 
-        it 'keeps the baseline, and creates no diff' do
+        it 'keeps the previous, and creates no diff' do
           run_happo
-          expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+          expect(snapshot_file_exists?(description, '@large', 'previous.png'))
             .to eq(true)
           expect(snapshot_file_exists?(description, '@large', 'diff.png'))
             .to eq(false)
-          expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+          expect(snapshot_file_exists?(description, '@large', 'current.png'))
             .to eq(false)
         end
       end
 
       context 'and there is a diff' do
-        context 'and the baseline has height' do
+        context 'and the previous has height' do
           before do
             run_happo
 
@@ -315,13 +315,13 @@ describe 'happo' do
             end
           end
 
-          it 'keeps the baseline, and generates a diff' do
+          it 'keeps the previous, and generates a diff' do
             run_happo
-            expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+            expect(snapshot_file_exists?(description, '@large', 'previous.png'))
               .to eq(true)
             expect(snapshot_file_exists?(description, '@large', 'diff.png'))
               .to eq(true)
-            expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+            expect(snapshot_file_exists?(description, '@large', 'current.png'))
               .to eq(true)
           end
         end
@@ -343,13 +343,13 @@ describe 'happo' do
       }, #{example_config});
     EOS
 
-    it 'generates a baseline, but no diff' do
+    it 'generates a previous, but no diff' do
       run_happo
-      expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+      expect(snapshot_file_exists?(description, '@large', 'previous.png'))
         .to eq(true)
       expect(snapshot_file_exists?(description, '@large', 'diff.png'))
         .to eq(false)
-      expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+      expect(snapshot_file_exists?(description, '@large', 'current.png'))
         .to eq(false)
     end
 
@@ -359,19 +359,19 @@ describe 'happo' do
           run_happo
         end
 
-        it 'keeps the baseline, and creates no diff' do
+        it 'keeps the previous, and creates no diff' do
           run_happo
-          expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+          expect(snapshot_file_exists?(description, '@large', 'previous.png'))
             .to eq(true)
           expect(snapshot_file_exists?(description, '@large', 'diff.png'))
             .to eq(false)
-          expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+          expect(snapshot_file_exists?(description, '@large', 'current.png'))
             .to eq(false)
         end
       end
 
       context 'and there is a diff' do
-        context 'and the baseline has height' do
+        context 'and the previous has height' do
           before do
             run_happo
 
@@ -389,13 +389,13 @@ describe 'happo' do
             end
           end
 
-          it 'keeps the baseline, and generates a diff' do
+          it 'keeps the previous, and generates a diff' do
             run_happo
-            expect(snapshot_file_exists?(description, '@large', 'baseline.png'))
+            expect(snapshot_file_exists?(description, '@large', 'previous.png'))
               .to eq(true)
             expect(snapshot_file_exists?(description, '@large', 'diff.png'))
               .to eq(true)
-            expect(snapshot_file_exists?(description, '@large', 'candidate.png'))
+            expect(snapshot_file_exists?(description, '@large', 'current.png'))
               .to eq(true)
           end
         end
@@ -444,11 +444,11 @@ describe 'happo' do
       }, #{example_config});
     EOS
 
-    it 'generates baselines for each example' do
+    it 'generates previous for each example' do
       run_happo
-      expect(snapshot_file_exists?('foo', '@large', 'baseline.png')).to eq(true)
-      expect(snapshot_file_exists?('bar', '@large', 'baseline.png')).to eq(true)
-      expect(snapshot_file_exists?('baz', '@large', 'baseline.png')).to eq(true)
+      expect(snapshot_file_exists?('foo', '@large', 'previous.png')).to eq(true)
+      expect(snapshot_file_exists?('bar', '@large', 'previous.png')).to eq(true)
+      expect(snapshot_file_exists?('baz', '@large', 'previous.png')).to eq(true)
     end
   end
 
@@ -510,16 +510,16 @@ describe 'happo' do
       }, #{example_config});
     EOS
 
-    it 'generates baselines for the fdefined examples' do
+    it 'generates previous for the fdefined examples' do
       run_happo
 
-      expect(snapshot_file_exists?('foo', '@large', 'baseline.png'))
+      expect(snapshot_file_exists?('foo', '@large', 'previous.png'))
         .to eq(false)
-      expect(snapshot_file_exists?('fiz', '@large', 'baseline.png'))
+      expect(snapshot_file_exists?('fiz', '@large', 'previous.png'))
         .to eq(true)
-      expect(snapshot_file_exists?('bar', '@large', 'baseline.png'))
+      expect(snapshot_file_exists?('bar', '@large', 'previous.png'))
         .to eq(true)
-      expect(snapshot_file_exists?('baz', '@large', 'baseline.png'))
+      expect(snapshot_file_exists?('baz', '@large', 'previous.png'))
         .to eq(false)
     end
   end

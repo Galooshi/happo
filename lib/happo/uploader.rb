@@ -36,7 +36,7 @@ module Happo
           "#{dir}/#{example[:description]}_#{example[:viewport]}.png")
         image.content = open(Happo::Utils.path_to(example[:description],
                                                      example[:viewport],
-                                                     'baseline.png'))
+                                                     'previous.png'))
         image.content_type = 'image/png'
         image.save
         example[:url] = image.url

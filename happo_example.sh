@@ -16,7 +16,7 @@ run-happo() {
   xvfb-run happo
 }
 
-# Check out the previous version and generate baseline snapshots
+# Check out the previous version and generate previous snapshots
 run-happo HEAD^
 
 # Check out the latest version and check for diffs
