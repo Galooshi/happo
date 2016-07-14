@@ -12,16 +12,6 @@
         <%= h diff[:description] %> @ <%= diff[:viewport] %>
       </h3>
       <p><img src="/resource?file=<%= ERB::Util.url_encode(diff[:file]) %>"></p>
-      <form style="display: inline-block"
-            action="/approve?description=<%= diff[:description] %>&viewport=<%= diff[:viewport] %>"
-            method="POST">
-        <button type="submit">Approve</button>
-      </form>
-      <form style="display: inline-block"
-            action="/reject?description=<%= diff[:description] %>&viewport=<%= diff[:viewport] %>"
-            method="POST">
-        <button type="submit">Reject</button>
-      </form>
     <% end %>
 
     <hr>

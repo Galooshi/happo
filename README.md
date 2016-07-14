@@ -165,8 +165,7 @@ happo examples.
 
 Once `happo` has finished, run `happo review` from the command line. This
 will open a page that compares the latest run's snapshots against the
-previously accepted snapshots. You can then approve or reject the snapshots for
-the next run.
+previous snapshots.
 
 ### `happo debug`
 
