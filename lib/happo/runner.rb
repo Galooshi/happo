@@ -144,35 +144,49 @@ begin
         log.log '.', false
       end
 
-      # Run the diff if needed
-      baseline_path = Happo::Utils.path_to(
-        description, viewport['name'], 'baseline.png')
+      # This is potentially expensive code that is run in a tight loop for every
+      # snapshot that we will be taking. With that in mind, we want to do as
+      # little work here as possible to keep runs fast. Therefore, we have
+      # landed on the following algorithm:
+      #
+      # 1. Delete previous.png if it exists.
+      # 2. Compare the current snapshot in memory against current.png if it
+      #    exists.
+      # 3. If there is a diff, move current.png to previous.png and write out
+      #    diff.png to disk and the current snapshot to current.png.
+      # 4. If there is no diff, return, leaving the old current.png in place.
+      previous_image_path = Happo::Utils.path_to(
+        description, viewport['name'], 'previous.png')
+      current_image_path = Happo::Utils.path_to(
+        description, viewport['name'], 'current.png')
+      diff_image_path = Happo::Utils.path_to(
+        description, viewport['name'], 'diff.png')
 
-      if File.exist? baseline_path
-        # A baseline image exists, so we want to compare the new snapshot
-        # against the baseline.
+      # We no longer need the old previous.png and diff.png, so lets remove them
+      # to keep things clean.
+      File.delete previous_image_path if File.exist? previous_image_path
+      File.delete diff_image_path if File.exist? diff_image_path
+
+      if File.exist? current_image_path
         comparison = Happo::SnapshotComparer.new(
-          ChunkyPNG::Image.from_file(baseline_path),
+          ChunkyPNG::Image.from_file(current_image_path),
           screenshot
         ).compare!
         log.log '.', false
 
         if comparison[:diff_image]
           # There was a visual difference between the new snapshot and the
-          # baseline, so we want to write the diff image and the new snapshot
+          # previous, so we want to write the diff image and the new snapshot
           # image to disk. This will allow it to be reviewed by someone.
-          diff_path = Happo::Utils.path_to(
-            description, viewport['name'], 'diff.png')
-          comparison[:diff_image].save(diff_path, :fast_rgba)
+          comparison[:diff_image].save(diff_image_path, :fast_rgba)
           log.log '.', false
 
-          candidate_path = Happo::Utils.path_to(
-            description, viewport['name'], 'candidate.png')
-          screenshot.save(candidate_path, :fast_rgba)
+          File.rename(current_image_path, previous_image_path)
+          screenshot.save(current_image_path, :fast_rgba)
           log.log '.', false
 
           percent = comparison[:diff_in_percent].round(1)
-          log.log log.cyan(" #{percent}% (#{candidate_path})")
+          log.log log.cyan(" #{percent}% (#{current_image_path})")
           result_summary[:diff_examples] << {
             description: description,
             viewport: viewport['name']
@@ -187,16 +201,15 @@ begin
           }
         end
       else
-        # There was no baseline image yet, so we want to start by saving a new
-        # baseline image.
+        # There was no snapshot yet, so we want to start by saving a new one.
 
         # Create the folder structure if it doesn't already exist
-        unless File.directory?(dirname = File.dirname(baseline_path))
+        unless File.directory?(dirname = File.dirname(current_image_path))
           FileUtils.mkdir_p(dirname)
         end
-        screenshot.save(baseline_path, :fast_rgba)
+        screenshot.save(current_image_path, :fast_rgba)
         log.log '.', false
-        log.log " First snapshot created (#{baseline_path})"
+        log.log " First snapshot created (#{current_image_path})"
         result_summary[:new_examples] << {
           description: description,
           viewport: viewport['name']

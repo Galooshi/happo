@@ -5,12 +5,12 @@ components. [Read more][end-of-visual-regressions].
 
 [end-of-visual-regressions]: https://medium.com/brigade-engineering/the-end-of-visual-regressions-b6b5c3d810f
 
-You begin by defining a set of examples that Happo will grab snapshots for.
-If a previous snapshot (called a "baseline") exists for a component, Happo
-will diff the new snapshot with the old baseline. If a diff is found, a visual
-representation of the changes will be constructed. You can then use that diff
-image to decide whether a visual regression has been introduced or not, and
-take appropriate action based on that information.
+You begin by defining a set of examples that Happo will grab snapshots for. If a
+previous snapshot exists for a component, Happo will diff the new snapshot with
+the previous. If a diff is found, a visual representation of the changes will be
+constructed. You can then use that diff image to decide whether a visual
+regression has been introduced or not, and take appropriate action based on that
+information.
 
 ![Demo of Happo in action](happo_demo.gif)
 
@@ -165,8 +165,7 @@ happo examples.
 
 Once `happo` has finished, run `happo review` from the command line. This
 will open a page that compares the latest run's snapshots against the
-previously accepted snapshots. You can then approve or reject the snapshots for
-the next run.
+previous snapshots.
 
 ### `happo debug`
 
@@ -199,7 +198,7 @@ any visual change.
 
 1. Check out the commit previous to the one to test (e.g. `git checkout HEAD^`)
 2. (optionally) precompile your JavaScript and/or CSS
-3. Run `happo` to generate baseline snapshots
+3. Run `happo` to generate previous snapshots
 4. Check out the commit to test
 5. (optionally) precompile your JavaScript and/or CSS
 6. Run `happo` to diff against previously created snapshots

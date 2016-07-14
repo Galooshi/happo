@@ -53,16 +53,6 @@ module Happo
       end
     end
 
-    post '/reject' do
-      Happo::Action.new(params[:description], params[:viewport]).reject
-      redirect back
-    end
-
-    post '/approve' do
-      Happo::Action.new(params[:description], params[:viewport]).approve
-      redirect back
-    end
-
     run!
   end
 end
