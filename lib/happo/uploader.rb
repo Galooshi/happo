@@ -4,9 +4,10 @@ require 'securerandom'
 module Happo
   class Uploader
     def initialize
-      @s3_access_key_id = Happo::Utils.config['s3_access_key_id']
-      @s3_secret_access_key = Happo::Utils.config['s3_secret_access_key']
-      @s3_bucket_name = Happo::Utils.config['s3_bucket_name']
+      @s3_access_key_id = ENV['S3_ACCESS_KEY_ID']
+      @s3_secret_access_key = ENV['S3_SECRET_ACCESS_KEY']
+      @s3_bucket_name = ENV['S3_BUCKET_NAME']
+      @s3_bucket_path = ENV['S3_BUCKET_PATH']
     end
 
     def upload_diffs
@@ -17,7 +18,11 @@ module Happo
                    result_summary[:new_examples].empty?
 
       bucket = find_or_build_bucket
-      dir = SecureRandom.uuid
+      if @s3_bucket_path.nil? || @s3_bucket_path.empty?
+        dir = SecureRandom.uuid
+      else
+        dir = File.join(@s3_bucket_path, SecureRandom.uuid)
+      end
 
       diff_images = result_summary[:diff_examples].map do |diff|
         image = bucket.objects.build(
