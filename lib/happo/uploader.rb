@@ -18,11 +18,11 @@ module Happo
                    result_summary[:new_examples].empty?
 
       bucket = find_or_build_bucket
-      if @s3_bucket_path.nil? || @s3_bucket_path.empty?
-        dir = SecureRandom.uuid
-      else
-        dir = File.join(@s3_bucket_path, SecureRandom.uuid)
-      end
+      dir = if @s3_bucket_path.nil? || @s3_bucket_path.empty?
+              SecureRandom.uuid
+            else
+              File.join(@s3_bucket_path, SecureRandom.uuid)
+            end
 
       diff_images = result_summary[:diff_examples].map do |diff|
         image = bucket.objects.build(
