@@ -178,9 +178,12 @@ to access those diff images. Requires that `S3_ACCESS_KEY_ID`,
 `S3_SECRET_ACCESS_KEY`, and `S3_BUCKET_NAME` are specified as environment
 variables. `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY` will be the
 credentials Happo uses to access the bucket named `S3_BUCKET_NAME`.
+
 `S3_BUCKET_PATH` can also be set as an environment variable to specify a
 directory path for where you want diff images uploaded within the S3 bucket.
+
 You can set these in the session by using `export`:
+
 ```sh
 export S3_ACCESS_KEY_ID=<YOUR_ACCESS_KEY_VALUE>
 export S3_SECRET_ACCESS_KEY=<YOUR_SECRET_ACCESS_KEY_VALUE>
@@ -189,7 +192,9 @@ export S3_BUCKET_PATH=<YOUR_BUCKET_PATH>
 
 happo upload_diffs
 ```
+
 or by adding them in the beginning of the command:
+
 ```sh
 S3_ACCESS_KEY_ID=<...> S3_SECRET_ACCESS_KEY=<...> ... happo upload_diffs
 ```
