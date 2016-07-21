@@ -149,9 +149,6 @@ viewports:
   small:
     width: 320
     height: 444
-s3_access_key_id: <your acccess key id>
-s3_secret_access_key: <your secret acccess key>
-s3_bucket_name: <a globally unique bucket name>
 ```
 
 ## Command line tools
@@ -177,8 +174,25 @@ and you can do use your developer tools to debug.
 ### `happo upload_diffs`
 
 Uploads all current diff images to an Amazon S3 account and reports back URLs
-to access those diff images. Requires the `s3_access_key_id`,
-`s3_secret_access_key`, and `s3_bucket_name` configuration options.
+to access those diff images. Requires that `S3_ACCESS_KEY_ID`,
+`S3_SECRET_ACCESS_KEY`, and `S3_BUCKET_NAME` are specified as environment
+variables. `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY` will be the
+credentials Happo uses to access the bucket named `S3_BUCKET_NAME`.
+`S3_BUCKET_PATH` can also be set as an environment variable to specify a
+directory path for where you want diff images uploaded within the S3 bucket.
+You can set these in the session by using `export`:
+```sh
+export S3_ACCESS_KEY_ID=<YOUR_ACCESS_KEY_VALUE>
+export S3_SECRET_ACCESS_KEY=<YOUR_SECRET_ACCESS_KEY_VALUE>
+export S3_BUCKET_NAME=<YOUR_BUCKET_NAME>
+export S3_BUCKET_PATH=<YOUR_BUCKET_PATH>
+
+happo upload_diffs
+```
+or by adding them in the beginning of the command:
+```sh
+S3_ACCESS_KEY_ID=<...> S3_SECRET_ACCESS_KEY=<...> ... happo upload_diffs
+```
 
 ### `happo clean`
 
