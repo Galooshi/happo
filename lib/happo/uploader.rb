@@ -62,9 +62,9 @@ module Happo
     def find_or_build_bucket
       service = S3::Service.new(access_key_id: @s3_access_key_id,
                                 secret_access_key: @s3_secret_access_key)
-      bucket = service.buckets.find(@s3_bucket_name)
+      bucket = service.bucket(@s3_bucket_name)
 
-      if bucket.nil?
+      if !bucket.exists?
         bucket = service.buckets.build(@s3_bucket_name)
         bucket.save(location: :us)
       end
