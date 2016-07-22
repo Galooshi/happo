@@ -65,7 +65,6 @@ module Happo
       bucket = service.bucket(@s3_bucket_name)
 
       if !bucket.exists?
-        bucket = service.buckets.build(@s3_bucket_name)
         bucket.save(location: :us)
       end
 
