@@ -63,11 +63,7 @@ module Happo
       service = S3::Service.new(access_key_id: @s3_access_key_id,
                                 secret_access_key: @s3_secret_access_key)
       bucket = service.bucket(@s3_bucket_name)
-
-      if !bucket.exists?
-        bucket.save(location: :us)
-      end
-
+      bucket.save(location: :us) unless bucket.exists?
       bucket
     end
   end
