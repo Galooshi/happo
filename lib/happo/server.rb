@@ -39,20 +39,20 @@ module Happo
     end
 
     get '/*' do
-      config = Happo::Utils.config
+      # If this file is part of Happo itself (e.g. some bit of JavaScript), we
+      # want to give that precedence so that Happo can work properly.
       file = params[:splat].first
-      if File.exist?(file)
-        send_file file
-        return
-      else
-        config['public_directories'].each do |pub_dir|
-          filepath = File.join(Dir.pwd, pub_dir, file)
-          if File.exist?(filepath)
-            send_file filepath
-            return
-          end
-        end
+      return send_file(file) if File.exist?(file)
+
+      # The requested file is not part of Happo, so let's look in the configured
+      # public directories. This is useful for serving up e.g. custom font files
+      # that your components depend on to be rendered correctly.
+      config = Happo::Utils.config
+      config['public_directories'].each do |pub_dir|
+        filepath = File.join(Dir.pwd, pub_dir, file)
+        return send_file(filepath) if File.exist?(filepath)
       end
+
       status 404 # not found
       body '404 error: not found'
     end
