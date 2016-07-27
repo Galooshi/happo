@@ -43,14 +43,18 @@ module Happo
       file = params[:splat].first
       if File.exist?(file)
         send_file file
+        return
       else
         config['public_directories'].each do |pub_dir|
           filepath = File.join(Dir.pwd, pub_dir, file)
           if File.exist?(filepath)
             send_file filepath
+            return
           end
         end
       end
+      status 404 # not found
+      body '404 error: not found'
     end
 
     run!
