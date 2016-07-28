@@ -25,26 +25,26 @@ module Happo
             end
 
       diff_images = result_summary[:diff_examples].map do |diff|
-        image = bucket.objects.build(
-          "#{dir}/#{diff[:description]}_#{diff[:viewport]}.png")
+        img_url = "#{dir}/#{diff[:description]}_#{diff[:viewport]}.png"
+        image = bucket.objects.build(img_url)
         image.content = open(Happo::Utils.path_to(diff[:description],
                                                      diff[:viewport],
                                                      'diff.png'))
         image.content_type = 'image/png'
         image.save
-        diff[:url] = image.url
+        diff[:url] = img_url
         diff
       end
 
       new_images = result_summary[:new_examples].map do |example|
-        image = bucket.objects.build(
-          "#{dir}/#{example[:description]}_#{example[:viewport]}.png")
+        img_url = "#{dir}/#{example[:description]}_#{example[:viewport]}.png"
+        image = bucket.objects.build(img_url)
         image.content = open(Happo::Utils.path_to(example[:description],
                                                      example[:viewport],
                                                      'previous.png'))
         image.content_type = 'image/png'
         image.save
-        example[:url] = image.url
+        example[:url] = img_url
         example
       end
 
