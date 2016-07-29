@@ -41,7 +41,7 @@ module Happo
         image = bucket.objects.build("#{dir}/#{img_name}")
         image.content = open(Happo::Utils.path_to(example[:description],
                                                      example[:viewport],
-                                                     'previous.png'))
+                                                     'current.png'))
         image.content_type = 'image/png'
         image.save
         example[:url] = img_name
