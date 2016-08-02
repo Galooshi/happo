@@ -15,10 +15,30 @@ def resolve_viewports(example)
   end
 end
 
+def driver_config
+  Happo::Utils.config['driver'].to_sym
+end
+
+def driver_opts
+  if driver_config == :firefox
+    # We need to use Marionette with Firefox 48+. In WebDriver 3, this will be
+    # the default.
+    # @see https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver
+    # @see https://github.com/SeleniumHQ/selenium/issues/2559
+    {
+      desired_capabilities: Selenium::WebDriver::Remote::Capabilities
+        .firefox(marionette: true)
+    }
+  else
+    {}
+  end
+end
+
 def init_driver
   tries = 0
+
   begin
-    driver = Selenium::WebDriver.for Happo::Utils.config['driver'].to_sym
+    driver = Selenium::WebDriver.for driver_config, driver_opts
   rescue Selenium::WebDriver::Error::WebDriverError => e
     # "unable to obtain stable firefox connection in 60 seconds"
     #

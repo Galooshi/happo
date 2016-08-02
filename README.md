@@ -126,6 +126,16 @@ happo.cleanOutElement = function(element) {
 
 Happo comes bundled as a gem. To install it, run `gem install happo`.
 
+If you are using Happo with Firefox, you also need to have
+[geckodriver](https://github.com/mozilla/geckodriver) installed. To install
+geckodriver on Mac OS X with homebrew:
+
+```sh
+brew install geckodriver
+```
+
+This is only compatible with Firefox 48+.
+
 ## Configuration
 
 Happo loads configuration in one of the following ways:
