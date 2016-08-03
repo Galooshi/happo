@@ -44,13 +44,13 @@ describe 'happo' do
     end.join("\n")
   end
 
-  def run_happo
+  def run_happo(opts = {})
     pwd = Dir.pwd
     Dir.chdir @tmp_dir do
       std_out, std_err, status =
         Open3.capture3("ruby -I#{pwd}/lib #{pwd}/bin/happo")
 
-      if status.exitstatus != 0
+      if status.exitstatus != 0 && !opts[:disable_raise_errors]
         filtered_std_err = filter_std_err(std_err)
         raise filtered_std_err unless filtered_std_err.empty?
       end
@@ -423,11 +423,13 @@ describe 'happo' do
     EOS
 
     it 'exits with a non-zero exit code' do
-      expect(run_happo[:exit_status]).to eq(1)
+      result = run_happo(disable_raise_errors: true)
+      expect(result[:exit_status]).to eq(1)
     end
 
     it 'logs the error' do
-      expect(run_happo[:std_err])
+      result = run_happo(disable_raise_errors: true)
+      expect(result[:std_err])
         .to include("Error while rendering \"#{description}\"")
     end
   end
@@ -482,7 +484,8 @@ describe 'happo' do
     EOS
 
     it 'exits with a non-zero exit code' do
-      expect(run_happo[:exit_status]).to eq(1)
+      result = run_happo(disable_raise_errors: true)
+      expect(result[:exit_status]).to eq(1)
     end
 
     it 'logs the error' do
