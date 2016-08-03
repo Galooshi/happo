@@ -489,7 +489,8 @@ describe 'happo' do
     end
 
     it 'logs the error' do
-      expect(run_happo[:std_err])
+      result = run_happo(disable_raise_errors: true)
+      expect(result[:std_err])
         .to include("Error while defining \\\"#{description}\\\"")
     end
   end
@@ -605,7 +606,8 @@ describe 'happo' do
     EOS
 
     it 'gets error when trying to get file from other directory' do
-      expect(run_happo[:std_err]).to include('image not found');
+      result = run_happo(disable_raise_errors: true)
+      expect(result[:std_err]).to include('image not found');
     end
   end
 end
