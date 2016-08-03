@@ -38,11 +38,23 @@ describe 'happo' do
     FileUtils.remove_entry_secure @tmp_dir
   end
 
+  def filter_std_err(std_err)
+    std_err.split("\n").reject do |line|
+      line.start_with? '== Sinatra'
+    end.join("\n")
+  end
+
   def run_happo
     pwd = Dir.pwd
     Dir.chdir @tmp_dir do
       std_out, std_err, status =
         Open3.capture3("ruby -I#{pwd}/lib #{pwd}/bin/happo")
+
+      if status.exitstatus != 0
+        filtered_std_err = filter_std_err(std_err)
+        raise filtered_std_err unless filtered_std_err.empty?
+      end
+
       {
         std_out: std_out,
         std_err: std_err,
