@@ -20,18 +20,21 @@ def driver_config
 end
 
 def driver_opts
-  if driver_config == :firefox
-    # We need to use Marionette with Firefox 48+. In WebDriver 3, this will be
-    # the default.
-    # @see https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver
-    # @see https://github.com/SeleniumHQ/selenium/issues/2559
-    {
-      desired_capabilities: Selenium::WebDriver::Remote::Capabilities
-        .firefox(marionette: true)
-    }
-  else
-    {}
+  return {} unless driver_config == :firefox
+
+  # We need to use Marionette with Firefox 48+. In WebDriver 3, this will be
+  # the default.
+  # @see https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver
+  # @see https://github.com/SeleniumHQ/selenium/issues/2559
+
+  if ENV['TRAVIS']
+    Selenium::WebDriver::Firefox.path = '/home/travis/geckodriver'
   end
+
+  {
+    desired_capabilities: Selenium::WebDriver::Remote::Capabilities
+      .firefox(marionette: true)
+  }
 end
 
 def init_driver
