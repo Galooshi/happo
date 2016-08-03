@@ -580,7 +580,7 @@ describe 'happo' do
 
     it 'gets file from other directory' do
       output = run_happo
-      expect(output[:std_err]).not_to include('image not found');
+      expect(output[:std_err]).not_to include('image not found')
     end
   end
 
@@ -607,7 +607,7 @@ describe 'happo' do
 
     it 'gets error when trying to get file from other directory' do
       result = run_happo(disable_raise_errors: true)
-      expect(result[:std_err]).to include('image not found');
+      expect(result[:std_err]).to include('image not found')
     end
   end
 end
