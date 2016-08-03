@@ -27,10 +27,6 @@ def driver_opts
   # @see https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver
   # @see https://github.com/SeleniumHQ/selenium/issues/2559
 
-  if ENV['TRAVIS']
-    Selenium::WebDriver::Firefox.path = '/home/travis/geckodriver'
-  end
-
   {
     desired_capabilities: Selenium::WebDriver::Remote::Capabilities
       .firefox(marionette: true)
