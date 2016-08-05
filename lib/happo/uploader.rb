@@ -1,5 +1,6 @@
 require 's3'
 require 'securerandom'
+require 'uri'
 
 module Happo
   class Uploader
@@ -32,7 +33,7 @@ module Happo
                                                      'diff.png'))
         image.content_type = 'image/png'
         image.save
-        diff[:url] = img_name
+        diff[:url] = URI.escape(img_name)
         diff
       end
 
@@ -44,7 +45,7 @@ module Happo
                                                      'current.png'))
         image.content_type = 'image/png'
         image.save
-        example[:url] = img_name
+        example[:url] = URI.escape(img_name)
         example
       end
 
