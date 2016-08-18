@@ -237,3 +237,7 @@ then, you can use a virtual display server such as
 run for Happo uses `xvfb-run` in order to obtain a virtual display. There are
 other tools that can help you with this as well, for example the [headless
 gem](https://github.com/leonid-shevtsov/headless).
+
+## In the wild
+
+[Organizations and projects using Happo](INTHEWILD.md).
