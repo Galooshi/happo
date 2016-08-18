@@ -180,6 +180,22 @@ describe 'happo' do
     end
   end
 
+  describe 'with an element rendered outside the screen' do
+    let(:examples_js) { <<-EOS }
+      happo.define('#{description}', function() {
+        var elem = document.createElement('div');
+        elem.style.margin = '-5px';
+        elem.innerHTML = 'Foo';
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+    EOS
+
+    it 'exits with a zero exit code' do
+      expect(run_happo[:exit_status]).to eq(0)
+    end
+  end
+
   describe 'with a previous run' do
     context 'and no diff' do
       before do
