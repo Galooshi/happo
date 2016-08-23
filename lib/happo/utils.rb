@@ -77,5 +77,10 @@ module Happo
         previous_images: previous_images.map(&prepare_file)
       }
     end
+
+    def self.favicon_as_base64
+      favicon = File.expand_path('../public/favicon.ico', __FILE__)
+      "data:image/ico;base64,#{Base64.encode64(File.binread(favicon))}"
+    end
   end
 end

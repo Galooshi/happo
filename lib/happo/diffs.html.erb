@@ -1,8 +1,10 @@
 <% require 'rack' %>
+<% require 'happo' %>
 <!DOCTYPE html>
 <html>
   <head>
     <title>Happo diffs</title>
+    <link rel="shortcut icon" href="<%= Happo::Utils.favicon_as_base64 %>" />
   </head>
   <body>
     <h1>Happo diffs</h1>
