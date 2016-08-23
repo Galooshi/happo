@@ -21,7 +21,7 @@
         $.each(happo.defined, function(_, example) {
           ul.append($('<li>').append(
             $('<a>', {
-              href: '/?description=' + encodeURIComponent(example.description)
+              href: '/?debug=true&description=' + encodeURIComponent(example.description)
             }).text(example.description)
           ));
         });
