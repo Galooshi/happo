@@ -11,6 +11,12 @@
         -moz-animation-duration: 0s !important;
         animation-duration: 0s !important;
       }
+
+      body {
+        background-color: #fff;
+        margin: 0;
+        pointer-events: none;
+      }
     </style>
 
     <% @config['stylesheets'].each do |stylesheet| %>
@@ -22,6 +28,6 @@
       <script src="/resource?file=<%= ERB::Util.url_encode(source_file) %>"></script>
     <% end %>
   </head>
-  <body style="background-color: #fff; margin: 0; pointer-events: none;">
+  <body>
   </body>
 </html>
