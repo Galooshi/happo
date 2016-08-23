@@ -16,6 +16,11 @@
         background-color: #fff;
         margin: 0;
         <% unless params[:debug] %>
+          /*
+            We disable pointer events to prevent spurious diffs happening as a
+            result of an accidental mouse hover (or click) in the browser
+            window where happo is running.
+           */
           pointer-events: none;
         <% end %>
       }
