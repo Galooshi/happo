@@ -15,7 +15,9 @@
       body {
         background-color: #fff;
         margin: 0;
-        pointer-events: none;
+        <% unless params[:debug] %>
+          pointer-events: none;
+        <% end %>
       }
     </style>
 
