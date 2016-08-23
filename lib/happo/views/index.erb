@@ -13,6 +13,7 @@
       }
     </style>
 
+    <link rel="shortcut icon" href="<%= Happo::Utils.favicon_as_base64 %>" />
     <% @config['stylesheets'].each do |stylesheet| %>
       <link rel="stylesheet" type="text/css"
         href="/resource?file=<%= ERB::Util.url_encode(stylesheet) %>">
