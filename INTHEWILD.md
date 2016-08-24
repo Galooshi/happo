@@ -4,6 +4,7 @@ Organizations
 ----------
  - [Airbnb](https://github.com/airbnb)
  - [Brigade](https://github.com/brigade)
+ - [Remix](https://github.com/remix)
 
 Projects
 ----------
