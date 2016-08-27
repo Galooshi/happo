@@ -12,8 +12,7 @@ module Happo
     end
 
     def upload_diffs
-      result_summary = YAML.load(File.read(File.join(
-        Happo::Utils.config['snapshots_folder'], 'result_summary.yaml')))
+      result_summary = Happo::Utils.last_result_summary
 
       return [] if result_summary[:diff_examples].empty? &&
                    result_summary[:new_examples].empty?
@@ -51,7 +50,7 @@ module Happo
 
       html = bucket.objects.build("#{dir}/index.html")
       path = File.expand_path(
-        File.join(File.dirname(__FILE__), 'diffs.html.erb'))
+        File.join(File.dirname(__FILE__), 'views', 'diffs.erb'))
       html.content = ERB.new(File.read(path)).result(binding)
       html.content_type = 'text/html'
       html.save

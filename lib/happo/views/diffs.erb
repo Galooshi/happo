@@ -1,0 +1,38 @@
+<% require 'rack' %>
+<% require 'happo' %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Happo diffs</title>
+    <link rel="shortcut icon" href="<%= Happo::Utils.favicon_as_base64 %>" />
+    <style>
+      <%= Happo::Utils.css_styles %>
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Happo diffs</h1>
+      <div>Generated: <%= Time.now %></div>
+    </header>
+
+    <main>
+      <h2>Diffs (<%= diff_images.count %>)</h2>
+      <% diff_images.each do |diff| %>
+        <h3>
+          <%= Rack::Utils.escape_html(diff[:description]) %> @ <%= diff[:viewport] %>
+        </h3>
+        <p><img src="<%= diff[:url] %>"></p>
+      <% end %>
+
+      <hr>
+
+      <h2>New examples (<%= new_images.count %>)</h2>
+      <% new_images.each do |image| %>
+        <h3>
+          <%= Rack::Utils.escape_html(image[:description]) %> @ <%= image[:viewport] %>
+        </h3>
+        <p><img src="<%= image[:url] %>"></p>
+      <% end %>
+    </main>
+  </body>
+</html>

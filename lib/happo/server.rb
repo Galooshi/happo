@@ -25,8 +25,31 @@ module Happo
     end
 
     get '/review' do
-      @snapshots = Happo::Utils.current_snapshots
-      erb :review
+      result_summary = Happo::Utils.last_result_summary
+
+      diff_images = result_summary[:diff_examples].map do |example|
+        file_path = Happo::Utils.path_to(
+          example[:description],
+          example[:viewport],
+          'diff.png'
+        )
+        example[:url] = "/resource?file=#{ERB::Util.url_encode(file_path)}"
+        example
+      end
+
+      new_images = result_summary[:new_examples].map do |example|
+        file_path = Happo::Utils.path_to(
+          example[:description],
+          example[:viewport],
+          'current.png'
+        )
+        example[:url] = "/resource?file=#{ERB::Util.url_encode(file_path)}"
+        example
+      end
+      erb :diffs, locals: {
+        diff_images: diff_images,
+        new_images: new_images
+      }
     end
 
     get '/resource' do

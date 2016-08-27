@@ -57,30 +57,18 @@ module Happo
                       query: query).to_s
     end
 
-    def self.current_snapshots
-      prepare_file = lambda do |file|
-        viewport_dir = File.expand_path('..', file)
-        description_dir = File.expand_path('..', viewport_dir)
-        {
-          description: Base64.decode64(File.basename(description_dir)),
-          viewport: File.basename(viewport_dir).sub('@', ''),
-          file: file
-        }
-      end
-
-      snapshots_folder = Happo::Utils.config['snapshots_folder']
-      diff_files = Dir.glob("#{snapshots_folder}/**/diff.png")
-      previous_images = Dir.glob("#{snapshots_folder}/**/previous.png")
-
-      {
-        diffs: diff_files.map(&prepare_file),
-        previous_images: previous_images.map(&prepare_file)
-      }
-    end
-
     def self.favicon_as_base64
       favicon = File.expand_path('../public/favicon.ico', __FILE__)
       "data:image/ico;base64,#{Base64.encode64(File.binread(favicon))}"
+    end
+
+    def self.css_styles
+      File.read(File.expand_path('../public/happo-styles.css', __FILE__))
+    end
+
+    def self.last_result_summary
+      YAML.load(File.read(File.join(
+        self.config['snapshots_folder'], 'result_summary.yaml')))
     end
   end
 end
