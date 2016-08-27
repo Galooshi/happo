@@ -12,8 +12,7 @@ module Happo
     end
 
     def upload_diffs
-      result_summary = YAML.load(File.read(File.join(
-        Happo::Utils.config['snapshots_folder'], 'result_summary.yaml')))
+      result_summary = Happo::Utils.last_result_summary
 
       return [] if result_summary[:diff_examples].empty? &&
                    result_summary[:new_examples].empty?
