@@ -55,17 +55,17 @@ module Happo
     get '/review-demo' do
       diff_images = [
         {
-          description: 'First component',
+          description: '<First> with "test"',
           viewport: 'small',
           url: 'http://placehold.it/350x150',
         },
         {
-          description: 'First component',
+          description: '<First> some other \'test\'',
           viewport: 'medium',
           url: 'http://placehold.it/550x150',
         },
         {
-          description: 'First component',
+          description: '<First>',
           viewport: 'large',
           url: 'http://placehold.it/850x150',
         },
@@ -73,17 +73,17 @@ module Happo
 
       new_images = [
         {
-          description: 'New component',
+          description: '<New>',
           viewport: 'small',
           url: 'http://placehold.it/350x150',
         },
         {
-          description: 'New component',
+          description: '<New>',
           viewport: 'medium',
           url: 'http://placehold.it/550x150',
         },
         {
-          description: 'New component',
+          description: '<New>',
           viewport: 'large',
           url: 'http://placehold.it/850x150',
         },
