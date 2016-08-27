@@ -87,6 +87,11 @@ module Happo
           viewport: 'large',
           url: 'http://placehold.it/850x150',
         },
+        {
+          description: '<SomethingElseNew>',
+          viewport: 'small',
+          url: 'http://placehold.it/350x150',
+        },
       ]
 
       erb :diffs, locals: {
