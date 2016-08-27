@@ -61,6 +61,26 @@ module Happo
                       query: query).to_s
     end
 
+    def self.pluralize(count, singular, plural)
+      if count == 1
+        "#{count} #{singular}"
+      else
+        "#{count} #{plural}"
+      end
+    end
+
+    def self.page_title(diff_images, new_images)
+      title = []
+
+      unless diff_images.count == 0
+        title << pluralize(diff_images.count, 'diff', 'diffs')
+      end
+
+      title << "#{new_images.count} new" unless new_images.count == 0
+
+      "#{title.join(', ')} · Happo"
+    end
+
     def self.favicon_as_base64
       favicon = File.expand_path('../public/favicon.ico', __FILE__)
       "data:image/ico;base64,#{Base64.encode64(File.binread(favicon))}"
