@@ -14,7 +14,9 @@
 
   <body>
     <header class="header">
-      <h1 class="header_title">Happo diffs</h1>
+      <h1 class="header_title">
+        <%= Happo::Utils.page_title(diff_images, new_images) %>
+      </h1>
       <div class="header__time">Generated: <%= Time.now %></div>
     </header>
 
