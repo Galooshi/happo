@@ -10,25 +10,29 @@
     </style>
   </head>
   <body>
-    <h1>Happo diffs</h1>
-    <p>File generated: <%= Time.now %></p>
+    <header>
+      <h1>Happo diffs</h1>
+      <div>Generated: <%= Time.now %></div>
+    </header>
 
-    <h2>Diffs (<%= diff_images.count %>)</h2>
-    <% diff_images.each do |diff| %>
-      <h3>
-        <%= Rack::Utils.escape_html(diff[:description]) %> @ <%= diff[:viewport] %>
-      </h3>
-      <p><img src="<%= diff[:url] %>"></p>
-    <% end %>
+    <main>
+      <h2>Diffs (<%= diff_images.count %>)</h2>
+      <% diff_images.each do |diff| %>
+        <h3>
+          <%= Rack::Utils.escape_html(diff[:description]) %> @ <%= diff[:viewport] %>
+        </h3>
+        <p><img src="<%= diff[:url] %>"></p>
+      <% end %>
 
-    <hr>
+      <hr>
 
-    <h2>New examples (<%= new_images.count %>)</h2>
-    <% new_images.each do |image| %>
-      <h3>
-        <%= Rack::Utils.escape_html(image[:description]) %> @ <%= image[:viewport] %>
-      </h3>
-      <p><img src="<%= image[:url] %>"></p>
-    <% end %>
+      <h2>New examples (<%= new_images.count %>)</h2>
+      <% new_images.each do |image| %>
+        <h3>
+          <%= Rack::Utils.escape_html(image[:description]) %> @ <%= image[:viewport] %>
+        </h3>
+        <p><img src="<%= image[:url] %>"></p>
+      <% end %>
+    </main>
   </body>
 </html>

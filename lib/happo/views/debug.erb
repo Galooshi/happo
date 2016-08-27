@@ -13,20 +13,24 @@
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   </head>
   <body>
-    <h1>Happo Debug Tool</h1>
-    <p>Click on an item to render that example in isolation.</p>
-    <script>
-      (function() {
-        var ul = $('<ul>');
-        $('body').append(ul);
-        $.each(happo.defined, function(_, example) {
-          ul.append($('<li>').append(
-            $('<a>', {
-              href: '/?debug=true&description=' + encodeURIComponent(example.description)
-            }).text(example.description)
-          ));
-        });
-      }());
-    </script>
+    <header>
+      <h1>Happo Debug Tool</h1>
+    </header>
+    <main>
+      <p>Click on an item to render that example in isolation.</p>
+      <script>
+        (function() {
+          var ul = $('<ul>');
+          $('main').append(ul);
+          $.each(happo.defined, function(_, example) {
+            ul.append($('<li>').append(
+              $('<a>', {
+                href: '/?debug=true&description=' + encodeURIComponent(example.description)
+              }).text(example.description)
+            ));
+          });
+        }());
+      </script>
+    </main>
   </body>
 </html>

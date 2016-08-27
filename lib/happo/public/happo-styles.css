@@ -8,4 +8,27 @@ body {
     #f4f4f4 10px,
     #f4f4f4 20px
   );
+  margin: 0;
+}
+
+header {
+  align-items: baseline;
+  background-color: #ffffff;
+  border-bottom: 1px solid #cccccc;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 20px 10px 15px;
+}
+
+header > *:first-child {
+  margin-right: 10px;
+}
+
+header h1 {
+  margin: 0;
+}
+
+main {
+  padding: 10px;
 }
