@@ -82,5 +82,9 @@ module Happo
       favicon = File.expand_path('../public/favicon.ico', __FILE__)
       "data:image/ico;base64,#{Base64.encode64(File.binread(favicon))}"
     end
+
+    def self.css_styles
+      File.read(File.expand_path('../public/happo-styles.css', __FILE__))
+    end
   end
 end
