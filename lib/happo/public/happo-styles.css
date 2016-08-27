@@ -21,7 +21,7 @@ body {
   margin: 0;
 }
 
-header {
+.header {
   align-items: baseline;
   background-color: #ffffff;
   border-bottom: 1px solid #cccccc;
@@ -31,14 +31,14 @@ header {
   padding: 20px 10px 15px;
 }
 
-header > *:first-child {
+.header > :first-child {
   margin-right: 10px;
 }
 
-header h1 {
+.header__title {
   margin: 0;
 }
 
-main {
+.main {
   padding: 10px;
 }

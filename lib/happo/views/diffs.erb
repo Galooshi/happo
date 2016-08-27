@@ -13,12 +13,12 @@
   </head>
 
   <body>
-    <header>
-      <h1>Happo diffs</h1>
-      <div>Generated: <%= Time.now %></div>
+    <header class="header">
+      <h1 class="header_title">Happo diffs</h1>
+      <div class="header__time">Generated: <%= Time.now %></div>
     </header>
 
-    <main>
+    <main class="main">
       <h2>Diffs (<%= diff_images.count %>)</h2>
       <% diff_images.each do |diff| %>
         <h3>
