@@ -17,7 +17,7 @@ body {
   );
   background-position: 0 0, 10px 10px;
   background-size: 20px 20px;
-  font-family: helvetica, arial;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   margin: 0;
 }
 
