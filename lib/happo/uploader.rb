@@ -51,7 +51,7 @@ module Happo
 
       html = bucket.objects.build("#{dir}/index.html")
       path = File.expand_path(
-        File.join(File.dirname(__FILE__), 'diffs.html.erb'))
+        File.join(File.dirname(__FILE__), 'views', 'diffs.erb'))
       html.content = ERB.new(File.read(path)).result(binding)
       html.content_type = 'text/html'
       html.save
