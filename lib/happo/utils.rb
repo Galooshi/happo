@@ -94,5 +94,19 @@ module Happo
       YAML.load(File.read(File.join(
         self.config['snapshots_folder'], 'result_summary.yaml')))
     end
+
+    def self.to_slug(string)
+      value = string.gsub(/[^\x00-\x7F]/n, '').to_s
+      value.gsub!(/[']+/, '')
+      value.gsub!(/\W+/, ' ')
+      value.strip!
+      value.downcase!
+      value.tr!(' ', '-')
+      value
+    end
+
+    def self.image_slug(diff_image)
+      to_slug("#{diff_image[:description]} #{diff_image[:viewport]}")
+    end
   end
 end

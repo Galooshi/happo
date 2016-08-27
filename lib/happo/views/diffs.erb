@@ -20,21 +20,35 @@
 
     <main class="main">
       <% if diff_images.count > 0%>
-        <h2>Diffs (<%= diff_images.count %>)</h2>
-        <% diff_images.each do |diff| %>
-          <h3>
-            <%= Rack::Utils.escape_html(diff[:description]) %> @ <%= diff[:viewport] %>
+        <h2 id="diffs">
+          <a href="#diffs">
+            Diffs (<%= diff_images.count %>)
+          </a>
+        </h2>
+
+        <% diff_images.each do |image| %>
+          <h3 id="<%= Happo::Utils.image_slug(image) %>">
+            <a href="#<%= Happo::Utils.image_slug(image) %>">
+              <%= Rack::Utils.escape_html(image[:description]) %> @ <%= image[:viewport] %>
+            </a>
           </h3>
 
-          <img src="<%= diff[:url] %>">
+          <img src="<%= image[:url] %>">
         <% end %>
       <% end %>
 
       <% if new_images.count > 0%>
-        <h2>New examples (<%= new_images.count %>)</h2>
+        <h2 id="new">
+          <a href="#new">
+            New examples (<%= new_images.count %>)
+          </a>
+        </h2>
+
         <% new_images.each do |image| %>
-          <h3>
-            <%= Rack::Utils.escape_html(image[:description]) %> @ <%= image[:viewport] %>
+          <h3 id="<%= Happo::Utils.image_slug(image) %>">
+            <a href="#<%= Happo::Utils.image_slug(image) %>">
+              <%= Rack::Utils.escape_html(image[:description]) %> @ <%= image[:viewport] %>
+            </a>
           </h3>
 
           <img src="<%= image[:url] %>">
