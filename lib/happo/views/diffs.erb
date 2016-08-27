@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Happo diffs</title>
+    <title><%= Happo::Utils.page_title(diff_images, new_images) %></title>
 
     <link rel="shortcut icon" href="<%= Happo::Utils.favicon_as_base64 %>" />
 
@@ -14,27 +14,47 @@
 
   <body>
     <header class="header">
-      <h1 class="header_title">Happo diffs</h1>
+      <h1 class="header_title">
+        <%= Happo::Utils.page_title(diff_images, new_images) %>
+      </h1>
       <div class="header__time">Generated: <%= Time.now %></div>
     </header>
 
     <main class="main">
-      <h2>Diffs (<%= diff_images.count %>)</h2>
-      <% diff_images.each do |diff| %>
-        <h3>
-          <%= Rack::Utils.escape_html(diff[:description]) %> @ <%= diff[:viewport] %>
-        </h3>
-        <p><img src="<%= diff[:url] %>"></p>
+      <% if diff_images.count > 0%>
+        <h2 id="diffs">
+          <a href="#diffs">
+            Diffs (<%= diff_images.count %>)
+          </a>
+        </h2>
+
+        <% diff_images.each do |image| %>
+          <h3 id="<%= Happo::Utils.image_slug(image) %>">
+            <a href="#<%= Happo::Utils.image_slug(image) %>">
+              <%= Rack::Utils.escape_html(image[:description]) %> @ <%= image[:viewport] %>
+            </a>
+          </h3>
+
+          <img src="<%= image[:url] %>">
+        <% end %>
       <% end %>
 
-      <hr>
+      <% if new_images.count > 0%>
+        <h2 id="new">
+          <a href="#new">
+            New examples (<%= new_images.count %>)
+          </a>
+        </h2>
 
-      <h2>New examples (<%= new_images.count %>)</h2>
-      <% new_images.each do |image| %>
-        <h3>
-          <%= Rack::Utils.escape_html(image[:description]) %> @ <%= image[:viewport] %>
-        </h3>
-        <p><img src="<%= image[:url] %>"></p>
+        <% new_images.each do |image| %>
+          <h3 id="<%= Happo::Utils.image_slug(image) %>">
+            <a href="#<%= Happo::Utils.image_slug(image) %>">
+              <%= Rack::Utils.escape_html(image[:description]) %> @ <%= image[:viewport] %>
+            </a>
+          </h3>
+
+          <img src="<%= image[:url] %>">
+        <% end %>
       <% end %>
     </main>
   </body>

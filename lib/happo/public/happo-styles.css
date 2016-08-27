@@ -24,7 +24,7 @@ body {
 .header {
   align-items: baseline;
   background-color: #ffffff;
-  border-bottom: 1px solid #cccccc;
+  box-shadow: 0 0 4px rgba(0, 0, 0, .3);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
