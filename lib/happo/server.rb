@@ -52,6 +52,49 @@ module Happo
       }
     end
 
+    get '/review-demo' do
+      diff_images = [
+        {
+          description: 'First component',
+          viewport: 'small',
+          url: 'http://placehold.it/350x150',
+        },
+        {
+          description: 'First component',
+          viewport: 'medium',
+          url: 'http://placehold.it/550x150',
+        },
+        {
+          description: 'First component',
+          viewport: 'large',
+          url: 'http://placehold.it/850x150',
+        },
+      ]
+
+      new_images = [
+        {
+          description: 'New component',
+          viewport: 'small',
+          url: 'http://placehold.it/350x150',
+        },
+        {
+          description: 'New component',
+          viewport: 'medium',
+          url: 'http://placehold.it/550x150',
+        },
+        {
+          description: 'New component',
+          viewport: 'large',
+          url: 'http://placehold.it/850x150',
+        },
+      ]
+
+      erb :diffs, locals: {
+        diff_images: diff_images,
+        new_images: new_images
+      }
+    end
+
     get '/resource' do
       file = params[:file]
       if file.start_with? 'http'

@@ -32,7 +32,11 @@ module Happo
 
     def self.config_from_file
       config_file_name = ENV['HAPPO_CONFIG_FILE'] || '.happo.yaml'
-      YAML.load(ERB.new(File.read(config_file_name)).result)
+      if File.exist?(config_file_name)
+        YAML.load(ERB.new(File.read(config_file_name)).result)
+      else
+        {}
+      end
     end
 
     def self.normalize_description(description)
