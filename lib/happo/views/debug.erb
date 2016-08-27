@@ -2,21 +2,26 @@
 <html>
   <head>
     <title>Happo Debug Tool</title>
+
     <link rel="shortcut icon" href="<%= Happo::Utils.favicon_as_base64 %>" />
+
     <style>
       <%= Happo::Utils.css_styles %>
     </style>
+
     <script src="/happo-runner.js"></script>
     <% @config['source_files'].each do |source_file| %>
       <script src="/resource?file=<%= ERB::Util.url_encode(source_file) %>"></script>
     <% end %>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   </head>
+
   <body>
-    <header>
-      <h1>Happo Debug Tool</h1>
+    <header class="header">
+      <h1 class="header__title">Happo Debug Tool</h1>
     </header>
-    <main>
+
+    <main class="main">
       <p>Click on an item to render that example in isolation.</p>
       <script>
         (function() {
