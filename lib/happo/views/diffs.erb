@@ -23,14 +23,14 @@
     <main class="main">
       <% if diff_images.count > 0%>
         <h2 id="diffs">
-          <a href="#diffs">
+          <a class="anchored" href="#diffs">
             Diffs (<%= diff_images.count %>)
           </a>
         </h2>
 
         <% diff_images.each do |image| %>
           <h3 id="<%= Happo::Utils.image_slug(image) %>">
-            <a href="#<%= Happo::Utils.image_slug(image) %>">
+            <a class="anchored" href="#<%= Happo::Utils.image_slug(image) %>">
               <%= Rack::Utils.escape_html(image[:description]) %> @ <%= image[:viewport] %>
             </a>
           </h3>
@@ -41,14 +41,14 @@
 
       <% if new_images.count > 0%>
         <h2 id="new">
-          <a href="#new">
+          <a class="anchored" href="#new">
             New examples (<%= new_images.count %>)
           </a>
         </h2>
 
         <% new_images.each do |image| %>
           <h3 id="<%= Happo::Utils.image_slug(image) %>">
-            <a href="#<%= Happo::Utils.image_slug(image) %>">
+            <a class="anchored" href="#<%= Happo::Utils.image_slug(image) %>">
               <%= Rack::Utils.escape_html(image[:description]) %> @ <%= image[:viewport] %>
             </a>
           </h3>
