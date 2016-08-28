@@ -90,22 +90,13 @@ module Happo
       File.read(File.expand_path('../public/happo-styles.css', __FILE__))
     end
 
+    def self.jsx_code
+      File.read(File.expand_path('../public/HappoDiffs.jsx', __FILE__))
+    end
+
     def self.last_result_summary
       YAML.load(File.read(File.join(
         self.config['snapshots_folder'], 'result_summary.yaml')))
-    end
-
-    def self.to_inline_slug(string)
-      value = string.gsub(/[^\x00-\x7F]/n, '').to_s
-      value.gsub!(/[']+/, '')
-      value.gsub!(/\W+/, ' ')
-      value.strip!
-      value.tr!(' ', '-')
-      URI.escape(value)
-    end
-
-    def self.image_slug(diff_image)
-      to_inline_slug("#{diff_image[:description]} #{diff_image[:viewport]}")
     end
   end
 end
