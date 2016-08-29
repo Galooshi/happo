@@ -28,12 +28,24 @@ module Happo
       result_summary = Happo::Utils.last_result_summary
 
       diff_images = result_summary[:diff_examples].map do |example|
-        file_path = Happo::Utils.path_to(
+        diff_file_path = Happo::Utils.path_to(
           example[:description],
           example[:viewport],
           'diff.png'
         )
-        example[:url] = "/resource?file=#{ERB::Util.url_encode(file_path)}"
+        before_file_path = Happo::Utils.path_to(
+          example[:description],
+          example[:viewport],
+          'previous.png'
+        )
+        after_file_path = Happo::Utils.path_to(
+          example[:description],
+          example[:viewport],
+          'current.png'
+        )
+        example[:url] = "/resource?file=#{ERB::Util.url_encode(diff_file_path)}"
+        example[:beforeUrl] = "/resource?file=#{ERB::Util.url_encode(before_file_path)}"
+        example[:afterUrl] = "/resource?file=#{ERB::Util.url_encode(after_file_path)}"
         example
       end
 

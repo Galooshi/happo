@@ -1,19 +1,24 @@
 require 'oily_png'
 require 'diff-lcs'
-require_relative 'snapshot_comparison_image/base'
-require_relative 'snapshot_comparison_image/gutter'
-require_relative 'snapshot_comparison_image/before'
-require_relative 'snapshot_comparison_image/overlayed'
-require_relative 'snapshot_comparison_image/after'
 
 module Happo
   # This class is responsible for comparing two Snapshots and generating a diff.
   class SnapshotComparer
+    include ChunkyPNG::Color
+    BASE_OPACITY    = 0.1
+    BASE_ALPHA      = (255 * BASE_OPACITY).round
+    BASE_DIFF_ALPHA = BASE_ALPHA * 2
+    MAGENTA = ChunkyPNG::Color.from_hex '#b33682'
+    WHITE_OVERLAY = ChunkyPNG::Color.fade(WHITE, 1 - BASE_ALPHA)
+
     # @param png_before [ChunkyPNG::Image]
     # @param png_after  [ChunkyPNG::Image]
     def initialize(png_before, png_after)
       @png_after  = png_after
       @png_before = png_before
+
+      @diff_pixels  = {}
+      @faded_pixels = {}
     end
 
     # @return [Hash]
@@ -27,65 +32,89 @@ module Happo
       # work.
       return no_diff if @png_before == @png_after
 
-      array_before = to_array_of_arrays(@png_before)
-      array_after = to_array_of_arrays(@png_after)
+      max_height = [@png_after.height, @png_before.height].max
+      max_width = [@png_after.width, @png_before.width].max
 
-      # If the arrays of arrays of colors are identical, we don't need to do any
-      # more work. This might happen if some of the headers are different.
-      return no_diff if array_before == array_after
+      diff_image = ChunkyPNG::Image.new(max_width, max_height)
 
-      sdiff = Diff::LCS.sdiff(array_before, array_after)
-      number_of_different_rows = 0
+      number_of_different_pixels = 0
 
-      sprite, all_comparisons = initialize_comparison_images(
-        [@png_after.width, @png_before.width].max, sdiff.size)
-
-      sdiff.each_with_index do |row, y|
-        # each row is a Diff::LCS::ContextChange instance
-        all_comparisons.each { |image| image.render_row(y, row) }
-        number_of_different_rows += 1 unless row.unchanged?
+      max_height.times do |y|
+        max_width.times do |x|
+          pixel_before = @png_before.get_pixel(x, y)
+          pixel_after = @png_after.get_pixel(x, y)
+          number_of_different_pixels += 1 unless pixel_before == pixel_after
+          diff_image.set_pixel(x, y, faded_magenta_pixel(
+            pixel_after  || TRANSPARENT,
+            pixel_before || TRANSPARENT
+          ))
+        end
       end
 
-      percent_changed = number_of_different_rows.to_f / sdiff.size * 100
+      # Even though we have a check at the top to see image equality, there's
+      # still a chance we end up here with no differenve. This might happen if
+      # some of the headers are different.
+      return no_diff if number_of_different_pixels.zero?
+
+      percent_changed =
+        number_of_different_pixels.to_f / max_width * max_height * 100
+
       {
         diff_in_percent: percent_changed,
-        diff_image:      (sprite if percent_changed > 0),
+        diff_image:      (diff_image if percent_changed.positive?),
       }
     end
 
     private
 
-    # @param [ChunkyPNG::Image]
-    # @return [Array<Array<Integer>>]
-    def to_array_of_arrays(chunky_png)
-      array_of_arrays = []
-      chunky_png.height.times do |y|
-        array_of_arrays << chunky_png.row(y)
-      end
-      array_of_arrays
+    # Compute a score that represents the difference between 2 pixels
+    #
+    # This method simply takes the Euclidean distance between the RGBA channels
+    # of 2 colors over the maximum possible Euclidean distance. This gives us a
+    # percentage of how different the two colors are.
+    #
+    # Although it would be more perceptually accurate to calculate a proper
+    # Delta E in Lab colorspace, we probably don't need perceptual accuracy for
+    # this application, and it is nice to avoid the overhead of converting RGBA
+    # to Lab.
+    #
+    # @param pixel_after [Integer]
+    # @param pixel_before [Integer]
+    # @return [Float] number between 0 and 1 where 1 is completely different
+    #   and 0 is no difference
+    def pixel_diff_score(pixel_after, pixel_before)
+      ChunkyPNG::Color::euclidean_distance_rgba(pixel_after, pixel_before) /
+        ChunkyPNG::Color::MAX_EUCLIDEAN_DISTANCE_RGBA
     end
 
-    # @param canvas [ChunkyPNG::Image] The output image to draw pixels on
-    # @return [Array<SnapshotComparisonImage>]
-    def initialize_comparison_images(width, height)
-      gutter_width = Happo::SnapshotComparisonImage::Gutter::WIDTH
-      total_width = (width * 3) + (gutter_width * 3)
+    # @param pixel_after [Integer]
+    # @param pixel_before [Integer]
+    def faded_magenta_pixel(pixel_after, pixel_before)
+      score = pixel_diff_score(pixel_after, pixel_before)
+      if score > 0
+        diff_pixel(score)
+      else
+        faded_pixel(pixel_after)
+      end
+    end
 
-      sprite = ChunkyPNG::Image.new(total_width, height)
-      offset, comparison_images = 0, []
-      comparison_images << Happo::SnapshotComparisonImage::Gutter.new(offset, sprite)
-      offset += gutter_width
-      comparison_images << Happo::SnapshotComparisonImage::Before.new(offset, sprite)
-      offset += width
-      comparison_images << Happo::SnapshotComparisonImage::Gutter.new(offset, sprite)
-      offset += gutter_width
-      comparison_images << Happo::SnapshotComparisonImage::Overlayed.new(offset, sprite)
-      offset += width
-      comparison_images << Happo::SnapshotComparisonImage::Gutter.new(offset, sprite)
-      offset += gutter_width
-      comparison_images << Happo::SnapshotComparisonImage::After.new(offset, sprite)
+    # @param diff_score [Float]
+    # @return [Integer] a number between 0 and 255 that represents the alpha
+    #   channel of of the difference
+    def diff_alpha(diff_score)
+      (BASE_DIFF_ALPHA + ((255 - BASE_DIFF_ALPHA) * diff_score)).round
+    end
 
-      [sprite, comparison_images]
+    # @param score [Float]
+    def diff_pixel(score)
+      @diff_pixels[score] ||=
+        compose_quick(fade(MAGENTA, diff_alpha(score)), WHITE)
+    end
+
+    # @param pixel [Integer]
+    def faded_pixel(pixel)
+      @faded_pixels[pixel] ||=
+        compose_quick(WHITE_OVERLAY, pixel)
     end
   end
 end
