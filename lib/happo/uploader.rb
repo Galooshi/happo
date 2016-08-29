@@ -52,6 +52,7 @@ module Happo
       path = File.expand_path(
         File.join(File.dirname(__FILE__), 'views', 'diffs.erb'))
       html.content = ERB.new(File.read(path)).result(binding)
+      html.content_encoding = 'utf-8'
       html.content_type = 'text/html'
       html.save
       html.url
