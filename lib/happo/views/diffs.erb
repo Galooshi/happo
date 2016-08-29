@@ -21,6 +21,8 @@
   </head>
 
   <body>
+    <div id="react-root"></div>
+
     <script type="text/babel">
       ReactDOM.render(
         <HappoDiffs
@@ -29,7 +31,7 @@
           pageTitle={<%= Happo::Utils.page_title(diff_images, new_images).to_json %>}
           generatedAt={<%= Time.now.to_s.to_json %>}
         />,
-        document.body
+        document.getElementById('react-root')
       );
     </script>
   </body>
