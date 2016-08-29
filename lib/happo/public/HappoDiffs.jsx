@@ -3,24 +3,32 @@ const PropTypes = React.PropTypes;
 const imageObjectStructure = {
   description: PropTypes.string.isRequired,
   viewport: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired,
+  diff: PropTypes.string.isRequired,
+  previous: PropTypes.string,
+  current: PropTypes.string,
 };
 
 function imageSlug(image) {
   return btoa(image.description +  image.viewport);
 }
 
-function renderImage(image) {
+function renderImageHeading(image) {
+  return (
+    <h3 id={imageSlug(image)}>
+      <a className='anchored' href={`#${imageSlug(image)}`}>
+        {image.description}
+        {' @ '}
+        {image.viewport}
+      </a>
+    </h3>
+  );
+}
+
+function renderNewImage(image) {
   return (
     <div>
-      <h3 id={imageSlug(image)}>
-        <a className='anchored' href={`#${imageSlug(image)}`}>
-          {image.description}
-          {' @ '}
-          {image.viewport}
-        </a>
-      </h3>
-      <img src={image.url} />
+      {renderImageHeading(image)}
+      <img src={image.current} />
     </div>
   );
 }
@@ -38,7 +46,12 @@ function renderDiffImages(diffImages) {
         </a>
       </h2>
 
-      {diffImages.map(renderImage)}
+      {diffImages.map((image, i) => (
+        <HappoDiff
+          key={i}
+          image={image}
+        />
+      ))}
     </div>
   );
 }
@@ -56,10 +69,33 @@ function renderNewImages(newImages) {
         </a>
       </h2>
 
-      {newImages.map(renderImage)}
+      {newImages.map(renderNewImage)}
     </div>
   );
 }
+
+const HappoDiff = React.createClass({
+  propTypes: {
+    image: PropTypes.shape(imageObjectStructure),
+  },
+
+  render() {
+    const {
+      image,
+    } = this.props;
+
+    return (
+      <div>
+        {renderImageHeading(image)}
+        <div className='happo-diff__images'>
+          <img src={image.previous} />
+          <img src={image.diff} />
+          <img src={image.current} />
+        </div>
+      </div>
+    );
+  }
+});
 
 window.HappoDiffs = React.createClass({
   propTypes: {

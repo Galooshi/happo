@@ -66,3 +66,7 @@ body {
 .main {
   padding: 10px;
 }
+
+.happo-diff__images {
+  white-space: nowrap;
+}
