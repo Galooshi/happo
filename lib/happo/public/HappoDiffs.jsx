@@ -7,7 +7,6 @@ const imageObjectStructure = {
 };
 
 function imageSlug(image) {
-  // TODO can we just use btoa() here?
   return btoa(image.description +  image.viewport);
 }
 
