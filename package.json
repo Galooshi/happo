@@ -14,5 +14,6 @@
   "bugs": {
     "url": "https://github.com/Galooshi/happo/issues"
   },
-  "homepage": "https://github.com/Galooshi/happo#readme"
+  "homepage": "https://github.com/Galooshi/happo#readme",
+  "private": true
 }
