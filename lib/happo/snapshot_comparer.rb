@@ -48,7 +48,7 @@ module Happo
       percent_changed = number_of_different_rows.to_f / sdiff.size * 100
       {
         diff_in_percent: percent_changed,
-        diff_image:      (sprite if percent_changed.positive?),
+        diff_image:      (sprite if percent_changed > 0.0),
       }
     end
 
