@@ -81,20 +81,66 @@ function HappoNewImages({ images }) {
   );
 }
 
-function HappoDiff({ image }) {
-  return (
-    <div>
-      <HappoImageHeading
-        image={image}
-      />
-      <div className='happo-diff__images'>
-        <img src={image.previous} />
+const HappoDiff = React.createClass({
+  propTypes: {
+    image: PropTypes.shape(imageObjectStructure),
+  },
+
+  getInitialState() {
+    return {
+      selectedView: 'side-by-side',
+    };
+  },
+
+  _renderSelectedView() {
+    const { image } = this.props;
+    const { selectedView } = this.state;
+
+    if (selectedView === 'side-by-side') {
+      return (
+        <div>
+          <img src={image.previous} />
+          <img src={image.current} />
+        </div>
+      );
+    }
+
+    if (selectedView === 'diff') {
+      return (
         <img src={image.diff} />
-        <img src={image.current} />
+      );
+    }
+  },
+
+  render() {
+    const { image } = this.props;
+    const { selectedView } = this.state;
+
+    return (
+      <div>
+        <HappoImageHeading
+          image={image}
+        />
+        <div className='happo-diff__buttons'>
+          {['side-by-side', 'diff'].map((view) => {
+            return (
+              <button
+                className='happo-diff__button'
+                aria-pressed={view === selectedView}
+                onClick={() => this.setState({ selectedView: view })}
+              >
+                {view}
+              </button>
+            );
+          })}
+        </div>
+        <div className='happo-diff__images'>
+          {this._renderSelectedView()}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
+});
 
 window.HappoDiffs = React.createClass({
   propTypes: {

@@ -70,3 +70,18 @@ body {
 .happo-diff__images {
   white-space: nowrap;
 }
+
+.happo-diff__buttons {
+  margin-bottom: 5px;
+}
+
+.happo-diff__button {
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  padding: 5px 15px;
+}
+
+.happo-diff__button[aria-pressed="true"] {
+  background-color: #666;
+  color: white;
+}
