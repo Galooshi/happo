@@ -1,7 +1,7 @@
 /* global React */
 const PropTypes = React.PropTypes;
 
-const imageObjectStructure = {
+const imageShape = {
   description: PropTypes.string.isRequired,
   viewport: PropTypes.string.isRequired,
   diff: PropTypes.string.isRequired,
@@ -24,6 +24,9 @@ function HappoImageHeading({ image }) {
     </h3>
   );
 }
+HappoImageHeading.propTypes = {
+  image: PropTypes.shape(imageShape),
+};
 
 function HappoNewImage({ image }) {
   return (
@@ -35,6 +38,9 @@ function HappoNewImage({ image }) {
     </div>
   );
 }
+HappoNewImage.propTypes = {
+  image: PropTypes.shape(imageShape),
+};
 
 function HappoDiffImages({ images }) {
   if (!images.length) {
@@ -58,6 +64,9 @@ function HappoDiffImages({ images }) {
     </div>
   );
 }
+HappoDiffImages.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.shape(imageShape)),
+};
 
 function HappoNewImages({ images }) {
   if (!images.length) {
@@ -81,6 +90,9 @@ function HappoNewImages({ images }) {
     </div>
   );
 }
+HappoNewImages.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.shape(imageShape)),
+};
 
 function SelectedView({ image, selectedView }) {
   if (selectedView === 'side-by-side') {
@@ -98,10 +110,14 @@ function SelectedView({ image, selectedView }) {
     );
   }
 };
+SelectedView.propTypes = {
+  image: PropTypes.shape(imageShape),
+  selectedView: PropTypes.string,
+};
 
 const HappoDiff = React.createClass({
   propTypes: {
-    image: PropTypes.shape(imageObjectStructure),
+    image: PropTypes.shape(imageShape),
   },
 
   getInitialState() {
@@ -143,8 +159,8 @@ const HappoDiff = React.createClass({
 window.HappoDiffs = React.createClass({
   propTypes: {
     pageTitle: PropTypes.string.isRequired,
-    diffImages: PropTypes.arrayOf(imageObjectStructure).isRequired,
-    newImages: PropTypes.arrayOf(imageObjectStructure).isRequired,
+    diffImages: PropTypes.arrayOf(imageShape).isRequired,
+    newImages: PropTypes.arrayOf(imageShape).isRequired,
     generatedAt: PropTypes.string.isRequired,
   },
 
