@@ -1,0 +1,18 @@
+{
+  "name": "happo",
+  "version": "0.0.0",
+  "description": "Command-line tool to visually diff JavaScript components",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Galooshi/happo.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Galooshi/happo/issues"
+  },
+  "homepage": "https://github.com/Galooshi/happo#readme"
+}
