@@ -1,3 +1,4 @@
+/* global React */
 const PropTypes = React.PropTypes;
 
 const imageObjectStructure = {
