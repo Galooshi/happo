@@ -109,7 +109,7 @@ function SelectedView({ image, selectedView }) {
       <img src={image.diff} />
     );
   }
-};
+}
 SelectedView.propTypes = {
   image: PropTypes.shape(imageShape),
   selectedView: PropTypes.string,
@@ -151,7 +151,7 @@ const HappoDiff = React.createClass({
         </div>
       </div>
     );
-  }
+  },
 });
 
 window.HappoDiffs = React.createClass({
@@ -184,5 +184,5 @@ window.HappoDiffs = React.createClass({
         </main>
       </div>
     );
-  }
+  },
 });
