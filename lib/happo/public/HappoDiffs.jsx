@@ -81,6 +81,23 @@ function HappoNewImages({ images }) {
   );
 }
 
+function SelectedView({ image, selectedView }) {
+  if (selectedView === 'side-by-side') {
+    return (
+      <div>
+        <img src={image.previous} />
+        <img src={image.current} />
+      </div>
+    );
+  }
+
+  if (selectedView === 'diff') {
+    return (
+      <img src={image.diff} />
+    );
+  }
+};
+
 const HappoDiff = React.createClass({
   propTypes: {
     image: PropTypes.shape(imageObjectStructure),
@@ -90,26 +107,6 @@ const HappoDiff = React.createClass({
     return {
       selectedView: 'side-by-side',
     };
-  },
-
-  _renderSelectedView() {
-    const { image } = this.props;
-    const { selectedView } = this.state;
-
-    if (selectedView === 'side-by-side') {
-      return (
-        <div>
-          <img src={image.previous} />
-          <img src={image.current} />
-        </div>
-      );
-    }
-
-    if (selectedView === 'diff') {
-      return (
-        <img src={image.diff} />
-      );
-    }
   },
 
   render() {
@@ -135,7 +132,7 @@ const HappoDiff = React.createClass({
           })}
         </div>
         <div className='happo-diff__images'>
-          {this._renderSelectedView()}
+          <SelectedView image={image} selectedView={selectedView} />
         </div>
       </div>
     );
