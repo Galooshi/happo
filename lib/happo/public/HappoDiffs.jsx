@@ -10,7 +10,7 @@ const imageObjectStructure = {
 };
 
 function imageSlug(image) {
-  return btoa(image.description +  image.viewport);
+  return btoa(image.description + image.viewport);
 }
 
 function HappoImageHeading({ image }) {
