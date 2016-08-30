@@ -136,17 +136,15 @@ const HappoDiff = React.createClass({
           image={image}
         />
         <div className='happo-diff__buttons'>
-          {['side-by-side', 'diff'].map((view) => {
-            return (
-              <button
-                className='happo-diff__button'
-                aria-pressed={view === selectedView}
-                onClick={() => this.setState({ selectedView: view })}
-              >
-                {view}
-              </button>
-            );
-          })}
+          {['side-by-side', 'diff'].map((view) => (
+            <button
+              className='happo-diff__button'
+              aria-pressed={view === selectedView}
+              onClick={() => this.setState({ selectedView: view })}
+            >
+              {view}
+            </button>
+          ))}
         </div>
         <div className='happo-diff__images'>
           <SelectedView image={image} selectedView={selectedView} />
