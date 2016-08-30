@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "description": "Command-line tool to visually diff JavaScript components",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "eslint": "eslint --ext .js,.jsx",
+    "test": "npm run --silent eslint -- ."
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,12 @@
     "url": "https://github.com/Galooshi/happo/issues"
   },
   "homepage": "https://github.com/Galooshi/happo#readme",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "eslint": "^3.4.0",
+    "eslint-config-airbnb": "^10.0.1",
+    "eslint-plugin-import": "^1.14.0",
+    "eslint-plugin-jsx-a11y": "^2.2.0",
+    "eslint-plugin-react": "^6.2.0"
+  }
 }
