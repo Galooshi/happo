@@ -1,6 +1,7 @@
+/* global React */
 const PropTypes = React.PropTypes;
 
-const imageObjectStructure = {
+const imageShape = {
   description: PropTypes.string.isRequired,
   viewport: PropTypes.string.isRequired,
   diff: PropTypes.string.isRequired,
@@ -9,7 +10,7 @@ const imageObjectStructure = {
 };
 
 function imageSlug(image) {
-  return btoa(image.description +  image.viewport);
+  return btoa(image.description + image.viewport);
 }
 
 function HappoImageHeading({ image }) {
@@ -23,6 +24,9 @@ function HappoImageHeading({ image }) {
     </h3>
   );
 }
+HappoImageHeading.propTypes = {
+  image: PropTypes.shape(imageShape),
+};
 
 function HappoNewImage({ image }) {
   return (
@@ -34,6 +38,9 @@ function HappoNewImage({ image }) {
     </div>
   );
 }
+HappoNewImage.propTypes = {
+  image: PropTypes.shape(imageShape),
+};
 
 function HappoDiffImages({ images }) {
   if (!images.length) {
@@ -57,6 +64,9 @@ function HappoDiffImages({ images }) {
     </div>
   );
 }
+HappoDiffImages.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.shape(imageShape)),
+};
 
 function HappoNewImages({ images }) {
   if (!images.length) {
@@ -80,36 +90,40 @@ function HappoNewImages({ images }) {
     </div>
   );
 }
+HappoNewImages.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.shape(imageShape)),
+};
+
+function SelectedView({ image, selectedView }) {
+  if (selectedView === 'side-by-side') {
+    return (
+      <div>
+        <img src={image.previous} />
+        <img src={image.current} />
+      </div>
+    );
+  }
+
+  if (selectedView === 'diff') {
+    return (
+      <img src={image.diff} />
+    );
+  }
+}
+SelectedView.propTypes = {
+  image: PropTypes.shape(imageShape),
+  selectedView: PropTypes.string,
+};
 
 const HappoDiff = React.createClass({
   propTypes: {
-    image: PropTypes.shape(imageObjectStructure),
+    image: PropTypes.shape(imageShape),
   },
 
   getInitialState() {
     return {
       selectedView: 'side-by-side',
     };
-  },
-
-  _renderSelectedView() {
-    const { image } = this.props;
-    const { selectedView } = this.state;
-
-    if (selectedView === 'side-by-side') {
-      return (
-        <div>
-          <img src={image.previous} />
-          <img src={image.current} />
-        </div>
-      );
-    }
-
-    if (selectedView === 'diff') {
-      return (
-        <img src={image.diff} />
-      );
-    }
   },
 
   render() {
@@ -122,31 +136,30 @@ const HappoDiff = React.createClass({
           image={image}
         />
         <div className='happo-diff__buttons'>
-          {['side-by-side', 'diff'].map((view) => {
-            return (
-              <button
-                className='happo-diff__button'
-                aria-pressed={view === selectedView}
-                onClick={() => this.setState({ selectedView: view })}
-              >
-                {view}
-              </button>
-            );
-          })}
+          {['side-by-side', 'diff'].map((view) => (
+            <button
+              key={view}
+              className='happo-diff__button'
+              aria-pressed={view === selectedView}
+              onClick={() => this.setState({ selectedView: view })}
+            >
+              {view}
+            </button>
+          ))}
         </div>
         <div className='happo-diff__images'>
-          {this._renderSelectedView()}
+          <SelectedView image={image} selectedView={selectedView} />
         </div>
       </div>
     );
-  }
+  },
 });
 
 window.HappoDiffs = React.createClass({
   propTypes: {
     pageTitle: PropTypes.string.isRequired,
-    diffImages: PropTypes.arrayOf(imageObjectStructure).isRequired,
-    newImages: PropTypes.arrayOf(imageObjectStructure).isRequired,
+    diffImages: PropTypes.arrayOf(imageShape).isRequired,
+    newImages: PropTypes.arrayOf(imageShape).isRequired,
     generatedAt: PropTypes.string.isRequired,
   },
 
@@ -172,5 +185,5 @@ window.HappoDiffs = React.createClass({
         </main>
       </div>
     );
-  }
+  },
 });
