@@ -2,9 +2,7 @@ require 'oily_png'
 require 'diff-lcs'
 require_relative 'snapshot_comparison_image/base'
 require_relative 'snapshot_comparison_image/gutter'
-require_relative 'snapshot_comparison_image/before'
 require_relative 'snapshot_comparison_image/overlayed'
-require_relative 'snapshot_comparison_image/after'
 
 module Happo
   # This class is responsible for comparing two Snapshots and generating a diff.
@@ -38,7 +36,8 @@ module Happo
       number_of_different_rows = 0
 
       sprite, all_comparisons = initialize_comparison_images(
-        [@png_after.width, @png_before.width].max, sdiff.size)
+        [@png_after.width, @png_before.width].max, sdiff.size
+      )
 
       sdiff.each_with_index do |row, y|
         # each row is a Diff::LCS::ContextChange instance
@@ -49,7 +48,7 @@ module Happo
       percent_changed = number_of_different_rows.to_f / sdiff.size * 100
       {
         diff_in_percent: percent_changed,
-        diff_image:      (sprite if percent_changed > 0),
+        diff_image:      (sprite if percent_changed > 0.0),
       }
     end
 
@@ -69,22 +68,13 @@ module Happo
     # @return [Array<SnapshotComparisonImage>]
     def initialize_comparison_images(width, height)
       gutter_width = Happo::SnapshotComparisonImage::Gutter::WIDTH
-      total_width = (width * 3) + (gutter_width * 3)
+      total_width = gutter_width + width
 
       sprite = ChunkyPNG::Image.new(total_width, height)
       offset, comparison_images = 0, []
       comparison_images << Happo::SnapshotComparisonImage::Gutter.new(offset, sprite)
       offset += gutter_width
-      comparison_images << Happo::SnapshotComparisonImage::Before.new(offset, sprite)
-      offset += width
-      comparison_images << Happo::SnapshotComparisonImage::Gutter.new(offset, sprite)
-      offset += gutter_width
       comparison_images << Happo::SnapshotComparisonImage::Overlayed.new(offset, sprite)
-      offset += width
-      comparison_images << Happo::SnapshotComparisonImage::Gutter.new(offset, sprite)
-      offset += gutter_width
-      comparison_images << Happo::SnapshotComparisonImage::After.new(offset, sprite)
-
       [sprite, comparison_images]
     end
   end

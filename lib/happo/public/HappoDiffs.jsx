@@ -3,30 +3,40 @@ const PropTypes = React.PropTypes;
 const imageObjectStructure = {
   description: PropTypes.string.isRequired,
   viewport: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired,
+  diff: PropTypes.string.isRequired,
+  previous: PropTypes.string,
+  current: PropTypes.string,
 };
 
 function imageSlug(image) {
   return btoa(image.description +  image.viewport);
 }
 
-function renderImage(image) {
+function HappoImageHeading({ image }) {
+  return (
+    <h3 id={imageSlug(image)}>
+      <a className='anchored' href={`#${imageSlug(image)}`}>
+        {image.description}
+        {' @ '}
+        {image.viewport}
+      </a>
+    </h3>
+  );
+}
+
+function HappoNewImage({ image }) {
   return (
     <div>
-      <h3 id={imageSlug(image)}>
-        <a className='anchored' href={`#${imageSlug(image)}`}>
-          {image.description}
-          {' @ '}
-          {image.viewport}
-        </a>
-      </h3>
-      <img src={image.url} />
+      <HappoImageHeading
+        image={image}
+      />
+      <img src={image.current} />
     </div>
   );
 }
 
-function renderDiffImages(diffImages) {
-  if (!diffImages.length) {
+function HappoDiffImages({ images }) {
+  if (!images.length) {
     return null;
   }
 
@@ -34,17 +44,22 @@ function renderDiffImages(diffImages) {
     <div>
       <h2 id='diffs'>
         <a className='anchored' href='#diffs'>
-          Diffs ({ diffImages.length })
+          Diffs ({ images.length })
         </a>
       </h2>
 
-      {diffImages.map(renderImage)}
+      {images.map((image, i) =>
+        <HappoDiff
+          key={i}
+          image={image}
+        />
+      )}
     </div>
   );
 }
 
-function renderNewImages(newImages) {
-  if (!newImages.length) {
+function HappoNewImages({ images }) {
+  if (!images.length) {
     return null;
   }
 
@@ -52,14 +67,80 @@ function renderNewImages(newImages) {
     <div>
       <h2 id='new'>
         <a className='anchored' href='#new'>
-          New examples ({ newImages.length })
+          New examples ({ images.length })
         </a>
       </h2>
 
-      {newImages.map(renderImage)}
+      {images.map((image, i) =>
+        <HappoNewImage
+          key={i}
+          image={image}
+        />
+      )}
     </div>
   );
 }
+
+const HappoDiff = React.createClass({
+  propTypes: {
+    image: PropTypes.shape(imageObjectStructure),
+  },
+
+  getInitialState() {
+    return {
+      selectedView: 'side-by-side',
+    };
+  },
+
+  _renderSelectedView() {
+    const { image } = this.props;
+    const { selectedView } = this.state;
+
+    if (selectedView === 'side-by-side') {
+      return (
+        <div>
+          <img src={image.previous} />
+          <img src={image.current} />
+        </div>
+      );
+    }
+
+    if (selectedView === 'diff') {
+      return (
+        <img src={image.diff} />
+      );
+    }
+  },
+
+  render() {
+    const { image } = this.props;
+    const { selectedView } = this.state;
+
+    return (
+      <div>
+        <HappoImageHeading
+          image={image}
+        />
+        <div className='happo-diff__buttons'>
+          {['side-by-side', 'diff'].map((view) => {
+            return (
+              <button
+                className='happo-diff__button'
+                aria-pressed={view === selectedView}
+                onClick={() => this.setState({ selectedView: view })}
+              >
+                {view}
+              </button>
+            );
+          })}
+        </div>
+        <div className='happo-diff__images'>
+          {this._renderSelectedView()}
+        </div>
+      </div>
+    );
+  }
+});
 
 window.HappoDiffs = React.createClass({
   propTypes: {
@@ -82,8 +163,12 @@ window.HappoDiffs = React.createClass({
         </header>
 
         <main className='main'>
-          {renderDiffImages(this.props.diffImages)}
-          {renderNewImages(this.props.newImages)}
+          <HappoDiffImages
+            images={this.props.diffImages}
+          />
+          <HappoNewImages
+            images={this.props.newImages}
+          />
         </main>
       </div>
     );

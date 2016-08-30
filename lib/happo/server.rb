@@ -27,25 +27,28 @@ module Happo
     get '/review' do
       result_summary = Happo::Utils.last_result_summary
 
-      diff_images = result_summary[:diff_examples].map do |example|
-        file_path = Happo::Utils.path_to(
-          example[:description],
-          example[:viewport],
-          'diff.png'
-        )
-        example[:url] = "/resource?file=#{ERB::Util.url_encode(file_path)}"
-        example
+      diff_images = result_summary[:diff_examples].map do |image|
+        [:previous, :diff, :current].each do |variant|
+          file_path = Happo::Utils.path_to(
+            image[:description],
+            image[:viewport],
+            "#{variant}.png"
+          )
+          image[variant] = "/resource?file=#{ERB::Util.url_encode(file_path)}"
+        end
+        image
       end
 
-      new_images = result_summary[:new_examples].map do |example|
+      new_images = result_summary[:new_examples].map do |image|
         file_path = Happo::Utils.path_to(
-          example[:description],
-          example[:viewport],
+          image[:description],
+          image[:viewport],
           'current.png'
         )
-        example[:url] = "/resource?file=#{ERB::Util.url_encode(file_path)}"
-        example
+        image[:current] = "/resource?file=#{ERB::Util.url_encode(file_path)}"
+        image
       end
+
       erb :diffs, locals: {
         diff_images: diff_images,
         new_images: new_images
@@ -57,17 +60,23 @@ module Happo
         {
           description: '<First> with "test"',
           viewport: 'small',
-          url: 'http://placehold.it/350x150',
+          previous: 'http://placehold.it/350x150',
+          diff: 'http://placehold.it/350x150',
+          current: 'http://placehold.it/350x150',
         },
         {
           description: '<First> some other \'test\'',
           viewport: 'medium',
-          url: 'http://placehold.it/550x150',
+          previous: 'http://placehold.it/550x150',
+          diff: 'http://placehold.it/550x150',
+          current: 'http://placehold.it/550x150',
         },
         {
           description: '<First>',
           viewport: 'large',
-          url: 'http://placehold.it/850x150',
+          previous: 'http://placehold.it/850x150',
+          diff: 'http://placehold.it/850x150',
+          current: 'http://placehold.it/850x150',
         },
       ]
 
@@ -75,22 +84,22 @@ module Happo
         {
           description: '<New>',
           viewport: 'small',
-          url: 'http://placehold.it/350x150',
+          current: 'http://placehold.it/350x150',
         },
         {
           description: '<New>',
           viewport: 'medium',
-          url: 'http://placehold.it/550x150',
+          current: 'http://placehold.it/550x150',
         },
         {
           description: '<New>',
           viewport: 'large',
-          url: 'http://placehold.it/850x150',
+          current: 'http://placehold.it/850x150',
         },
         {
           description: '<SomethingElseNew>',
           viewport: 'small',
-          url: 'http://placehold.it/350x150',
+          current: 'http://placehold.it/350x150',
         },
       ]
 
