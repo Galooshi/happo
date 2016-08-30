@@ -138,6 +138,7 @@ const HappoDiff = React.createClass({
         <div className='happo-diff__buttons'>
           {['side-by-side', 'diff'].map((view) => (
             <button
+              key={view}
               className='happo-diff__button'
               aria-pressed={view === selectedView}
               onClick={() => this.setState({ selectedView: view })}
