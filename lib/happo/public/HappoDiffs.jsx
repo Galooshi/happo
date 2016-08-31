@@ -34,7 +34,10 @@ function NewImage({ image }) {
       <ImageHeading
         image={image}
       />
-      <img src={image.current} />
+      <img
+        role='presentation'
+        src={image.current}
+      />
     </div>
   );
 }
@@ -98,15 +101,15 @@ function SelectedView({ image, selectedView }) {
   if (selectedView === 'side-by-side') {
     return (
       <div>
-        <img src={image.previous} />
-        <img src={image.current} />
+        <img role='presentation' src={image.previous} />
+        <img role='presentation' src={image.current} />
       </div>
     );
   }
 
   if (selectedView === 'diff') {
     return (
-      <img src={image.diff} />
+      <img role='presentation' src={image.diff} />
     );
   }
 }
