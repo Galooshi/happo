@@ -30,7 +30,7 @@ function ImageHeading({ image }) {
   );
 }
 ImageHeading.propTypes = {
-  image: PropTypes.shape(imageShape),
+  image: PropTypes.shape(imageShape).isRequired,
 };
 
 function NewImage({ image }) {
@@ -47,7 +47,7 @@ function NewImage({ image }) {
   );
 }
 NewImage.propTypes = {
-  image: PropTypes.shape(imageShape),
+  image: PropTypes.shape(imageShape).isRequired,
 };
 
 function DiffImages({ images }) {
@@ -73,7 +73,7 @@ function DiffImages({ images }) {
   );
 }
 DiffImages.propTypes = {
-  images: PropTypes.arrayOf(PropTypes.shape(imageShape)),
+  images: PropTypes.arrayOf(PropTypes.shape(imageShape)).isRequired,
 };
 
 function NewImages({ images }) {
@@ -99,7 +99,7 @@ function NewImages({ images }) {
   );
 }
 NewImages.propTypes = {
-  images: PropTypes.arrayOf(PropTypes.shape(imageShape)),
+  images: PropTypes.arrayOf(PropTypes.shape(imageShape)).isRequired,
 };
 
 function SelectedView({ image, selectedView }) {
@@ -119,8 +119,8 @@ function SelectedView({ image, selectedView }) {
   }
 }
 SelectedView.propTypes = {
-  image: PropTypes.shape(imageShape),
-  selectedView: PropTypes.string,
+  image: PropTypes.shape(imageShape).isRequired,
+  selectedView: PropTypes.string.isRequired,
 };
 
 class DiffController extends React.Component {
@@ -148,7 +148,7 @@ class DiffController extends React.Component {
   }
 }
 DiffController.propTypes = {
-  image: PropTypes.shape(imageShape),
+  image: PropTypes.shape(imageShape).isRequired,
 };
 
 function Diff({ image, selectedView, onClick }) {
