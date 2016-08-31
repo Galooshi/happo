@@ -18,14 +18,26 @@ function imageSlug(image) {
   return btoa(image.description + image.viewport);
 }
 
+function InlineLink({ children, to }) {
+  return (
+    <a className='InlineLink' href={`#${to}`}>
+      {children}
+    </a>
+  );
+}
+InlineLink.propTypes = {
+  children: PropTypes.node.isRequired,
+  to: PropTypes.string.isRequired,
+};
+
 function ImageHeading({ image }) {
   return (
     <h3 id={imageSlug(image)}>
-      <a className='anchored' href={`#${imageSlug(image)}`}>
+      <InlineLink to={imageSlug(image)}>
         {image.description}
         {' @ '}
         {image.viewport}
-      </a>
+      </InlineLink>
     </h3>
   );
 }
@@ -58,9 +70,9 @@ function DiffImages({ images }) {
   return (
     <div>
       <h2 id='diffs'>
-        <a className='anchored' href='#diffs'>
+        <InlineLink to='diffs'>
           Diffs ({ images.length })
-        </a>
+        </InlineLink>
       </h2>
 
       {images.map((image, i) =>
@@ -84,9 +96,9 @@ function NewImages({ images }) {
   return (
     <div>
       <h2 id='new'>
-        <a className='anchored' href='#new'>
+        <InlineLink to='new'>
           New examples ({ images.length })
-        </a>
+        </InlineLink>
       </h2>
 
       {images.map((image, i) =>
@@ -157,11 +169,11 @@ function Diff({ image, selectedView, onClick }) {
       <ImageHeading
         image={image}
       />
-      <div className='happo-diff__buttons'>
+      <div className='Diff__buttons'>
         {Object.keys(VIEWS).map(key => VIEWS[key]).map((view) => (
           <button
             key={view}
-            className='happo-diff__button'
+            className='Diff__button'
             aria-pressed={view === selectedView}
             onClick={() => { onClick(view); }}
           >
@@ -169,7 +181,7 @@ function Diff({ image, selectedView, onClick }) {
           </button>
         ))}
       </div>
-      <div className='happo-diff__images'>
+      <div className='Diff__images'>
         <SelectedView image={image} selectedView={selectedView} />
       </div>
     </div>
@@ -184,16 +196,16 @@ Diff.propTypes = {
 function HappoDiffs({ pageTitle, generatedAt, diffImages, newImages }) {
   return (
     <div>
-      <header className='header'>
-        <h1 className='header_title'>
+      <header className='HappoDiffs__header'>
+        <h1 className='HappoDiffs__headerTitle'>
           {pageTitle}
         </h1>
-        <div className='header__time'>
+        <div className='HappoDiffs__headerTime'>
           Generated: {generatedAt}
         </div>
       </header>
 
-      <main className='main'>
+      <main className='HappoDiffs__main'>
         <DiffImages
           images={diffImages}
         />
