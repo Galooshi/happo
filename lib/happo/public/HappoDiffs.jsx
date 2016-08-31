@@ -119,6 +119,7 @@ function SelectedView({ image, selectedView }) {
     return (
       <div>
         <img role='presentation' src={image.previous} />
+        {' '}
         <img role='presentation' src={image.current} />
       </div>
     );
