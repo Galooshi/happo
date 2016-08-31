@@ -118,16 +118,13 @@ SelectedView.propTypes = {
   selectedView: PropTypes.string,
 };
 
-const Diff = React.createClass({
-  propTypes: {
-    image: PropTypes.shape(imageShape),
-  },
-
-  getInitialState() {
-    return {
+class Diff extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       selectedView: 'side-by-side',
     };
-  },
+  }
 
   render() {
     const { image } = this.props;
@@ -155,38 +152,41 @@ const Diff = React.createClass({
         </div>
       </div>
     );
-  },
-});
+  }
+}
+Diff.propTypes = {
+  image: PropTypes.shape(imageShape),
+};
 
-window.HappoDiffs = React.createClass({
-  propTypes: {
-    pageTitle: PropTypes.string.isRequired,
-    diffImages: PropTypes.arrayOf(imageShape).isRequired,
-    newImages: PropTypes.arrayOf(imageShape).isRequired,
-    generatedAt: PropTypes.string.isRequired,
-  },
 
-  render() {
-    return (
-      <div>
-        <header className='header'>
-          <h1 className='header_title'>
-            {this.props.pageTitle}
-          </h1>
-          <div className='header__time'>
-            Generated: {this.props.generatedAt}
-          </div>
-        </header>
+function HappoDiffs({ pageTitle, generatedAt, diffImages, newImages }) {
+  return (
+    <div>
+      <header className='header'>
+        <h1 className='header_title'>
+          {pageTitle}
+        </h1>
+        <div className='header__time'>
+          Generated: {generatedAt}
+        </div>
+      </header>
 
-        <main className='main'>
-          <DiffImages
-            images={this.props.diffImages}
-          />
-          <NewImages
-            images={this.props.newImages}
-          />
-        </main>
-      </div>
-    );
-  },
-});
+      <main className='main'>
+        <DiffImages
+          images={diffImages}
+        />
+        <NewImages
+          images={newImages}
+        />
+      </main>
+    </div>
+  );
+}
+HappoDiffs.propTypes = {
+  pageTitle: PropTypes.string.isRequired,
+  diffImages: PropTypes.arrayOf(imageShape).isRequired,
+  newImages: PropTypes.arrayOf(imageShape).isRequired,
+  generatedAt: PropTypes.string.isRequired,
+};
+
+window.HappoDiffs = HappoDiffs;
