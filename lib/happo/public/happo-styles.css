@@ -85,3 +85,23 @@ body {
   background-color: #666;
   color: white;
 }
+
+.Swiper {
+  background-repeat: no-repeat;
+  background-position: top left;
+  display: inline-block;
+  position: relative;
+}
+
+.Swiper__cursor {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background-color: #ccc;
+  pointer-events: none;
+}
+
+.Swiper__image {
+  pointer-events: none;
+}

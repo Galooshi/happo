@@ -4,6 +4,7 @@ const PropTypes = React.PropTypes;
 const VIEWS = {
   SIDE_BY_SIDE: 'side-by-side',
   DIFF: 'diff',
+  SWIPE: 'swipe',
 };
 
 const imageShape = {
@@ -114,6 +115,69 @@ NewImages.propTypes = {
   images: PropTypes.arrayOf(PropTypes.shape(imageShape)).isRequired,
 };
 
+class Swiper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cursorLeftPercent: 50, // Start in the center
+    };
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+  }
+
+  handleMouseMove(event) {
+    const leftPx = event.pageX - event.target.offsetLeft;
+    const leftPercent = leftPx / event.target.offsetWidth * 100;
+
+    this.setState({
+      cursorLeftPercent: leftPercent,
+    })
+  }
+
+  render() {
+    const { previous, current } = this.props;
+    const { cursorLeftPercent } = this.state;
+
+    const polygonPoints = [
+      `${cursorLeftPercent}% 0`, // top leftmost point
+      '100% 0', // top right corner
+      '100% 100%', // bottom right cornder
+      `${cursorLeftPercent}% 100%`, // bottom leftmost point
+    ];
+    const clipPath = `polygon(${polygonPoints.join(',')})`;
+
+    return (
+      <div
+        className='Swiper'
+        style={{
+          backgroundImage: `url(${previous})`,
+        }}
+        onMouseMove={this.handleMouseMove}
+      >
+        <img
+          className='Swiper__image'
+          style={{
+            WebkitClipPath: clipPath,
+            MozClipPath: clipPath,
+            clipPath: clipPath,
+          }}
+          src={current}
+          role='presentation'
+        />
+        <div
+          className='Swiper__cursor'
+          style={{
+            left: `${cursorLeftPercent}%`,
+          }}
+        />
+      </div>
+    );
+  }
+}
+Swiper.propTypes = {
+  previous: PropTypes.string.isRequired,
+  current: PropTypes.string.isRequired,
+};
+
 function SelectedView({ image, selectedView }) {
   if (selectedView === VIEWS.SIDE_BY_SIDE) {
     return (
@@ -128,6 +192,15 @@ function SelectedView({ image, selectedView }) {
   if (selectedView === VIEWS.DIFF) {
     return (
       <img role='presentation' src={image.diff} />
+    );
+  }
+
+  if (selectedView === VIEWS.SWIPE) {
+    return (
+      <Swiper
+        previous={image.previous}
+        current={image.current}
+      />
     );
   }
 }
