@@ -133,7 +133,7 @@ function SelectedView({ image, selectedView }) {
 }
 SelectedView.propTypes = {
   image: PropTypes.shape(imageShape).isRequired,
-  selectedView: PropTypes.string.isRequired,
+  selectedView: PropTypes.oneOf(Object.keys(VIEWS).map(key => VIEWS[key])).isRequired,
 };
 
 class DiffController extends React.Component {
