@@ -13,7 +13,7 @@ function imageSlug(image) {
   return btoa(image.description + image.viewport);
 }
 
-function HappoImageHeading({ image }) {
+function ImageHeading({ image }) {
   return (
     <h3 id={imageSlug(image)}>
       <a className='anchored' href={`#${imageSlug(image)}`}>
@@ -24,25 +24,25 @@ function HappoImageHeading({ image }) {
     </h3>
   );
 }
-HappoImageHeading.propTypes = {
+ImageHeading.propTypes = {
   image: PropTypes.shape(imageShape),
 };
 
-function HappoNewImage({ image }) {
+function NewImage({ image }) {
   return (
     <div>
-      <HappoImageHeading
+      <ImageHeading
         image={image}
       />
       <img src={image.current} />
     </div>
   );
 }
-HappoNewImage.propTypes = {
+NewImage.propTypes = {
   image: PropTypes.shape(imageShape),
 };
 
-function HappoDiffImages({ images }) {
+function DiffImages({ images }) {
   if (!images.length) {
     return null;
   }
@@ -56,7 +56,7 @@ function HappoDiffImages({ images }) {
       </h2>
 
       {images.map((image, i) =>
-        <HappoDiff
+        <Diff
           key={i}
           image={image}
         />
@@ -64,11 +64,11 @@ function HappoDiffImages({ images }) {
     </div>
   );
 }
-HappoDiffImages.propTypes = {
+DiffImages.propTypes = {
   images: PropTypes.arrayOf(PropTypes.shape(imageShape)),
 };
 
-function HappoNewImages({ images }) {
+function NewImages({ images }) {
   if (!images.length) {
     return null;
   }
@@ -82,7 +82,7 @@ function HappoNewImages({ images }) {
       </h2>
 
       {images.map((image, i) =>
-        <HappoNewImage
+        <NewImage
           key={i}
           image={image}
         />
@@ -90,7 +90,7 @@ function HappoNewImages({ images }) {
     </div>
   );
 }
-HappoNewImages.propTypes = {
+NewImages.propTypes = {
   images: PropTypes.arrayOf(PropTypes.shape(imageShape)),
 };
 
@@ -115,7 +115,7 @@ SelectedView.propTypes = {
   selectedView: PropTypes.string,
 };
 
-const HappoDiff = React.createClass({
+const Diff = React.createClass({
   propTypes: {
     image: PropTypes.shape(imageShape),
   },
@@ -132,7 +132,7 @@ const HappoDiff = React.createClass({
 
     return (
       <div>
-        <HappoImageHeading
+        <ImageHeading
           image={image}
         />
         <div className='happo-diff__buttons'>
@@ -176,10 +176,10 @@ window.HappoDiffs = React.createClass({
         </header>
 
         <main className='main'>
-          <HappoDiffImages
+          <DiffImages
             images={this.props.diffImages}
           />
-          <HappoNewImages
+          <NewImages
             images={this.props.newImages}
           />
         </main>
