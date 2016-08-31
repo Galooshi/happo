@@ -64,7 +64,7 @@ function DiffImages({ images }) {
       </h2>
 
       {images.map((image, i) =>
-        <Diff
+        <DiffController
           key={i}
           image={image}
         />
@@ -123,44 +123,62 @@ SelectedView.propTypes = {
   selectedView: PropTypes.string,
 };
 
-class Diff extends React.Component {
+class DiffController extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedView: VIEWS.SIDE_BY_SIDE,
     };
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(view) {
+    this.setState({ selectedView: view });
   }
 
   render() {
-    const { image } = this.props;
-    const { selectedView } = this.state;
-
     return (
-      <div>
-        <ImageHeading
-          image={image}
-        />
-        <div className='happo-diff__buttons'>
-          {Object.keys(VIEWS).map(key => VIEWS[key]).map((view) => (
-            <button
-              key={view}
-              className='happo-diff__button'
-              aria-pressed={view === selectedView}
-              onClick={() => this.setState({ selectedView: view })}
-            >
-              {view}
-            </button>
-          ))}
-        </div>
-        <div className='happo-diff__images'>
-          <SelectedView image={image} selectedView={selectedView} />
-        </div>
-      </div>
+      <Diff
+        image={this.props.image}
+        selectedView={this.state.selectedView}
+        onClick={this.handleClick}
+      />
     );
   }
 }
-Diff.propTypes = {
+DiffController.propTypes = {
   image: PropTypes.shape(imageShape),
+};
+
+function Diff({ image, selectedView, onClick }) {
+  return (
+    <div>
+      <ImageHeading
+        image={image}
+      />
+      <div className='happo-diff__buttons'>
+        {Object.keys(VIEWS).map(key => VIEWS[key]).map((view) => (
+          <button
+            key={view}
+            className='happo-diff__button'
+            aria-pressed={view === selectedView}
+            onClick={() => { onClick(view); }}
+          >
+            {view}
+          </button>
+        ))}
+      </div>
+      <div className='happo-diff__images'>
+        <SelectedView image={image} selectedView={selectedView} />
+      </div>
+    </div>
+  );
+}
+Diff.propTypes = {
+  image: PropTypes.shape(imageShape).isRequired,
+  onClick: PropTypes.func.isRequired,
+  selectedView: PropTypes.oneOf(Object.keys(VIEWS).map(key => VIEWS[key])).isRequired,
 };
 
 function HappoDiffs({ pageTitle, generatedAt, diffImages, newImages }) {
