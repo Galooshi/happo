@@ -9,9 +9,9 @@ const VIEWS = {
 const imageShape = {
   description: PropTypes.string.isRequired,
   viewport: PropTypes.string.isRequired,
-  diff: PropTypes.string.isRequired,
+  diff: PropTypes.string,
   previous: PropTypes.string,
-  current: PropTypes.string,
+  current: PropTypes.string.isRequired,
 };
 
 function imageSlug(image) {
@@ -75,12 +75,12 @@ function DiffImages({ images }) {
         </InlineLink>
       </h2>
 
-      {images.map((image, i) =>
+      {images.map((image) => (
         <DiffController
-          key={i}
+          key={image.current}
           image={image}
         />
-      )}
+      ))}
     </div>
   );
 }
@@ -101,12 +101,12 @@ function NewImages({ images }) {
         </InlineLink>
       </h2>
 
-      {images.map((image, i) =>
+      {images.map((image) => (
         <NewImage
-          key={i}
+          key={image.current}
           image={image}
         />
-      )}
+      ))}
     </div>
   );
 }
