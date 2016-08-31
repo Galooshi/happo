@@ -1,6 +1,11 @@
 /* global React */
 const PropTypes = React.PropTypes;
 
+const VIEWS = {
+  SIDE_BY_SIDE: 'side-by-side',
+  DIFF: 'diff',
+};
+
 const imageShape = {
   description: PropTypes.string.isRequired,
   viewport: PropTypes.string.isRequired,
@@ -98,7 +103,7 @@ NewImages.propTypes = {
 };
 
 function SelectedView({ image, selectedView }) {
-  if (selectedView === 'side-by-side') {
+  if (selectedView === VIEWS.SIDE_BY_SIDE) {
     return (
       <div>
         <img role='presentation' src={image.previous} />
@@ -107,7 +112,7 @@ function SelectedView({ image, selectedView }) {
     );
   }
 
-  if (selectedView === 'diff') {
+  if (selectedView === VIEWS.DIFF) {
     return (
       <img role='presentation' src={image.diff} />
     );
@@ -122,7 +127,7 @@ class Diff extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedView: 'side-by-side',
+      selectedView: VIEWS.SIDE_BY_SIDE,
     };
   }
 
@@ -136,7 +141,7 @@ class Diff extends React.Component {
           image={image}
         />
         <div className='happo-diff__buttons'>
-          {['side-by-side', 'diff'].map((view) => (
+          {Object.keys(VIEWS).map(key => VIEWS[key]).map((view) => (
             <button
               key={view}
               className='happo-diff__button'
@@ -157,7 +162,6 @@ class Diff extends React.Component {
 Diff.propTypes = {
   image: PropTypes.shape(imageShape),
 };
-
 
 function HappoDiffs({ pageTitle, generatedAt, diffImages, newImages }) {
   return (
