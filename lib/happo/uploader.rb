@@ -31,7 +31,7 @@ module Happo
         image
       end
 
-      html = find_or_build_bucket.objects.build("#{directory}/index.html")
+      html = build_object("#{directory}/index.html")
       path = File.expand_path(
         File.join(File.dirname(__FILE__), 'views', 'diffs.erb')
       )
@@ -54,6 +54,10 @@ module Happo
       end
     end
 
+    def build_object(path)
+      find_or_build_bucket.objects.build(path)
+    end
+
     def directory
       if @s3_bucket_path.nil? || @s3_bucket_path.empty?
         SecureRandom.uuid
@@ -63,9 +67,8 @@ module Happo
     end
 
     def upload_image(image, variant)
-      bucket = find_or_build_bucket
       img_name = "#{image[:description]}_#{image[:viewport]}_#{variant}.png"
-      s3_image = bucket.objects.build("#{directory}/#{img_name}")
+      s3_image = build_object("#{directory}/#{img_name}")
       s3_image.content = open(Happo::Utils.path_to(image[:description],
                                                    image[:viewport],
                                                    "#{variant}.png"))
