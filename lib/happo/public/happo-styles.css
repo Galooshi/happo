@@ -87,16 +87,15 @@ body {
 }
 
 .Swiper {
-  background-repeat: no-repeat;
-  background-position: top left;
   display: inline-block;
-  position: relative;
   line-height: 0;
+  position: relative;
 }
 
 .Swiper__cursor {
   box-shadow: 0px 0px 2px 0px #ffffff;
   position: absolute;
+  left: 0;
   top: 0;
   width: 1px;
   height: 100%;
@@ -105,7 +104,11 @@ body {
 }
 
 .Swiper__image {
+  left: 0;
+  overflow: hidden;
   pointer-events: none;
+  position: absolute;
+  top: 0;
 }
 
 .SideBySide__image {

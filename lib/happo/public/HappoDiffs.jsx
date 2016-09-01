@@ -116,58 +116,116 @@ NewImages.propTypes = {
   images: PropTypes.arrayOf(PropTypes.shape(imageShape)).isRequired,
 };
 
+function maxImageSize(...imageUrls) {
+  const dimensions = {};
+
+  return new Promise((resolve, reject) => {
+    imageUrls.forEach((url, i) => {
+      const image = new Image();
+
+      image.onerrer = function handleImageError(e) {
+        reject(e);
+      };
+
+      image.onload = function handleImageLoad() {
+        const { width, height } = this;
+
+        // Use the index in case the URL is somehow duplicated.
+        dimensions[i] = { width, height };
+
+        if (Object.keys(dimensions).length >= imageUrls.length) {
+          // We are done, so compute the max width and height and resolve.
+          const values = Object.keys(dimensions).map(key => dimensions[key]);
+          const maxWidth = Math.max(...values.map(value => value.width));
+          const maxHeight = Math.max(...values.map(value => value.height));
+          resolve({ width: maxWidth, height: maxHeight });
+        }
+      };
+
+      image.src = url;
+    });
+  });
+}
+
 class Swiper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cursorLeftPercent: 50, // Start in the center
+      cursorLeft: 0,
+      height: 'auto',
+      width: 'auto',
     };
     this.handleMouseMove = this.handleMouseMove.bind(this);
   }
 
-  handleMouseMove(event) {
-    const leftPx = event.pageX - event.target.offsetLeft;
-    const leftPercent = (leftPx / event.target.offsetWidth) * 100;
+  componentWillMount() {
+    this.updateSize(this.props)
+      .then(({ width }) => {
+        // Start in the center
+        this.setState({ cursorLeft: width / 2 });
+      });
+  }
 
+  componentWillReceiveProps(nextProps) {
+    this.updateSize(nextProps);
+  }
+
+  updateSize({ current, previous }) {
+    const sizes = maxImageSize(current, previous)
+      .then(({ width, height }) => {
+        this.setState({ width, height });
+        return { width, height };
+      });
+
+    return Promise.resolve(sizes);
+  }
+
+  handleMouseMove(event) {
     this.setState({
-      cursorLeftPercent: leftPercent,
+      cursorLeft: event.pageX - event.target.offsetLeft,
     });
   }
 
   render() {
     const { previous, current } = this.props;
-    const { cursorLeftPercent } = this.state;
-
-    const polygonPoints = [
-      `${cursorLeftPercent}% 0`, // top leftmost point
-      '100% 0', // top right corner
-      '100% 100%', // bottom right cornder
-      `${cursorLeftPercent}% 100%`, // bottom leftmost point
-    ];
-    const clipPath = `polygon(${polygonPoints.join(',')})`;
+    const { cursorLeft, height, width } = this.state;
 
     return (
       <div
         className='Swiper'
-        style={{
-          backgroundImage: `url(${previous})`,
-        }}
+        style={{ height, width }}
         onMouseMove={this.handleMouseMove}
       >
-        <img
+        <div
+          className='Swiper__image'
+          style={{ width: cursorLeft }}
+        >
+          <img
+            src={previous}
+            role='presentation'
+          />
+        </div>
+
+        <div
           className='Swiper__image'
           style={{
-            WebkitClipPath: clipPath,
-            MozClipPath: clipPath,
-            clipPath,
+            transform: `translateX(${cursorLeft}px)`,
+            width: width - cursorLeft,
           }}
-          src={current}
-          role='presentation'
-        />
+        >
+          <img
+            src={current}
+            style={{
+              transform: `translateX(-${cursorLeft}px)`,
+            }}
+            role='presentation'
+          />
+        </div>
+
         <div
           className='Swiper__cursor'
           style={{
-            left: `${cursorLeftPercent}%`,
+            transform: `translateX(${cursorLeft}px)`,
           }}
         />
       </div>
