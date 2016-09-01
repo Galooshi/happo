@@ -59,10 +59,12 @@ module Happo
     end
 
     def directory
-      if @s3_bucket_path.nil? || @s3_bucket_path.empty?
-        SecureRandom.uuid
-      else
-        File.join(@s3_bucket_path, SecureRandom.uuid)
+      @directory ||= begin
+        if @s3_bucket_path.nil? || @s3_bucket_path.empty?
+          SecureRandom.uuid
+        else
+          File.join(@s3_bucket_path, SecureRandom.uuid)
+        end
       end
     end
 
