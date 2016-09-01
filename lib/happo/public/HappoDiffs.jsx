@@ -1,4 +1,5 @@
 /* global React */
+/* eslint-disable react/no-multi-comp */
 const PropTypes = React.PropTypes;
 
 const VIEWS = {
@@ -126,11 +127,11 @@ class Swiper extends React.Component {
 
   handleMouseMove(event) {
     const leftPx = event.pageX - event.target.offsetLeft;
-    const leftPercent = leftPx / event.target.offsetWidth * 100;
+    const leftPercent = (leftPx / event.target.offsetWidth) * 100;
 
     this.setState({
       cursorLeftPercent: leftPercent,
-    })
+    });
   }
 
   render() {
@@ -158,7 +159,7 @@ class Swiper extends React.Component {
           style={{
             WebkitClipPath: clipPath,
             MozClipPath: clipPath,
-            clipPath: clipPath,
+            clipPath,
           }}
           src={current}
           role='presentation'
