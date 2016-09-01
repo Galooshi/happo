@@ -112,6 +112,7 @@ body {
   display: inline-block;
   line-height: 0;
   position: relative;
+  vertical-align: top;
 }
 
 .SideBySide__caption {
