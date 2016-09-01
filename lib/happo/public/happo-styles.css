@@ -77,13 +77,24 @@ body {
 
 .Diff__button {
   border: 1px solid #ccc;
+  border-left-width: 0;
   background-color: #f0f0f0;
   padding: 5px 15px;
 }
 
 .Diff__button[aria-pressed="true"] {
   background-color: #666;
+  border-color: #444;
   color: white;
+}
+
+.Diff__button--first {
+  border-left-width: 1px;
+  border-radius: 3px 0 0 3px;
+}
+
+.Diff__button--last {
+  border-radius: 0 3px 3px 0;
 }
 
 .Swiper {

@@ -332,16 +332,25 @@ function Diff({ image, selectedView, onClick }) {
         image={image}
       />
       <div className='Diff__buttons'>
-        {Object.keys(VIEWS).map(key => VIEWS[key]).map((view) => (
-          <button
-            key={view}
-            className='Diff__button'
-            aria-pressed={view === selectedView}
-            onClick={() => { onClick(view); }}
-          >
-            {view}
-          </button>
-        ))}
+        {Object.keys(VIEWS).map(key => VIEWS[key]).map((view, i) => {
+          const classes = ['Diff__button'];
+          if (i === 0) {
+            classes.push('Diff__button--first');
+          } else if (i === Object.keys(VIEWS).length - 1) {
+            classes.push('Diff__button--last');
+          }
+
+          return (
+            <button
+              key={view}
+              className={classes.join(' ')}
+              aria-pressed={view === selectedView}
+              onClick={() => { onClick(view); }}
+            >
+              {view}
+            </button>
+          );
+        })}
       </div>
       <div className='Diff__images'>
         <SelectedView image={image} selectedView={selectedView} />
