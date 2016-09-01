@@ -62,14 +62,14 @@ module Happo
           viewport: 'small',
           previous: 'http://placehold.it/350x150',
           diff: 'http://placehold.it/350x150',
-          current: 'http://placehold.it/350x150',
+          current: 'http://placehold.it/450x190',
         },
         {
           description: '<First> some other \'test\'',
           viewport: 'medium',
           previous: 'http://placehold.it/550x150',
           diff: 'http://placehold.it/550x150',
-          current: 'http://placehold.it/550x150',
+          current: 'http://placehold.it/450x110',
         },
         {
           description: '<First>',
