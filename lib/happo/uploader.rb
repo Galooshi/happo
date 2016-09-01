@@ -19,19 +19,19 @@ module Happo
       return [] if result_summary[:diff_examples].empty? &&
                    result_summary[:new_examples].empty?
 
-      diff_images = result_summary[:diff_examples].map do |image|
-        image[:previous] = upload_image(image, 'previous')
-        image[:diff] = upload_image(image, 'diff')
-        image[:current] = upload_image(image, 'current')
-        image
+      diff_images = result_summary[:diff_examples].map do |example|
+        example[:previous] = upload_image(example, 'previous')
+        example[:diff] = upload_image(example, 'diff')
+        example[:current] = upload_image(example, 'current')
+        example
       end
 
-      new_images = result_summary[:new_examples].map do |image|
-        image[:current] = upload_image(image, 'current')
-        image
+      new_images = result_summary[:new_examples].map do |example|
+        example[:current] = upload_image(example, 'current')
+        example
       end
 
-      html = find_or_build_bucket.objects.build("#{directory}/index.html")
+      html = build_object('index.html')
       path = File.expand_path(
         File.join(File.dirname(__FILE__), 'views', 'diffs.erb')
       )
@@ -54,23 +54,28 @@ module Happo
       end
     end
 
+    def build_object(file_name)
+      find_or_build_bucket.objects.build("#{directory}/#{file_name}")
+    end
+
     def directory
-      if @s3_bucket_path.nil? || @s3_bucket_path.empty?
-        SecureRandom.uuid
-      else
-        File.join(@s3_bucket_path, SecureRandom.uuid)
+      @directory ||= begin
+        if @s3_bucket_path.nil? || @s3_bucket_path.empty?
+          SecureRandom.uuid
+        else
+          File.join(@s3_bucket_path, SecureRandom.uuid)
+        end
       end
     end
 
-    def upload_image(image, variant)
-      bucket = find_or_build_bucket
-      img_name = "#{image[:description]}_#{image[:viewport]}_#{variant}.png"
-      s3_image = bucket.objects.build("#{directory}/#{img_name}")
-      s3_image.content = open(Happo::Utils.path_to(image[:description],
-                                                   image[:viewport],
-                                                   "#{variant}.png"))
-      s3_image.content_type = 'image/png'
-      s3_image.save
+    def upload_image(example, variant)
+      img_name = "#{example[:description]}_#{example[:viewport]}_#{variant}.png"
+      image = build_object(img_name)
+      image.content = open(Happo::Utils.path_to(example[:description],
+                                                example[:viewport],
+                                                "#{variant}.png"))
+      image.content_type = 'image/png'
+      image.save
       URI.escape(img_name)
     end
   end
