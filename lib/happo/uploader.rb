@@ -31,7 +31,7 @@ module Happo
         example
       end
 
-      html = build_object("#{directory}/index.html")
+      html = build_object('index.html')
       path = File.expand_path(
         File.join(File.dirname(__FILE__), 'views', 'diffs.erb')
       )
@@ -54,8 +54,8 @@ module Happo
       end
     end
 
-    def build_object(path)
-      find_or_build_bucket.objects.build(path)
+    def build_object(file_name)
+      find_or_build_bucket.objects.build("#{directory}/#{file_name}")
     end
 
     def directory
@@ -68,7 +68,7 @@ module Happo
 
     def upload_image(example, variant)
       img_name = "#{example[:description]}_#{example[:viewport]}_#{variant}.png"
-      image = build_object("#{directory}/#{img_name}")
+      image = build_object(img_name)
       image.content = open(Happo::Utils.path_to(example[:description],
                                                 example[:viewport],
                                                 "#{variant}.png"))
