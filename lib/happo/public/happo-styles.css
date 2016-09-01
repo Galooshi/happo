@@ -91,14 +91,16 @@ body {
   background-position: top left;
   display: inline-block;
   position: relative;
+  line-height: 0;
 }
 
 .Swiper__cursor {
+  box-shadow: 0px 0px 2px 0px #ffffff;
   position: absolute;
   top: 0;
   width: 1px;
   height: 100%;
-  background-color: #ccc;
+  background-color: #666666;
   pointer-events: none;
 }
 
