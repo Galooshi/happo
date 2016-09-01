@@ -178,14 +178,43 @@ Swiper.propTypes = {
   current: PropTypes.string.isRequired,
 };
 
+function SideBySide({ previous, current }) {
+  return (
+    <div className='SideBySide'>
+      <div className='SideBySide__image'>
+        <img
+          role='presentation'
+          src={previous}
+        />
+        <div className='SideBySide__caption'>
+          Before
+        </div>
+      </div>
+      {' '}
+      <div className='SideBySide__image'>
+        <img
+          role='presentation'
+          src={current}
+        />
+        <div className='SideBySide__caption'>
+          After
+        </div>
+      </div>
+    </div>
+  );
+}
+SideBySide.propTypes = {
+  previous: PropTypes.string.isRequired,
+  current: PropTypes.string.isRequired,
+};
+
 function SelectedView({ image, selectedView }) {
   if (selectedView === VIEWS.SIDE_BY_SIDE) {
     return (
-      <div>
-        <img role='presentation' src={image.previous} />
-        {' '}
-        <img role='presentation' src={image.current} />
-      </div>
+      <SideBySide
+        previous={image.previous}
+        current={image.current}
+      />
     );
   }
 
