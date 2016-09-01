@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.files         = Dir['lib/**/*']
 
-  s.add_runtime_dependency 'chunky_png', '~>1.3.1'
+  s.add_runtime_dependency 'chunky_png', '1.3.6'
   s.add_runtime_dependency 'diff-lcs', '~> 1.2'
   s.add_runtime_dependency 'oily_png', '~> 1.2'
   s.add_runtime_dependency 's3', '~> 0.3', '>= 0.3.22'
