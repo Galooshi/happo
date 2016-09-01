@@ -4,8 +4,8 @@ const PropTypes = React.PropTypes;
 
 const VIEWS = {
   SIDE_BY_SIDE: 'Side-by-side',
-  DIFF: 'Diff',
   SWIPE: 'Swipe',
+  DIFF: 'Diff',
 };
 
 const imageShape = {
