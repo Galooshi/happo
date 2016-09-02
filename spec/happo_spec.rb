@@ -141,6 +141,51 @@ describe 'happo' do
     end
   end
 
+  describe 'with an element that has a scrollbar' do
+    let(:examples_js) { <<-EOS }
+      happo.define('#{description}', function() {
+        var elem = document.createElement('div');
+        elem.style.overflow = 'scroll';
+        elem.style.height = '100px';
+
+        var nested = document.createElement('div');
+        nested.innerHTML = 'Foo';
+        nested.style.height = '500%';
+        elem.appendChild(nested);
+
+        document.body.appendChild(elem);
+        return elem;
+      }, #{example_config});
+    EOS
+
+    it 'exits with a zero exit code' do
+      expect(run_happo[:exit_status]).to eq(0)
+    end
+
+    it 'generates a new current, but no diff' do
+      run_happo
+      expect(snapshot_file_exists?(description, '@large', 'previous.png'))
+        .to eq(false)
+      expect(snapshot_file_exists?(description, '@large', 'diff.png'))
+        .to eq(false)
+      expect(snapshot_file_exists?(description, '@large', 'current.png'))
+        .to eq(true)
+      expect(
+        YAML.load(File.read(File.join(
+          @tmp_dir, 'snapshots', 'result_summary.yaml')))
+      ).to eq(
+        new_examples: [
+          {
+            description: description,
+            viewport: 'large'
+          }
+        ],
+        diff_examples: [],
+        okay_examples: []
+      )
+    end
+  end
+
   describe 'with margin' do
     let(:examples_js) { <<-EOS }
       happo.define('#{description}', function() {
