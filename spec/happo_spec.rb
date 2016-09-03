@@ -2,6 +2,7 @@ require 'yaml'
 require 'tmpdir'
 require 'open3'
 require 'base64'
+require 'chunky_png'
 
 describe 'happo' do
   let(:config) do
@@ -63,11 +64,18 @@ describe 'happo' do
     end
   end
 
-  def snapshot_file_exists?(description, size, file_name)
-    File.exist?(
-      File.join(@tmp_dir, 'snapshots',
-                Base64.strict_encode64(description).strip, size, file_name)
+  def snapshot_file_name(description, size, file_name)
+    File.join(
+      @tmp_dir,
+      'snapshots',
+      Base64.strict_encode64(description).strip,
+      size,
+      file_name
     )
+  end
+
+  def snapshot_file_exists?(description, size, file_name)
+    File.exist?(snapshot_file_name(description, size, file_name))
   end
 
   describe 'with no previous run' do
@@ -146,11 +154,12 @@ describe 'happo' do
       happo.define('#{description}', function() {
         var elem = document.createElement('div');
         elem.style.overflow = 'scroll';
-        elem.style.height = '100px';
+        elem.style.height = '40px';
+        elem.style.width = '40px';
 
         var nested = document.createElement('div');
-        nested.innerHTML = 'Foo';
-        nested.style.height = '500%';
+        nested.style.background = '#ff0000';
+        nested.style.height = '200%';
         elem.appendChild(nested);
 
         document.body.appendChild(elem);
@@ -183,6 +192,22 @@ describe 'happo' do
         diff_examples: [],
         okay_examples: []
       )
+    end
+
+    it 'does not have a scrollbar' do
+      run_happo
+      path = snapshot_file_name(description, '@large', 'current.png')
+      image = ChunkyPNG::Image.from_file(path)
+
+      red = ChunkyPNG::Color.from_hex('#ff0000ff')
+      white = ChunkyPNG::Color.from_hex('#ffffffff')
+      no_scrollbar = image.pixels.all? do |pixel|
+        # We have to include white because our method for getting the dimensions
+        # of the element currently includes the full dimensions of anythng
+        # hidden by overflow containers.
+        pixel == red || pixel == white
+      end
+      expect(no_scrollbar).to eq(true)
     end
   end
 
