@@ -240,25 +240,19 @@ Swiper.propTypes = {
 function SideBySide({ previous, current }) {
   return (
     <div className='SideBySide'>
-      <div className='SideBySide__image'>
-        <img
-          role='presentation'
-          src={previous}
-        />
-        <div className='SideBySide__caption'>
-          Before
-        </div>
-      </div>
+      <img
+        className='SideBySide__image'
+        role='presentation'
+        src={previous}
+        title='Before'
+      />
       {' '}
-      <div className='SideBySide__image'>
-        <img
-          role='presentation'
-          src={current}
-        />
-        <div className='SideBySide__caption'>
-          After
-        </div>
-      </div>
+      <img
+        className='SideBySide__image'
+        role='presentation'
+        src={current}
+        title='After'
+      />
     </div>
   );
 }

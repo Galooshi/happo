@@ -123,25 +123,5 @@ body {
 }
 
 .SideBySide__image {
-  display: inline-block;
-  line-height: 0;
-  position: relative;
   vertical-align: top;
-}
-
-.SideBySide__caption {
-  background-color: #666666;
-  bottom: 0;
-  color: #ffffff;
-  font-size: 10px;
-  line-height: 1;
-  opacity: 0;
-  padding: 3px 6px;
-  position: absolute;
-  right: 0;
-  transition: opacity .2s;
-}
-
-.SideBySide__image:hover .SideBySide__caption {
-  opacity: 1;
 }
