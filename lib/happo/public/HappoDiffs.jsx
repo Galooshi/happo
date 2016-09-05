@@ -154,23 +154,22 @@ function getImageData(src) {
     imageObj.onload = () => {
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
-      const imageWidth = imageObj.width;
-      const imageHeight = imageObj.height;
+      const { width, height } = imageObj;
 
       context.drawImage(imageObj, 0, 0);
 
-      const imageData = context.getImageData(0, 0, imageWidth, imageHeight).data;
-      const processed = [];
+      const imageData = context.getImageData(0, 0, width, height).data;
+      const data = [];
 
       // The imageData is a 1D array. Each element in the array corresponds to a
       // decimal value that represents one of the RGBA channels for that pixel.
-      for (let y = 0; y < imageHeight; y++) {
-        const rowSize = imageWidth * 4;
+      for (let y = 0; y < height; y++) {
+        const rowSize = width * 4;
         const start = rowSize * y;
-        processed.push(imageData.slice(start, start + rowSize));
+        data.push(imageData.slice(start, start + rowSize));
       }
 
-      resolve(processed);
+      resolve({ data, width, height });
     };
     imageObj.src = src;
   });
@@ -198,10 +197,13 @@ class LCSDiff extends React.Component {
   }
 
   render() {
+    const { previousData, currentData } = this.state;
+
     // For the delta format returned by jsondiffpatch, refer to:
     // https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md
-    if (this.state.previousData && this.state.currentData) {
-      const diff = jsondiffpatch.create().diff(this.state.previousData, this.state.currentData);
+    if (previousData && currentData) {
+      const diff = jsondiffpatch.create().diff(previousData.data, currentData.data);
+      console.log(diff);
     }
 
     return (
