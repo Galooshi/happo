@@ -487,7 +487,7 @@ describe 'happo' do
           var elem = document.createElement('div');
           elem.innerHTML = 'Foo';
           document.body.appendChild(elem);
-          done(elem);
+          done();
         });
       }, #{example_config});
     EOS
@@ -531,7 +531,7 @@ describe 'happo' do
                     var elem = document.createElement('div');
                     elem.innerHTML = 'Football';
                     document.body.appendChild(elem);
-                    done(elem);
+                    done();
                   });
                 }, #{example_config});
               EOS
@@ -605,7 +605,7 @@ describe 'happo' do
                     var elem = document.createElement('div');
                     elem.innerHTML = 'Jon Snow';
                     document.body.appendChild(elem);
-                    done(elem);
+                    done();
                   });
                 }, #{example_config});
               EOS
