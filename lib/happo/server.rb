@@ -61,9 +61,9 @@ module Happo
         {
           description: '<First> with "test"',
           viewport: 'small',
-          previous: 'http://placehold.it/350x150',
+          previous: '/modal-previous.png',
           diff: 'http://placehold.it/350x150',
-          current: 'http://placehold.it/450x190',
+          current: '/modal-current.png',
         },
         {
           description: '<First> some other \'test\'',

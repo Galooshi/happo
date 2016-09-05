@@ -1,4 +1,5 @@
 /* global React */
+/* global jsondiffpatch */
 /* eslint-disable react/no-multi-comp */
 const PropTypes = React.PropTypes;
 
@@ -147,19 +148,67 @@ function maxImageSize(...imageUrls) {
   });
 }
 
+function getImageData(src) {
+  return new Promise((resolve) => {
+    const imageObj = new Image();
+    imageObj.onload = () => {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      const imageWidth = imageObj.width;
+      const imageHeight = imageObj.height;
+
+      context.drawImage(imageObj, 0, 0);
+
+      const imageData = context.getImageData(0, 0, imageWidth, imageHeight).data;
+      const processed = [];
+
+      // The imageData is a 1D array. Each element in the array corresponds to a
+      // decimal value that represents one of the RGBA channels for that pixel.
+      for (let y = 0; y < imageHeight; y++) {
+        const rowSize = imageWidth * 4;
+        const start = rowSize * y;
+        processed.push(imageData.slice(start, start + rowSize));
+      }
+
+      resolve(processed);
+    };
+    imageObj.src = src;
+  });
+}
+
 class LCSDiff extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      previousData: null,
+      currentData: null,
+    };
+  }
+
+  componentDidMount() {
+    const { previous, current } = this.props;
+
+    getImageData(previous).then((previousData) => {
+      this.setState({ previousData });
+    });
+
+    getImageData(current).then((currentData) => {
+      this.setState({ currentData });
+    });
   }
 
   render() {
     // For the delta format returned by jsondiffpatch, refer to:
     // https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md
-    const diff = jsondiffpatch.create().diff([1, 2, 3, 5], [1, 2, 3, 4]);
+    if (this.state.previousData && this.state.currentData) {
+      const diff = jsondiffpatch.create().diff(this.state.previousData, this.state.currentData);
+    }
 
     return (
       <div>
-        {JSON.stringify(diff)}
+        {this.state.previousData && this.state.currentData && (
+          <div>Done!</div>
+        )}
       </div>
     );
   }
