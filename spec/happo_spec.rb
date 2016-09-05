@@ -19,7 +19,6 @@ describe 'happo' do
       var elem = document.createElement('div');
       elem.innerHTML = 'Foo';
       document.body.appendChild(elem);
-      return elem;
     }, #{example_config});
   EOS
 
@@ -117,7 +116,6 @@ describe 'happo' do
         elem.appendChild(nested);
 
         document.body.appendChild(elem);
-        return elem;
       }, #{example_config});
     EOS
 
@@ -163,7 +161,6 @@ describe 'happo' do
         elem.appendChild(nested);
 
         document.body.appendChild(elem);
-        return elem;
       }, #{example_config});
     EOS
 
@@ -211,6 +208,58 @@ describe 'happo' do
     end
   end
 
+  describe 'with multiple top-level elements' do
+    let(:examples_js) { <<-EOS }
+      happo.define('#{description}', function() {
+        var first = document.createElement('div');
+        first.innerText = 'Foo';
+        first.style.height = '40px';
+        first.style.width = '40px';
+        document.body.appendChild(first);
+
+        var second = document.createElement('div');
+        second.innerText = 'Bar';
+        second.style.height = '40px';
+        second.style.width = '40px';
+        document.body.appendChild(second);
+      }, #{example_config});
+    EOS
+
+    it 'exits with a zero exit code' do
+      expect(run_happo[:exit_status]).to eq(0)
+    end
+
+    it 'generates a new current, but no diff' do
+      run_happo
+      expect(snapshot_file_exists?(description, '@large', 'previous.png'))
+        .to eq(false)
+      expect(snapshot_file_exists?(description, '@large', 'diff.png'))
+        .to eq(false)
+      expect(snapshot_file_exists?(description, '@large', 'current.png'))
+        .to eq(true)
+      expect(
+        YAML.load(File.read(File.join(
+          @tmp_dir, 'snapshots', 'result_summary.yaml')))
+      ).to eq(
+        new_examples: [
+          {
+            description: description,
+            viewport: 'large'
+          }
+        ],
+        diff_examples: [],
+        okay_examples: []
+      )
+    end
+
+    it 'has both elements' do
+      run_happo
+      path = snapshot_file_name(description, '@large', 'current.png')
+      image = ChunkyPNG::Image.from_file(path)
+      expect(image.height).to eq(80)
+    end
+  end
+
   describe 'with margin' do
     let(:examples_js) { <<-EOS }
       happo.define('#{description}', function() {
@@ -218,7 +267,6 @@ describe 'happo' do
         elem.style.margin = '10px';
         elem.innerHTML = 'Foo';
         document.body.appendChild(elem);
-        return elem;
       }, #{example_config});
     EOS
 
@@ -257,7 +305,6 @@ describe 'happo' do
         elem.style.margin = '-5px';
         elem.innerHTML = 'Foo';
         document.body.appendChild(elem);
-        return elem;
       }, #{example_config});
     EOS
 
@@ -315,7 +362,6 @@ describe 'happo' do
                 var elem = document.createElement('div');
                 elem.innerHTML = 'Football';
                 document.body.appendChild(elem);
-                return elem;
               }, #{example_config});
             EOS
           end
@@ -351,7 +397,6 @@ describe 'happo' do
         happo.define('#{description}', function() {
           var elem = document.createElement('div');
           document.body.appendChild(elem);
-          return elem;
         }, #{example_config});
       EOS
 
@@ -364,7 +409,6 @@ describe 'happo' do
               var elem = document.createElement('div');
               elem.innerHTML = 'Foo';
               document.body.appendChild(elem);
-              return elem;
             }, #{example_config});
           EOS
         end
@@ -516,7 +560,7 @@ describe 'happo' do
             var elem = document.createElement('div');
             elem.innerHTML = 'Daenerys Targaryen';
             document.body.appendChild(elem);
-            resolve(elem);
+            resolve();
           });
         });
       }, #{example_config});
@@ -585,7 +629,7 @@ describe 'happo' do
   describe 'when an example fails' do
     let(:examples_js) { <<-EOS }
       happo.define('#{description}', function() {
-        return undefined;
+        throw new Error('fail!');
       });
     EOS
 
@@ -607,21 +651,18 @@ describe 'happo' do
         var elem = document.createElement('div');
         elem.innerHTML = 'Foo';
         document.body.appendChild(elem);
-        return elem;
       }, #{example_config});
 
       happo.define('bar', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Bar';
         document.body.appendChild(elem);
-        return elem;
       }, #{example_config});
 
       happo.define('baz', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Baz';
         document.body.appendChild(elem);
-        return elem;
       }, #{example_config});
     EOS
 
@@ -639,14 +680,12 @@ describe 'happo' do
         var elem = document.createElement('div');
         elem.innerHTML = 'Foo';
         document.body.appendChild(elem);
-        return elem;
       }, #{example_config});
 
       happo.define('#{description}', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Bar';
         document.body.appendChild(elem);
-        return elem;
       }, #{example_config});
     EOS
 
@@ -668,28 +707,24 @@ describe 'happo' do
         var elem = document.createElement('div');
         elem.innerHTML = 'Foo';
         document.body.appendChild(elem);
-        return elem;
       }, #{example_config});
 
       happo.fdefine('fiz', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Fiz';
         document.body.appendChild(elem);
-        return elem;
       }, #{example_config});
 
       happo.fdefine('bar', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Bar';
         document.body.appendChild(elem);
-        return elem;
       }, #{example_config});
 
       happo.define('baz', function() {
         var elem = document.createElement('div');
         elem.innerHTML = 'Baz';
         document.body.appendChild(elem);
-        return elem;
       }, #{example_config});
     EOS
 
@@ -731,7 +766,7 @@ describe 'happo' do
           var image = new Image();
           image.onload = function() {
             // Continue to process the image once it is found without any errors
-            resolve(image);
+            resolve();
           };
           image.onerror = function() {
             // Throws an error if the image is not found.
@@ -758,7 +793,7 @@ describe 'happo' do
           var image = new Image();
           image.onload = function() {
             // Continue to process the image once it is found without any errors
-            resolve(image);
+            resolve();
           };
           image.onerror = function() {
             // Throws an error if the image is not found.
