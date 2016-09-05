@@ -147,6 +147,28 @@ function maxImageSize(...imageUrls) {
   });
 }
 
+class LCSDiff extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    // For the delta format returned by jsondiffpatch, refer to:
+    // https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md
+    const diff = jsondiffpatch.create().diff([1, 2, 3, 5], [1, 2, 3, 4]);
+
+    return (
+      <div>
+        {JSON.stringify(diff)}
+      </div>
+    );
+  }
+}
+LCSDiff.propTypes = {
+  previous: PropTypes.string.isRequired,
+  current: PropTypes.string.isRequired,
+};
+
 class Swiper extends React.Component {
   constructor(props) {
     super(props);
@@ -273,7 +295,10 @@ function SelectedView({ image, selectedView }) {
 
   if (selectedView === VIEWS.DIFF) {
     return (
-      <img role='presentation' src={image.diff} />
+      <LCSDiff
+        previous={image.previous}
+        current={image.current}
+      />
     );
   }
 
