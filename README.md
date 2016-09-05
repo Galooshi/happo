@@ -27,7 +27,6 @@ happo.define('button', function() {
   elem.setAttribute('class', '.button');
   elem.innerHTML = 'Submit';
   document.body.appendChild(elem);
-  return elem;
 });
 ```
 
@@ -56,31 +55,13 @@ happo.define('responsive component', function() {
   var elem = document.createElement('div');
   elem.setAttribute('class', '.responsive-component');
   document.body.appendChild(elem);
-  return elem;
 }, { viewports: ['large', 'small'] });
-```
-
-### Controlling the snapshot
-
-Happo can usually figure out what part of the screen belongs to your
-component, and take the snapshot of that area. In some situations however, that
-won't work. In those cases, you can pass in the `snapshotEntireScreen` option
-to force a full-size snapshot to be taken.
-
-```javascript
-happo.define('dialog window', function() {
-  var elem = document.createElement('div');
-  elem.setAttribute('class', '.dialog');
-  document.body.appendChild(elem);
-  return elem;
-}, { snapshotEntireScreen: true });
 ```
 
 ### Async examples
 
 If your examples need to do something asynchronous before they finish render,
-you can return a `Promise` from your define method that resolves with the
-element.
+you can return a `Promise` from your define method.
 
 ```javascript
 happo.define('async component', function() {
@@ -89,7 +70,7 @@ happo.define('async component', function() {
     document.body.appendChild(elem);
     setTimeout(function() {
       elem.innerHTML = 'Async content loaded';
-      resolve(elem);
+      resolve();
     }, 100);
   });
 });
@@ -103,7 +84,7 @@ happo.define('async component', function(done) {
   document.body.appendChild(elem);
   setTimeout(function() {
     elem.innerHTML = 'Async content loaded';
-    done(elem);
+    done();
   }, 100);
 });
 ```
