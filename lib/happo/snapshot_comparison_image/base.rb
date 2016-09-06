@@ -89,7 +89,7 @@ module Happo
 
       # @param diff_score [Float]
       # @return [Integer] a number between 0 and 255 that represents the alpha
-      #   channel of of the difference
+      #   channel of the difference
       def diff_alpha(diff_score)
         (BASE_DIFF_ALPHA + ((255 - BASE_DIFF_ALPHA) * diff_score)).round
       end

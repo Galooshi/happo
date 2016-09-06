@@ -152,27 +152,85 @@ function getImageData(src) {
   return new Promise((resolve) => {
     const imageObj = new Image();
     imageObj.onload = () => {
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
       const { width, height } = imageObj;
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const context = canvas.getContext('2d');
 
       context.drawImage(imageObj, 0, 0);
 
       const imageData = context.getImageData(0, 0, width, height).data;
-      const data = [];
 
       // The imageData is a 1D array. Each element in the array corresponds to a
       // decimal value that represents one of the RGBA channels for that pixel.
-      for (let y = 0; y < height; y++) {
-        const rowSize = width * 4;
-        const start = rowSize * y;
-        data.push(imageData.slice(start, start + rowSize));
-      }
+      const rowSize = width * 4;
+      const getPixelAt = (x, y) => {
+        if (x > width || y > height) {
+          return undefined;
+        }
 
-      resolve({ data, width, height });
+        const startIndex = (y * rowSize) + (x * 4);
+        return [
+          imageData[startIndex],
+          imageData[startIndex + 1],
+          imageData[startIndex + 2],
+          imageData[startIndex + 3],
+        ];
+      };
+
+      resolve({ getPixelAt, width, height });
     };
     imageObj.src = src;
   });
+}
+
+/**
+ * Compute a score that represents the difference between 2 pixels
+ *
+ * This method simply takes the Euclidean distance between the RGBA channels
+ * of 2 colors over the maximum possible Euclidean distance. This gives us a
+ * percentage of how different the two colors are.
+ *
+ * Although it would be more perceptually accurate to calculate a proper
+ * Delta E in Lab colorspace, we probably don't need perceptual accuracy for
+ * this application, and it is nice to avoid the overhead of converting RGBA
+ * to Lab.
+ *
+ * Returns a float number between 0 and 1 where 1 is completely different
+ * and 0 is no difference
+ */
+function euclideanDistance(rgb1, rgb2) {
+  let distance = 0;
+  for (let i = 0; i < rgb1.length; i++) {
+    distance += (rgb1[i] - rgb2[i]) * (rgb1[i] - rgb2[i]);
+  }
+  return (Math.sqrt(distance) / rgb1.length) / 255;
+}
+
+function getDiffPixel(previousPixel, currentPixel) {
+  if (!previousPixel) {
+    return currentPixel;
+  }
+
+  if (!currentPixel) {
+    return previousPixel;
+  }
+
+  let diff = euclideanDistance(previousPixel, currentPixel);
+  if (diff === 0) {
+    return [
+      currentPixel[0],
+      currentPixel[1],
+      currentPixel[2],
+      50,
+    ];
+  }
+
+  if (diff < 0.2) {
+    diff = 0.2;
+  }
+  return [255, 0, 0, 255 * diff]; // TODO don't use red here
 }
 
 class LCSDiff extends React.Component {
@@ -199,19 +257,43 @@ class LCSDiff extends React.Component {
   render() {
     const { previousData, currentData } = this.state;
 
-    // For the delta format returned by jsondiffpatch, refer to:
-    // https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md
+    let maxWidth;
+    let maxHeight;
+
     if (previousData && currentData) {
-      const diff = jsondiffpatch.create().diff(previousData.data, currentData.data);
-      console.log(diff);
+      maxWidth = Math.max(previousData.width, currentData.width);
+      maxHeight = Math.max(previousData.height, currentData.height);
+
+      setTimeout(() => {
+        const context = this.canvas.getContext('2d');
+        const diffImage = context.createImageData(maxWidth, maxHeight);
+        const d = diffImage.data;
+
+        for (let y = 0; y < maxHeight; y++) {
+          for (let x = 0; x < maxWidth; x++) {
+            const pixel = getDiffPixel(
+              previousData.getPixelAt(x, y),
+              currentData.getPixelAt(x, y)
+            );
+            const index = ((y * maxWidth) + x) * 4;
+
+            d[index + 0] = pixel[0]; // r
+            d[index + 1] = pixel[1]; // g
+            d[index + 2] = pixel[2]; // b
+            d[index + 3] = pixel[3]; // a
+          }
+        }
+
+        context.putImageData(diffImage, 0, 0);
+      }, 0);
     }
 
     return (
-      <div>
-        {this.state.previousData && this.state.currentData && (
-          <div>Done!</div>
-        )}
-      </div>
+      <canvas
+        width={maxWidth}
+        height={maxHeight}
+        ref={(node) => { this.canvas = node; }}
+      />
     );
   }
 }
