@@ -1,3 +1,4 @@
+bind: 0.0.0.0
 source_files:
   - example.js
 stylesheets:

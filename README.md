@@ -115,14 +115,29 @@ Happo loads configuration in one of the following ways:
 - From `.happo.yaml` in the current working directory
 
 ```yaml
+# Control the interface on which the local server listens (defaults to 'localhost')
+bind: localhost
+
+# Control the port used for the local server
+port: 4567
+
+# List javascript source files
 source_files:
   - application.js
   - happo-examples.js
+
+# List css source files
 stylesheets:
   - application.css
+
+# List directories where public files are accessible (useful for e.g. font files)
 public_directories:
   - public
+
+# Specify the folder where snapshots are saved
 snapshots_folder: ./snapshots
+
+# Configure the window size when taking snapshots
 viewports:
   large:
     width: 1024

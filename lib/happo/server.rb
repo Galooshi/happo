@@ -6,6 +6,7 @@ module Happo
     configure do
       enable :static
       set :port, Happo::Utils.config['port']
+      set :bind, Happo::Utils.config['bind'] || 'localhost'
     end
 
     helpers do
