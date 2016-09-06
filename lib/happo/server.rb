@@ -68,16 +68,16 @@ module Happo
         {
           description: '<First> some other \'test\'',
           viewport: 'medium',
-          previous: 'http://placehold.it/550x150',
+          previous: '/card-previous.png',
           diff: 'http://placehold.it/550x150',
-          current: 'http://placehold.it/450x110',
+          current: '/card-current.png',
         },
         {
           description: '<First>',
           viewport: 'large',
-          previous: 'http://placehold.it/850x150',
+          previous: '/dialog-previous.png',
           diff: 'http://placehold.it/850x150',
-          current: 'http://placehold.it/850x150',
+          current: '/dialog-current.png',
         },
       ]
 
