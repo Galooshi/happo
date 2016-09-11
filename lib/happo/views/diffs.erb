@@ -12,30 +12,21 @@
       <%= Happo::Utils.css_styles %>
     </style>
 
-
     <script src="https://unpkg.com/react@15.3.1/dist/react.min.js"></script>
     <script src="https://unpkg.com/react-dom@15.3.1/dist/react-dom.min.js"></script>
-    <script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
-    <script src="https://unpkg.com/jsondiffpatch@0.2.3/public/build/jsondiffpatch.js"></script>
 
-    <script type="text/babel">
+    <script>
+      window.APP_PROPS = {
+        newImages: <%= new_images.to_json %>,
+        diffImages: <%= diff_images.to_json %>,
+        pageTitle: <%= Happo::Utils.page_title(diff_images, new_images).to_json %>,
+        generatedAt: <%= Time.now.to_s.to_json %>
+      };
       <%= Happo::Utils.jsx_code %>
     </script>
   </head>
 
   <body>
     <div id="react-root"></div>
-
-    <script type="text/babel">
-      ReactDOM.render(
-        <HappoDiffs
-          newImages={<%= new_images.to_json %>}
-          diffImages={<%= diff_images.to_json %>}
-          pageTitle={<%= Happo::Utils.page_title(diff_images, new_images).to_json %>}
-          generatedAt={<%= Time.now.to_s.to_json %>}
-        />,
-        document.getElementById('react-root')
-      );
-    </script>
   </body>
 </html>

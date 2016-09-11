@@ -1,2 +1,4 @@
 Gemfile.lock
 node_modules
+lib/happo/public/HappoApp.bundle.js
+lib/happo/public/HappoApp.bundle.js.map

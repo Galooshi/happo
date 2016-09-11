@@ -91,7 +91,7 @@ module Happo
     end
 
     def self.jsx_code
-      File.read(File.expand_path('../public/HappoDiffs.jsx', __FILE__))
+      File.read(File.expand_path('../public/HappoApp.bundle.js', __FILE__))
     end
 
     def self.last_result_summary
