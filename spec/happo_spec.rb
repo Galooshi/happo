@@ -147,10 +147,11 @@ describe 'happo' do
     end
   end
 
-  describe 'with an element that has a scrollbar' do
+  describe 'with an overflowing element' do
     let(:examples_js) { <<-EOS }
       happo.define('#{description}', function() {
         var elem = document.createElement('div');
+        #{overflow}
         elem.style.overflow = 'scroll';
         elem.style.height = '40px';
         elem.style.width = '40px';
@@ -158,53 +159,77 @@ describe 'happo' do
         var nested = document.createElement('div');
         nested.style.background = '#ff0000';
         nested.style.height = '200%';
+        nested.style.width = '200%';
         elem.appendChild(nested);
 
         document.body.appendChild(elem);
       }, #{example_config});
     EOS
 
-    it 'exits with a zero exit code' do
-      expect(run_happo[:exit_status]).to eq(0)
-    end
-
-    it 'generates a new current, but no diff' do
-      run_happo
-      expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-        .to eq(false)
-      expect(snapshot_file_exists?(description, '@large', 'diff.png'))
-        .to eq(false)
-      expect(snapshot_file_exists?(description, '@large', 'current.png'))
-        .to eq(true)
-      expect(
-        YAML.load(File.read(File.join(
-          @tmp_dir, 'snapshots', 'result_summary.yaml')))
-      ).to eq(
-        new_examples: [
-          {
-            description: description,
-            viewport: 'large'
-          }
-        ],
-        diff_examples: [],
-        okay_examples: []
-      )
-    end
-
-    it 'does not have a scrollbar' do
+    let(:no_scrollbar) do
       run_happo
       path = snapshot_file_name(description, '@large', 'current.png')
       image = ChunkyPNG::Image.from_file(path)
 
       red = ChunkyPNG::Color.from_hex('#ff0000ff')
       white = ChunkyPNG::Color.from_hex('#ffffffff')
-      no_scrollbar = image.pixels.all? do |pixel|
+      image.pixels.all? do |pixel|
         # We have to include white because our method for getting the dimensions
         # of the element currently includes the full dimensions of anythng
         # hidden by overflow containers.
         pixel == red || pixel == white
       end
-      expect(no_scrollbar).to eq(true)
+    end
+
+    context 'with `overflow: scroll`' do
+      let(:overflow) { 'elem.style.overflow = "scroll";' }
+
+      it 'exits with a zero exit code' do
+        expect(run_happo[:exit_status]).to eq(0)
+      end
+
+      it 'does not capture a scrollbar' do
+        expect(no_scrollbar).to eq(true)
+      end
+
+      it 'generates a new current, but no diff' do
+        run_happo
+        expect(snapshot_file_exists?(description, '@large', 'previous.png'))
+          .to eq(false)
+        expect(snapshot_file_exists?(description, '@large', 'diff.png'))
+          .to eq(false)
+        expect(snapshot_file_exists?(description, '@large', 'current.png'))
+          .to eq(true)
+        expect(
+          YAML.load(File.read(File.join(
+            @tmp_dir, 'snapshots', 'result_summary.yaml')))
+        ).to eq(
+          new_examples: [
+            {
+              description: description,
+              viewport: 'large'
+            }
+          ],
+          diff_examples: [],
+          okay_examples: []
+        )
+      end
+    end
+
+    context 'with `overflow-x: auto`' do
+      let(:overflow) { 'elem.style.overflowX = "auto";' }
+
+      it 'does not have a scrollbar' do
+        expect(no_scrollbar).to eq(true)
+      end
+    end
+
+    context 'with `overflow-y: auto`' do
+      let(:overflow) { 'elem.style.overflowY = "auto";' }
+
+      it 'does not have a scrollbar' do
+        expect(no_scrollbar).to eq(true)
+      end
     end
   end
 
