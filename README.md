@@ -103,6 +103,20 @@ happo.cleanOutElement = function(element) {
 };
 ```
 
+### Controlling root nodes
+
+By default, Happo will compute a bounding rectangle used when snapshotting
+based on all root DOM nodes found in the `<body>` element. You can override
+this default by implementing a `happo.getRootNodes` function. If you use
+[React](https://facebook.github.io/react/) you might want to use this to better
+control the size of the snapshot.
+
+```javascript
+happo.getRootNodes = function() {
+  return document.querySelectorAll('[data-reactroot]');
+};
+```
+
 ## Installation
 
 Happo comes bundled as a gem. To install it, run `gem install happo`.
