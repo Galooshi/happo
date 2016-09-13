@@ -169,6 +169,31 @@ describe 'happo' do
     end
   end
 
+  describe 'with sub-pixel values' do
+    let(:examples_js) { <<-EOS }
+      happo.define('#{description}', function() {
+        var elem = document.createElement('div');
+        elem.innerHTML = 'Foo';
+
+        elem.style.height = '20.1px';
+        elem.style.left = '11.1px';
+        elem.style.position = 'relative';
+        elem.style.top = '10.1px';
+        elem.style.width = '30.1px';
+
+        document.body.appendChild(elem);
+      }, #{example_config});
+    EOS
+
+    it 'rounds the size to include all sub-pixels' do
+      run_happo
+      path = snapshot_file_name(description, '@large', 'current.png')
+      image = ChunkyPNG::Image.from_file(path)
+      expect(image.height).to eq(21)
+      expect(image.width).to eq(31)
+    end
+  end
+
   describe 'with an overflowing element' do
     let(:examples_js) { <<-EOS }
       happo.define('#{description}', function() {
