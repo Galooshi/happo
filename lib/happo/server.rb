@@ -52,7 +52,8 @@ module Happo
 
       erb :diffs, locals: {
         diff_images: diff_images,
-        new_images: new_images
+        new_images: new_images,
+        triggered_by_url: nil,
       }
     end
 
@@ -106,7 +107,8 @@ module Happo
 
       erb :diffs, locals: {
         diff_images: diff_images,
-        new_images: new_images
+        new_images: new_images,
+        triggered_by_url: 'https://test.example',
       }
     end
 

@@ -4,16 +4,31 @@ import DiffImages from './DiffImages';
 import NewImages from './NewImages';
 import imageShape from './imageShape';
 
-export default function HappoDiffs({ pageTitle, generatedAt, diffImages, newImages }) {
+export default function HappoDiffs({
+  pageTitle,
+  generatedAt,
+  diffImages,
+  newImages,
+  triggeredByUrl,
+}) {
   return (
     <div>
       <header className='HappoDiffs__header'>
         <h1 className='HappoDiffs__headerTitle'>
           {pageTitle}
         </h1>
-        <div className='HappoDiffs__headerTime'>
+        <div>
           Generated: {generatedAt}
         </div>
+        {triggeredByUrl && (
+          <div>
+            Triggered by:
+            {' '}
+            <a href={triggeredByUrl}>
+              {triggeredByUrl}
+            </a>
+          </div>
+        )}
       </header>
 
       <main className='HappoDiffs__main'>
@@ -32,4 +47,5 @@ HappoDiffs.propTypes = {
   diffImages: PropTypes.arrayOf(imageShape).isRequired,
   newImages: PropTypes.arrayOf(imageShape).isRequired,
   generatedAt: PropTypes.string.isRequired,
+  triggeredByUrl: PropTypes.string,
 };

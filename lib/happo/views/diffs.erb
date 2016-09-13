@@ -20,7 +20,8 @@
         newImages: <%= new_images.to_json %>,
         diffImages: <%= diff_images.to_json %>,
         pageTitle: <%= Happo::Utils.page_title(diff_images, new_images).to_json %>,
-        generatedAt: <%= Time.now.to_s.to_json %>
+        generatedAt: <%= Time.now.to_s.to_json %>,
+        triggeredByUrl: <%= triggered_by_url.to_json %>
       };
       <%= Happo::Utils.jsx_code %>
     </script>

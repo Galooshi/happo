@@ -55,8 +55,13 @@ body {
   padding: 20px 10px 15px;
 }
 
-.HappoDiffs__header > :first-child {
+.HappoDiffs__header > * {
   margin-right: 10px;
+  margin-bottom: 5px;
+}
+
+.HappoDiffs__header > :last-child {
+  margin-right: 0;
 }
 
 .HappoDiffs__headerTitle {

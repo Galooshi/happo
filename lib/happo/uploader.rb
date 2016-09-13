@@ -13,7 +13,7 @@ module Happo
       @s3_bucket_path = ENV['S3_BUCKET_PATH']
     end
 
-    def upload_diffs
+    def upload_diffs(triggered_by_url)
       result_summary = Happo::Utils.last_result_summary
 
       return [] if result_summary[:diff_examples].empty? &&
