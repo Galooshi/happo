@@ -30,6 +30,22 @@ happo.define('button', function() {
 });
 ```
 
+Here's an example using [React](https://facebook.github.io/react/)) and ES6:
+
+```jsx
+happo.define('<MyReactComponent>', function() {
+  const div = document.createElement('div');
+  document.body.appendChild(div);
+  const component = (
+    <MyReactComponent
+      foo={1}
+      bar='baz'
+    />
+  );
+  ReactDOM.render(component, div);
+});
+```
+
 Examples are responsible themselves for rendering the element into the DOM.
 This is because a lot of frameworks (e.g.
 [React](https://facebook.github.io/react/)) like to stay in control over the
