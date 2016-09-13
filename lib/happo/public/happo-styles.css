@@ -72,8 +72,11 @@ body {
   padding: 10px;
 }
 
-.Diff__images {
+.Diff__images,
+.NewImage__image {
   white-space: nowrap;
+  max-width: 100%;
+  overflow: auto;
 }
 
 .Diff__buttons {
@@ -84,7 +87,7 @@ body {
   border: 1px solid #ccc;
   border-left-width: 0;
   background-color: #f0f0f0;
-  padding: 5px 15px;
+  padding: 10px 20px;
 }
 
 .Diff__button[aria-pressed="true"] {

@@ -9,10 +9,12 @@ export default function NewImage({ image }) {
       <ImageHeading
         image={image}
       />
-      <img
-        role='presentation'
-        src={image.current}
-      />
+      <div className='NewImage__image'>
+        <img
+          role='presentation'
+          src={image.current}
+        />
+      </div>
     </div>
   );
 }

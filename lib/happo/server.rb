@@ -74,6 +74,13 @@ module Happo
           current: '/card-current.png',
         },
         {
+          description: '<First> /$&^',
+          viewport: 'large',
+          previous: '/wide-previous.png',
+          diff: 'http://placehold.it/350x150',
+          current: '/wide-current.png',
+        },
+        {
           description: '<First>',
           viewport: 'large',
           previous: '/dialog-previous.png',
