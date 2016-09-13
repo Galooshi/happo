@@ -30,6 +30,22 @@ happo.define('button', function() {
 });
 ```
 
+Here's an example using [React](https://facebook.github.io/react/)) and ES6:
+
+```jsx
+happo.define('<MyReactComponent>', function() {
+  const div = document.createElement('div');
+  document.body.appendChild(div);
+  const component = (
+    <MyReactComponent
+      foo={1}
+      bar='baz'
+    />
+  );
+  ReactDOM.render(component, div);
+});
+```
+
 Examples are responsible themselves for rendering the element into the DOM.
 This is because a lot of frameworks (e.g.
 [React](https://facebook.github.io/react/)) like to stay in control over the
@@ -100,6 +116,20 @@ listeners for instance, or if you use
 ```javascript
 happo.cleanOutElement = function(element) {
   React.unmountComponentAtNode(element);
+};
+```
+
+### Controlling root nodes
+
+By default, Happo will compute a bounding rectangle used when snapshotting
+based on all root DOM nodes found in the `<body>` element. You can override
+this default by implementing a `happo.getRootNodes` function. If you use
+[React](https://facebook.github.io/react/) you might want to use this to better
+control the size of the snapshot.
+
+```javascript
+happo.getRootNodes = function() {
+  return document.querySelectorAll('[data-reactroot]');
 };
 ```
 
