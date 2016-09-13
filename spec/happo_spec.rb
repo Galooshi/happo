@@ -147,6 +147,28 @@ describe 'happo' do
     end
   end
 
+  describe 'with an element rendering at the bottom right' do
+    let(:examples_js) { <<-EOS }
+      happo.define('#{description}', function() {
+        var elem = document.createElement('div');
+        elem.style.position = 'fixed';
+        elem.style.height = '40px';
+        elem.style.width = '40px';
+        elem.style.bottom = '0px';
+        elem.style.right = '0px';
+        document.body.appendChild(elem);
+      }, #{example_config});
+    EOS
+
+    it 'includes the component in the snapshot' do
+      run_happo
+      path = snapshot_file_name(description, '@large', 'current.png')
+      image = ChunkyPNG::Image.from_file(path)
+      expect(image.width).to eq(40)
+      expect(image.height).to eq(40)
+    end
+  end
+
   describe 'with an overflowing element' do
     let(:examples_js) { <<-EOS }
       happo.define('#{description}', function() {
