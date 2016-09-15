@@ -1,3 +1,15 @@
+const hashCache = new Map();
+
+function hash(data) {
+  if (!hashCache.has(data)) {
+    return hashCache.get(data);
+  }
+
+  const result = btoa(data);
+  hashCache.set(data, result);
+  return result;
+}
+
 export default function getImageData(src) {
   return new Promise((resolve) => {
     const imageObj = new Image();
@@ -37,7 +49,7 @@ export default function getImageData(src) {
           pixelsInRow.push(getPixelAt(col, row));
         }
         rows.push(pixelsInRow);
-        hashedRows.push(btoa(pixelsInRow));
+        hashedRows.push(hash(pixelsInRow));
       }
 
       resolve({ width, height, rows, hashedRows });
