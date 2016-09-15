@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 import computeAndInjectDiffs from './computeAndInjectDiffs';
-import getDiffPixel from './getDiffPixel';
+import constructDiffImageData from './constructDiffImageData';
 import getImageData from './getImageData';
 
 export default class LCSDiff extends React.Component {
@@ -39,26 +39,10 @@ export default class LCSDiff extends React.Component {
       maxHeight = previousData.length;
 
       setTimeout(() => {
+        const diffData = constructDiffImageData(previousData, currentData);
         const context = this.canvas.getContext('2d');
         const diffImage = context.createImageData(maxWidth, maxHeight);
-        const d = diffImage.data;
-
-        previousData.forEach((row, y) => {
-          for (let x = 0; x < maxWidth; x++) {
-            const pixel = getDiffPixel(
-              row[x],
-              currentData[y][x]
-            );
-
-            const index = (y * maxWidth * 4) + (x * 4);
-
-            d[index + 0] = pixel[0]; // r
-            d[index + 1] = pixel[1]; // g
-            d[index + 2] = pixel[2]; // b
-            d[index + 3] = pixel[3]; // a
-          }
-        });
-
+        diffData.forEach((value, index) => (diffImage.data[index] = value));
         context.putImageData(diffImage, 0, 0);
       }, 0);
     }
