@@ -30,15 +30,17 @@ export default function getImageData(src) {
       };
 
       const rows = [];
+      const hashedRows = [];
       for (let row = 0; row < height; row++) {
         const pixelsInRow = [];
         for (let col = 0; col < width; col++) {
           pixelsInRow.push(getPixelAt(col, row));
         }
         rows.push(pixelsInRow);
+        hashedRows.push(btoa(pixelsInRow));
       }
 
-      resolve({ width, height, rows });
+      resolve({ width, height, rows, hashedRows });
     };
     imageObj.src = src;
   });
