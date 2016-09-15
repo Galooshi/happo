@@ -1,7 +1,6 @@
-import adiff from 'adiff';
-
 import React, { PropTypes } from 'react';
 
+import computeAndInjectDiffs from './computeAndInjectDiffs';
 import getDiffPixel from './getDiffPixel';
 import getImageData from './getImageData';
 
@@ -33,55 +32,10 @@ export default class LCSDiff extends React.Component {
     let maxHeight;
 
     if (previousData && currentData) {
+      computeAndInjectDiffs(previousData, currentData);
+
       maxWidth = Math.max(
         previousData[0].length, currentData[0].length);
-
-      const adiffResults = adiff.diff(
-        previousData.map(d => btoa(d)), currentData.map(d => btoa(d)));
-
-      const redRow = [];
-      for (let i = 0; i < maxWidth; i++) {
-        redRow.push([255, 0, 0, 255]);
-      }
-
-      const greenRow = [];
-      for (let i = 0; i < maxWidth; i++) {
-        greenRow.push([0, 255, 0, 255]);
-      }
-
-      // iterate and apply changes to previous data
-      adiffResults.forEach((instruction) => {
-        const atIndex = instruction[0];
-        const deletedItems = instruction[1];
-        const addedItems = instruction.length - 2;
-
-        for (let y = 0; y < Math.max(deletedItems, addedItems); y++) {
-          if (y < deletedItems) {
-            // ignore, we just keep the old row
-          } else {
-            // add a green row to signal an addition
-            previousData.splice(atIndex + y, 0, greenRow);
-          }
-        }
-      });
-
-      // iterate backwards and apply changes to current data
-      for (let i = adiffResults.length - 1; i >= 0; i--) {
-        const instruction = adiffResults[i];
-        const atIndex = instruction[0];
-        const deletedItems = instruction[1];
-        const addedItems = instruction.length - 2;
-
-        for (let y = 0; y < Math.max(deletedItems, addedItems); y++) {
-          if (y < addedItems) {
-            // ignore, we just keep the old row
-          } else {
-            currentData.splice(atIndex + y, 0, redRow);
-            // add a red row to signal a deletion
-          }
-        }
-      }
-
       maxHeight = previousData.length;
 
       setTimeout(() => {
