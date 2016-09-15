@@ -29,7 +29,16 @@ export default function getImageData(src) {
         ];
       };
 
-      resolve({ getPixelAt, width, height });
+      const rows = [];
+      for (let row = 0; row < height; row++) {
+        const pixelsInRow = [];
+        for (let col = 0; col < width; col++) {
+          pixelsInRow.push(getPixelAt(col, row));
+        }
+        rows.push(pixelsInRow);
+      }
+
+      resolve({ width, height, rows });
     };
     imageObj.src = src;
   });

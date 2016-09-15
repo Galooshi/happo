@@ -60,6 +60,13 @@ module Happo
     get '/review-demo' do
       diff_images = [
         {
+          description: '<Small>',
+          viewport: 'small',
+          previous: '/small-previous.png',
+          diff: 'http://placehold.it/350x150',
+          current: '/small-current.png',
+        },
+        {
           description: '<First> with "test"',
           viewport: 'small',
           previous: '/modal-previous.png',
