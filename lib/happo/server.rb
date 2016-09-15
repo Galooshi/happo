@@ -81,6 +81,13 @@ module Happo
           current: '/card-current.png',
         },
         {
+          description: 'Completely different, reversed',
+          viewport: 'small',
+          previous: '/card-current.png',
+          diff: 'http://placehold.it/350x150',
+          current: '/modal-previous.png',
+        },
+        {
           description: '<First> with "test"',
           viewport: 'small',
           previous: '/modal-previous.png',

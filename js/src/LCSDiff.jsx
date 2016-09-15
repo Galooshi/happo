@@ -36,7 +36,6 @@ export default class LCSDiff extends React.Component {
       maxWidth = Math.max(previousData.width, currentData.width);
 
       const adiffResults = adiff.diff(previousData.hashedRows, currentData.hashedRows);
-      console.log(adiffResults);
 
       const redRow = [];
       for (let i = 0; i < maxWidth; i++) {
@@ -51,17 +50,16 @@ export default class LCSDiff extends React.Component {
       // iterate and apply changes to previous data
       adiffResults.forEach((instruction) => {
         const atIndex = instruction[0];
-        const itemsAffected = instruction[1];
-        if (instruction.length > 2) {
-          // addition
-          const newRows = instruction.slice(2);
-          newRows.forEach((_, y) => {
-            if (y < itemsAffected) {
-              // ignore row that is already present
-              return;
-            }
-            previousData.rows.splice(atIndex + y, 0, redRow);
-          });
+        const deletedItems = instruction[1];
+        const addedItems = instruction.length - 2;
+
+        for (let y = 0; y < Math.max(deletedItems, addedItems); y++) {
+          if (y < deletedItems) {
+            // ignore, we just keep the old row
+          } else {
+            // add a green row to signal an addition
+            previousData.rows.splice(atIndex + y, 0, greenRow);
+          }
         }
       });
 
@@ -69,11 +67,15 @@ export default class LCSDiff extends React.Component {
       for (let i = adiffResults.length - 1; i >= 0; i--) {
         const instruction = adiffResults[i];
         const atIndex = instruction[0];
-        const itemsAffected = instruction[1];
-        if (instruction.length === 2) {
-          // deletion
-          for (let n = 0; n < itemsAffected; n++) {
-            currentData.rows.splice(atIndex + n, 0, greenRow);
+        const deletedItems = instruction[1];
+        const addedItems = instruction.length - 2;
+
+        for (let y = 0; y < Math.max(deletedItems, addedItems); y++) {
+          if (y < addedItems) {
+            // ignore, we just keep the old row
+          } else {
+            currentData.rows.splice(atIndex + y, 0, redRow);
+            // add a red row to signal a deletion
           }
         }
       }
