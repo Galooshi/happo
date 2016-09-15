@@ -34,10 +34,10 @@ export default class LCSDiff extends React.Component {
 
     if (previousData && currentData) {
       maxWidth = Math.max(
-        previousData.rows[0].length, currentData.rows[0].length);
+        previousData[0].length, currentData[0].length);
 
       const adiffResults = adiff.diff(
-        previousData.hashedRows, currentData.hashedRows);
+        previousData.map(d => btoa(d)), currentData.map(d => btoa(d)));
 
       const redRow = [];
       for (let i = 0; i < maxWidth; i++) {
@@ -60,7 +60,7 @@ export default class LCSDiff extends React.Component {
             // ignore, we just keep the old row
           } else {
             // add a green row to signal an addition
-            previousData.rows.splice(atIndex + y, 0, greenRow);
+            previousData.splice(atIndex + y, 0, greenRow);
           }
         }
       });
@@ -76,24 +76,24 @@ export default class LCSDiff extends React.Component {
           if (y < addedItems) {
             // ignore, we just keep the old row
           } else {
-            currentData.rows.splice(atIndex + y, 0, redRow);
+            currentData.splice(atIndex + y, 0, redRow);
             // add a red row to signal a deletion
           }
         }
       }
 
-      maxHeight = previousData.rows.length;
+      maxHeight = previousData.length;
 
       setTimeout(() => {
         const context = this.canvas.getContext('2d');
         const diffImage = context.createImageData(maxWidth, maxHeight);
         const d = diffImage.data;
 
-        previousData.rows.forEach((row, y) => {
+        previousData.forEach((row, y) => {
           for (let x = 0; x < maxWidth; x++) {
             const pixel = getDiffPixel(
               row[x],
-              currentData.rows[y][x]
+              currentData[y][x]
             );
 
             const index = (y * maxWidth * 4) + (x * 4);
