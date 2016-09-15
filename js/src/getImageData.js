@@ -1,7 +1,7 @@
 const hashCache = new Map();
 
 function hash(data) {
-  if (!hashCache.has(data)) {
+  if (hashCache.has(data)) {
     return hashCache.get(data);
   }
 
