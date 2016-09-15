@@ -1,29 +1,40 @@
 import adiff from 'adiff';
 
 /**
+ * Construct a line of pixels of a certain rgba color
+ *
+ * @param {Array} rgba
+ * @param {Number} width
+ * @return {Array}
+ */
+function constructColoredLine(rgba, width) {
+  const line = [];
+  for (let i = 0; i < width; i++) {
+    line.push(rgba);
+  }
+  return line;
+}
+
+/**
  * Takes two 2d images, computes the diff between the two, and injects pixels to
  * both in order to:
  * a) make both images the same height
  * b) properly visualize differences
  *
  * Please note that this method MUTATES data.
+ *
+ * @param {Array} previousData
+ * @param {Array} currentData
  */
 export default function computeAndInjectDiffs(previousData, currentData) {
   const maxWidth = Math.max(
     previousData[0].length, currentData[0].length);
 
+  const redLine = constructColoredLine([255, 0, 0, 255], maxWidth);
+  const greenLine = constructColoredLine([0, 255, 0, 255], maxWidth);
+
   const adiffResults = adiff.diff(
     previousData.map(d => btoa(d)), currentData.map(d => btoa(d)));
-
-  const redRow = [];
-  for (let i = 0; i < maxWidth; i++) {
-    redRow.push([255, 0, 0, 255]);
-  }
-
-  const greenRow = [];
-  for (let i = 0; i < maxWidth; i++) {
-    greenRow.push([0, 255, 0, 255]);
-  }
 
   // iterate and apply changes to previous data
   adiffResults.forEach((instruction) => {
@@ -33,10 +44,10 @@ export default function computeAndInjectDiffs(previousData, currentData) {
 
     for (let y = 0; y < Math.max(deletedItems, addedItems); y++) {
       if (y < deletedItems) {
-        // ignore, we just keep the old row
+        // ignore, we just keep the old line
       } else {
-        // add a green row to signal an addition
-        previousData.splice(atIndex + y, 0, greenRow);
+        // add a green line to signal an addition
+        previousData.splice(atIndex + y, 0, greenLine);
       }
     }
   });
@@ -50,10 +61,10 @@ export default function computeAndInjectDiffs(previousData, currentData) {
 
     for (let y = 0; y < Math.max(deletedItems, addedItems); y++) {
       if (y < addedItems) {
-        // ignore, we just keep the old row
+        // ignore, we just keep the old line
       } else {
-        currentData.splice(atIndex + y, 0, redRow);
-        // add a red row to signal a deletion
+        // add a red line to signal a deletion
+        currentData.splice(atIndex + y, 0, redLine);
       }
     }
   }
