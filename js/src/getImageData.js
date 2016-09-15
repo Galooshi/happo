@@ -40,7 +40,7 @@ export default function getImageData(src) {
         hashedRows.push(btoa(pixelsInRow));
       }
 
-      resolve({ width, height, rows, hashedRows });
+      resolve({ rows, hashedRows });
     };
     imageObj.src = src;
   });

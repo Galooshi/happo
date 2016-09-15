@@ -33,9 +33,11 @@ export default class LCSDiff extends React.Component {
     let maxHeight;
 
     if (previousData && currentData) {
-      maxWidth = Math.max(previousData.width, currentData.width);
+      maxWidth = Math.max(
+        previousData.rows[0].length, currentData.rows[0].length);
 
-      const adiffResults = adiff.diff(previousData.hashedRows, currentData.hashedRows);
+      const adiffResults = adiff.diff(
+        previousData.hashedRows, currentData.hashedRows);
 
       const redRow = [];
       for (let i = 0; i < maxWidth; i++) {
