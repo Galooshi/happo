@@ -73,7 +73,7 @@ export default class LCSDiff extends React.Component {
         if (instruction.length === 2) {
           // deletion
           for (let n = 0; n < itemsAffected; n++) {
-            previousData.rows.splice(atIndex + n, 0, greenRow);
+            currentData.rows.splice(atIndex + n, 0, greenRow);
           }
         }
       }
