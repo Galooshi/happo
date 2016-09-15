@@ -13,10 +13,11 @@
  * Returns a float number between 0 and 1 where 1 is completely different
  * and 0 is no difference
  */
-export default function euclideanDistance(rgb1, rgb2) {
-  let distance = 0;
-  for (let i = 0; i < rgb1.length; i++) {
-    distance += (rgb1[i] - rgb2[i]) * (rgb1[i] - rgb2[i]);
-  }
-  return (Math.sqrt(distance) / rgb1.length) / 255;
+export default function euclideanDistance(rgba1, rgba2) {
+  const distance = ((rgba1[0] - rgba2[0]) * (rgba1[0] - rgba2[0]))
+                 + ((rgba1[1] - rgba2[1]) * (rgba1[1] - rgba2[1]))
+                 + ((rgba1[2] - rgba2[2]) * (rgba1[2] - rgba2[2]))
+                 + ((rgba1[3] - rgba2[3]) * (rgba1[3] - rgba2[3]));
+
+  return (Math.sqrt(distance) / 4) / 255;
 }
