@@ -1,3 +1,9 @@
+/**
+ * Get data (pixels, width, height) about an image
+ *
+ * @param {String} src
+ * @return {Promise}
+ */
 export default function getImageData(src) {
   return new Promise((resolve) => {
     const imageObj = new Image();
@@ -10,35 +16,8 @@ export default function getImageData(src) {
 
       context.drawImage(imageObj, 0, 0);
 
-      const imageData = context.getImageData(0, 0, width, height).data;
-
-      // The imageData is a 1D array. Each element in the array corresponds to a
-      // decimal value that represents one of the RGBA channels for that pixel.
-      const rowSize = width * 4;
-      const getPixelAt = (x, y) => {
-        if (x > width || y > height) {
-          return undefined;
-        }
-
-        const startIndex = (y * rowSize) + (x * 4);
-        return [
-          imageData[startIndex],
-          imageData[startIndex + 1],
-          imageData[startIndex + 2],
-          imageData[startIndex + 3],
-        ];
-      };
-
-      const data = [];
-      for (let row = 0; row < height; row++) {
-        const pixelsInRow = [];
-        for (let col = 0; col < width; col++) {
-          pixelsInRow.push(getPixelAt(col, row));
-        }
-        data.push(pixelsInRow);
-      }
-
-      resolve(data);
+      const data = context.getImageData(0, 0, width, height).data;
+      resolve({ width, height, data });
     };
     imageObj.src = src;
   });

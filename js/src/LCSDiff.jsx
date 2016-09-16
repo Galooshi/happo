@@ -35,9 +35,10 @@ export default class LCSDiff extends React.Component {
         currentData: newCurrentData,
       },
     }) => {
+      // At this point, images are of same width
       this.setState({
-        width: Math.max(newPreviousData[0].length, newCurrentData[0].length),
-        height: newCurrentData.length,
+        width: newPreviousData.width,
+        height: newPreviousData.height,
       });
 
       this.constructDiffImage({
@@ -50,11 +51,11 @@ export default class LCSDiff extends React.Component {
 
   constructDiffImage({ previousData, currentData }) {
     const worker = new ImageDiffWorker();
-    worker.addEventListener('message', (e) => {
+    worker.addEventListener('message', ({ data }) => {
       const context = this.canvas.getContext('2d');
       const diffImage = context.createImageData(
         this.state.width, this.state.height);
-      e.data.forEach((value, index) => (diffImage.data[index] = value));
+      diffImage.data.set(data);
       context.putImageData(diffImage, 0, 0);
     });
     worker.postMessage({ previousData, currentData });
