@@ -26,7 +26,7 @@ function constructColoredLine(rgba, width) {
  * @param {Array} previousData
  * @param {Array} currentData
  */
-export default function computeAndInjectDiffs(previousData, currentData) {
+function computeAndInjectDiffs({ previousData, currentData }) {
   const maxWidth = Math.max(
     previousData[0].length, currentData[0].length);
 
@@ -69,3 +69,9 @@ export default function computeAndInjectDiffs(previousData, currentData) {
     }
   }
 }
+
+self.addEventListener('message', ({ data: { previousData, currentData } }) => {
+  computeAndInjectDiffs({ previousData, currentData });
+  self.postMessage({ previousData, currentData });
+  self.close();
+});
