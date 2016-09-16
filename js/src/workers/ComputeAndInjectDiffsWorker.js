@@ -1,5 +1,7 @@
 import adiff from 'adiff';
 
+import flattenImageData from '../flattenImageData';
+
 /**
  * Construct a line of pixels of a certain rgba color
  *
@@ -41,16 +43,6 @@ function imageTo2DArray({ data, width, height }, paddingRight) {
     newData.push(pixelsInRow);
   }
   return newData;
-}
-
-function flattenImageData(imageData) {
-  const result = [];
-  imageData.forEach((row) => {
-    row.forEach((pixel) => {
-      result.push(...pixel);
-    });
-  });
-  return Uint8ClampedArray.from(result);
 }
 
 /**
