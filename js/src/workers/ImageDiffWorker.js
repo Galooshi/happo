@@ -1,6 +1,6 @@
-import getDiffPixel from './getDiffPixel';
+import getDiffPixel from '../getDiffPixel';
 
-export default function constructDiffImageData(previousData, currentData) {
+self.addEventListener('message', ({ data: { previousData, currentData } }) => {
   const maxWidth = Math.max(
         previousData[0].length, currentData[0].length);
   const data = new Array(previousData.length * maxWidth * 4);
@@ -19,5 +19,6 @@ export default function constructDiffImageData(previousData, currentData) {
       data[index + 3] = pixel[3]; // a
     }
   });
-  return data;
-}
+  self.postMessage(data);
+  self.close();
+});

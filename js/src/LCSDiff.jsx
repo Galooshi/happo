@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react';
 
 import computeAndInjectDiffs from './computeAndInjectDiffs';
-import constructDiffImageData from './constructDiffImageData';
 import getImageData from './getImageData';
+
+const ImageDiffWorker =
+  require('worker?inline!./workers/ImageDiffWorker'); // eslint-disable-line
 
 export default class LCSDiff extends React.Component {
   constructor(props) {
@@ -38,13 +40,14 @@ export default class LCSDiff extends React.Component {
         previousData[0].length, currentData[0].length);
       maxHeight = previousData.length;
 
-      setTimeout(() => {
-        const diffData = constructDiffImageData(previousData, currentData);
+      const worker = new ImageDiffWorker();
+      worker.addEventListener('message', (e) => {
         const context = this.canvas.getContext('2d');
         const diffImage = context.createImageData(maxWidth, maxHeight);
-        diffData.forEach((value, index) => (diffImage.data[index] = value));
+        e.data.forEach((value, index) => (diffImage.data[index] = value));
         context.putImageData(diffImage, 0, 0);
-      }, 0);
+      });
+      worker.postMessage({ previousData, currentData });
     }
 
     return (

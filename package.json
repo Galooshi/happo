@@ -32,6 +32,7 @@
     "webpack": "^1.13.2"
   },
   "dependencies": {
-    "adiff": "^0.2.13"
+    "adiff": "^0.2.13",
+    "worker-loader": "^0.7.1"
   }
 }
