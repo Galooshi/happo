@@ -61,8 +61,8 @@ function getAdiffResults({
     return [diff];
   }
   return adiff.diff(
-    previousImageData.map(d => btoa(d)),
-    currentImageData.map(d => btoa(d))
+    previousImageData.map(JSON.stringify),
+    currentImageData.map(JSON.stringify)
   );
 }
 
