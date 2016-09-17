@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import ReactWaypoint from 'react-waypoint';
 
 import getImageData from './getImageData';
 
@@ -11,9 +12,10 @@ export default class LCSDiff extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.initialize = this.initialize.bind(this);
   }
 
-  componentDidMount() {
+  initialize() {
     const { previous, current } = this.props;
 
     Promise.all([
@@ -71,11 +73,17 @@ export default class LCSDiff extends React.Component {
     } = this.state;
 
     return (
-      <canvas
-        ref={(node) => { this.canvas = node; }}
-        width={width}
-        height={height}
-      />
+      <div>
+        <ReactWaypoint
+          onEnter={this.initialize}
+          scrollableAncestor={window}
+        />
+        <canvas
+          ref={(node) => { this.canvas = node; }}
+          width={width}
+          height={height}
+        />
+      </div>
     );
   }
 }
