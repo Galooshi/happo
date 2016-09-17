@@ -2,16 +2,16 @@ import getDiffPixel from '../getDiffPixel';
 
 self.addEventListener('message', ({
   data: {
-    previousImageData,
-    currentImageData,
+    previousImageData: p,
+    currentImageData: c,
   },
 }) => {
-  const data = new Uint8ClampedArray(previousImageData.length);
+  const data = new Uint8ClampedArray(p.length);
 
-  for (let i = 0; i < previousImageData.length; i += 4) {
+  for (let i = 0; i < p.length; i += 4) {
     const pixel = getDiffPixel(
-      previousImageData.slice(i, i + 4),
-      currentImageData.slice(i, i + 4)
+      [p[i], p[i + 1], p[i + 2], p[i + 3]],
+      [c[i], c[i + 1], c[i + 2], c[i + 3]]
     );
     data[i + 0] = pixel[0]; // r
     data[i + 1] = pixel[1]; // g
