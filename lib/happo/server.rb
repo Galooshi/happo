@@ -74,6 +74,20 @@ module Happo
           current: '/small-previous.png',
         },
         {
+          description: '<FullPage> small',
+          viewport: 'small',
+          current: '/full-page-small-current.png',
+          diff: 'http://placehold.it/350x150',
+          previous: '/full-page-small-previous.png',
+        },
+        {
+          description: '<FullPage> large',
+          viewport: 'large',
+          current: '/full-page-large-current.png',
+          diff: 'http://placehold.it/350x150',
+          previous: '/full-page-large-previous.png',
+        },
+        {
           description: 'Completely different',
           viewport: 'small',
           previous: '/modal-previous.png',
@@ -114,6 +128,20 @@ module Happo
           previous: '/dialog-previous.png',
           diff: 'http://placehold.it/850x150',
           current: '/dialog-current.png',
+        },
+        {
+          description: '<MajorDiff> large',
+          viewport: 'large',
+          current: '/major-diff-large-current.png',
+          diff: 'http://placehold.it/350x150',
+          previous: '/major-diff-large-previous.png',
+        },
+        {
+          description: '<MajorDiff> small',
+          viewport: 'small',
+          current: '/major-diff-small-current.png',
+          diff: 'http://placehold.it/350x150',
+          previous: '/major-diff-small-previous.png',
         },
       ]
 
