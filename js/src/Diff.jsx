@@ -9,7 +9,7 @@ export class DiffController extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedView: VIEWS.SIDE_BY_SIDE,
+      selectedView: VIEWS.DIFF,
     };
 
     this.handleClick = this.handleClick.bind(this);
