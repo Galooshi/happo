@@ -45,6 +45,27 @@ function imageTo2DArray({ data, width, height }, paddingRight) {
   return newData;
 }
 
+function getAdiffResults({
+  previousData,
+  currentData,
+  previousImageData,
+  currentImageData,
+}) {
+  if (previousData.width !== currentData.width) {
+    // we know that all rows will be different here, so we can take a shortcut
+    const diff = [
+      0, // diff starts at index 0
+      previousData.height, // number of deletions
+    ];
+    diff.length = currentData.height + 2; // number of additions
+    return [diff];
+  }
+  return adiff.diff(
+    previousImageData.map(d => btoa(d)),
+    currentImageData.map(d => btoa(d))
+  );
+}
+
 /**
  * Takes two 2d images, computes the diff between the two, and injects pixels to
  * both in order to:
@@ -68,10 +89,12 @@ function computeAndInjectDiffs({ previousData, currentData }) {
   const currentImageData = imageTo2DArray(
     currentData, maxWidth - currentData.width);
 
-  const adiffResults = adiff.diff(
-    previousImageData.map(d => btoa(d)),
-    currentImageData.map(d => btoa(d))
-  );
+  const adiffResults = getAdiffResults({
+    previousData,
+    currentData,
+    previousImageData,
+    currentImageData,
+  });
 
   // iterate and apply changes to previous data
   adiffResults.forEach((instruction) => {
