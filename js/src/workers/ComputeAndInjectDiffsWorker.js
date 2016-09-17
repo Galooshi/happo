@@ -89,12 +89,16 @@ function computeAndInjectDiffs({ previousData, currentData }) {
   const currentImageData = imageTo2DArray(
     currentData, maxWidth - currentData.width);
 
+  self.postMessage({ progress: 30 });
+
   const adiffResults = getAdiffResults({
     previousData,
     currentData,
     previousImageData,
     currentImageData,
   });
+
+  self.postMessage({ progress: 75 });
 
   // iterate and apply changes to previous data
   adiffResults.forEach((instruction) => {
@@ -111,6 +115,7 @@ function computeAndInjectDiffs({ previousData, currentData }) {
       }
     }
   });
+  self.postMessage({ progress: 80 });
 
   // iterate backwards and apply changes to current data
   for (let i = adiffResults.length - 1; i >= 0; i--) {
@@ -128,6 +133,7 @@ function computeAndInjectDiffs({ previousData, currentData }) {
       }
     }
   }
+  self.postMessage({ progress: 85 });
 
   return {
     currentData: {

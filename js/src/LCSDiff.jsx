@@ -11,7 +11,9 @@ const ComputeAndInjectDiffsWorker =
 export default class LCSDiff extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      progress: 0,
+    };
     this.initialize = this.initialize.bind(this);
   }
 
@@ -22,6 +24,7 @@ export default class LCSDiff extends React.Component {
       getImageData(previous),
       getImageData(current),
     ]).then((result) => {
+      this.setState({ progress: 10 });
       this.computeDiffs({
         previousData: result[0],
         currentData: result[1],
@@ -35,8 +38,15 @@ export default class LCSDiff extends React.Component {
       data: {
         previousData: newPreviousData,
         currentData: newCurrentData,
+        progress,
       },
     }) => {
+      if (!newPreviousData) {
+        // This is only a progress message, not the final results
+        this.setState({ progress });
+        return;
+      }
+
       // At this point, images are of same width
       this.setState({
         width: newPreviousData.width,
@@ -59,6 +69,7 @@ export default class LCSDiff extends React.Component {
         this.state.width, this.state.height);
       diffImage.data.set(data);
       context.putImageData(diffImage, 0, 0);
+      this.setState({ progress: 100 });
     });
     worker.postMessage({
       previousImageData: previousData.data,
@@ -70,14 +81,25 @@ export default class LCSDiff extends React.Component {
     const {
       width,
       height,
+      progress,
     } = this.state;
 
     return (
       <div>
-        <ReactWaypoint
-          onEnter={this.initialize}
-          scrollableAncestor={window}
-        />
+        {progress === 0 &&
+          <ReactWaypoint
+            onEnter={this.initialize}
+            scrollableAncestor={window}
+          />
+        }
+        {progress < 100 &&
+          <div>
+            <progress
+              value={progress}
+              max={100}
+            />
+          </div>
+        }
         <canvas
           ref={(node) => { this.canvas = node; }}
           width={width}
