@@ -58,7 +58,10 @@ export default class LCSDiff extends React.Component {
       diffImage.data.set(data);
       context.putImageData(diffImage, 0, 0);
     });
-    worker.postMessage({ previousData, currentData });
+    worker.postMessage({
+      previousImageData: previousData.data,
+      currentImageData: currentData.data,
+    });
   }
 
   render() {
