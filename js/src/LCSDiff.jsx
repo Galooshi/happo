@@ -95,7 +95,7 @@ export default class LCSDiff extends React.Component {
           />
         }
         {progress < 100 &&
-          <div>
+          <div style={{ position: 'absolute' }}>
             <progress
               value={progress}
               max={100}
