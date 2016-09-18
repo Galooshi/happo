@@ -6,7 +6,7 @@
     "eslint": "eslint --ext .js,.jsx",
     "test": "npm run --silent eslint -- .",
     "webpack": "webpack -p",
-    "webpack-dev": "webpack --devtool eval-source-map --watch"
+    "webpack-dev": "webpack --devtool eval-source-map --progress --watch"
   },
   "repository": {
     "type": "git",
