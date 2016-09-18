@@ -29,7 +29,7 @@ module Happo
       result_summary = Happo::Utils.last_result_summary
 
       diff_images = result_summary[:diff_examples].map do |image|
-        [:previous, :diff, :current].each do |variant|
+        [:previous, :current].each do |variant|
           file_path = Happo::Utils.path_to(
             image[:description],
             image[:viewport],
@@ -63,84 +63,72 @@ module Happo
           description: '<Small>',
           viewport: 'small',
           previous: '/small-previous.png',
-          diff: 'http://placehold.it/350x150',
           current: '/small-current.png',
         },
         {
           description: '<Small> inverted',
           viewport: 'small',
           previous: '/small-current.png',
-          diff: 'http://placehold.it/350x150',
           current: '/small-previous.png',
         },
         {
           description: '<FullPage> small',
           viewport: 'small',
           current: '/full-page-small-current.png',
-          diff: 'http://placehold.it/350x150',
           previous: '/full-page-small-previous.png',
         },
         {
           description: '<FullPage> large',
           viewport: 'large',
           current: '/full-page-large-current.png',
-          diff: 'http://placehold.it/350x150',
           previous: '/full-page-large-previous.png',
         },
         {
           description: 'Completely different',
           viewport: 'small',
           previous: '/modal-previous.png',
-          diff: 'http://placehold.it/350x150',
           current: '/card-current.png',
         },
         {
           description: 'Completely different, reversed',
           viewport: 'small',
           previous: '/card-current.png',
-          diff: 'http://placehold.it/350x150',
           current: '/modal-previous.png',
         },
         {
           description: '<First> with "test"',
           viewport: 'small',
           previous: '/modal-previous.png',
-          diff: 'http://placehold.it/350x150',
           current: '/modal-current.png',
         },
         {
           description: '<First> some other \'test\'',
           viewport: 'medium',
           previous: '/card-previous.png',
-          diff: 'http://placehold.it/550x150',
           current: '/card-current.png',
         },
         {
           description: '<First> /$&^',
           viewport: 'large',
           previous: '/wide-previous.png',
-          diff: 'http://placehold.it/350x150',
           current: '/wide-current.png',
         },
         {
           description: '<First>',
           viewport: 'large',
           previous: '/dialog-previous.png',
-          diff: 'http://placehold.it/850x150',
           current: '/dialog-current.png',
         },
         {
           description: '<MajorDiff> large',
           viewport: 'large',
           current: '/major-diff-large-current.png',
-          diff: 'http://placehold.it/350x150',
           previous: '/major-diff-large-previous.png',
         },
         {
           description: '<MajorDiff> small',
           viewport: 'small',
           current: '/major-diff-small-current.png',
-          diff: 'http://placehold.it/350x150',
           previous: '/major-diff-small-previous.png',
         },
       ]

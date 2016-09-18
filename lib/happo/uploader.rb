@@ -21,7 +21,6 @@ module Happo
 
       diff_images = result_summary[:diff_examples].map do |example|
         example[:previous] = upload_image(example, 'previous')
-        example[:diff] = upload_image(example, 'diff')
         example[:current] = upload_image(example, 'current')
         example
       end

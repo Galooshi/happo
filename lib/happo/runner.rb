@@ -152,8 +152,7 @@ begin
       # 1. Delete previous.png if it exists.
       # 2. Compare the current snapshot in memory against current.png if it
       #    exists.
-      # 3. If there is a diff, move current.png to previous.png and write out
-      #    diff.png to disk and the current snapshot to current.png.
+      # 3. If there is a diff, move current.png to previous.png
       # 4. If there is no diff, return, leaving the old current.png in place.
       previous_image_path = Happo::Utils.path_to(
         description, viewport['name'], 'previous.png'
@@ -161,14 +160,10 @@ begin
       current_image_path = Happo::Utils.path_to(
         description, viewport['name'], 'current.png'
       )
-      diff_image_path = Happo::Utils.path_to(
-        description, viewport['name'], 'diff.png'
-      )
 
-      # We no longer need the old previous.png and diff.png, so lets remove them
-      # to keep things clean.
+      # We no longer need the old previous.png so lets remove it to keep things
+      # clean.
       File.delete previous_image_path if File.exist? previous_image_path
-      File.delete diff_image_path if File.exist? diff_image_path
 
       if File.exist? current_image_path
         ChunkyPNG::Image.from_file(current_image_path).eql?(screenshot)
