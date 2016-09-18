@@ -9,7 +9,7 @@ export default function getDiffPixel(previousPixel, currentPixel) {
     return previousPixel;
   }
 
-  let diff = euclideanDistance(previousPixel, currentPixel);
+  const diff = euclideanDistance(previousPixel, currentPixel);
   if (diff === 0) {
     return [
       currentPixel[0],
@@ -19,8 +19,5 @@ export default function getDiffPixel(previousPixel, currentPixel) {
     ];
   }
 
-  if (diff < 0.2) {
-    diff = 0.2;
-  }
-  return [255, 0, 0, 255 * diff]; // TODO don't use red here
+  return [255, 0, 0, 255 * Math.max(0.2, diff)]; // TODO don't use red here
 }
