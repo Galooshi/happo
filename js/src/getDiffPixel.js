@@ -21,7 +21,7 @@ export default function getDiffPixel(previousPixel, currentPixel) {
   }
 
   return compose(
-    [255, 0, 0, 255 * Math.max(0.2, diff)], // TODO don't use red here
+    [179, 54, 130, 255 * Math.max(0.2, diff)],
     WHITE
   );
 }
