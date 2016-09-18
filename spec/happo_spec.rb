@@ -112,6 +112,7 @@ describe 'happo' do
         var elem = document.createElement('div');
 
         var nested = document.createElement('span');
+        nested.style.lineHeight = '20px';
         nested.innerHTML = 'Foo';
         elem.appendChild(nested);
 
