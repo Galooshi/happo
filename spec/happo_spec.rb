@@ -102,7 +102,6 @@ describe 'happo' do
         ],
         diff_examples: [],
         okay_examples: [],
-        height: 20,
       )
     end
   end
