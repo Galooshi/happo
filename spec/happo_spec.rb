@@ -18,6 +18,7 @@ describe 'happo' do
     happo.define('#{description}', function() {
       var elem = document.createElement('div');
       elem.innerHTML = 'Foo';
+      elem.style.lineHeight = '20px';
       document.body.appendChild(elem);
     }, #{example_config});
   EOS
@@ -309,6 +310,7 @@ describe 'happo' do
       happo.define('#{description}', function() {
         var elem = document.createElement('div');
         elem.style.margin = '10px';
+        elem.style.lineHeight = '20px';
         elem.innerHTML = 'Foo';
         document.body.appendChild(elem);
       }, #{example_config});
