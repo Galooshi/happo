@@ -13,6 +13,8 @@ export default class LCSDiff extends React.Component {
     super(props);
     this.state = {
       progress: 0,
+      width: 0,
+      height: 0,
     };
     this.initialize = this.initialize.bind(this);
   }
