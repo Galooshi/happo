@@ -9,15 +9,14 @@
  * Delta E in Lab colorspace, we probably don't need perceptual accuracy for
  * this application, and it is nice to avoid the overhead of converting RGBA
  * to Lab.
- *
- * Returns a float number between 0 and 1 where 1 is completely different
- * and 0 is no difference
  */
 export default function euclideanDistance(rgba1, rgba2) {
-  const distance = ((rgba1[0] - rgba2[0]) * (rgba1[0] - rgba2[0]))
-                 + ((rgba1[1] - rgba2[1]) * (rgba1[1] - rgba2[1]))
-                 + ((rgba1[2] - rgba2[2]) * (rgba1[2] - rgba2[2]))
-                 + ((rgba1[3] - rgba2[3]) * (rgba1[3] - rgba2[3]));
-
-  return (Math.sqrt(distance) / 4) / 255;
+  return Math.sqrt(
+    Math.pow(rgba1[0] - rgba2[0], 2)
+    + Math.pow(rgba1[1] - rgba2[1], 2)
+    + Math.pow(rgba1[2] - rgba2[2], 2)
+    + Math.pow(rgba1[3] - rgba2[3], 2)
+  );
 }
+
+export const MAX_EUCLIDEAN_DISTANCE = Math.sqrt(Math.pow(255, 2) * 4);

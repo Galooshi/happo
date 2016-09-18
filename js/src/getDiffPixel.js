@@ -1,5 +1,5 @@
 import compose from './compose';
-import euclideanDistance from './euclideanDistance';
+import euclideanDistance, { MAX_EUCLIDEAN_DISTANCE } from './euclideanDistance';
 
 const WHITE = [255, 255, 255, 255];
 
@@ -12,7 +12,7 @@ export default function getDiffPixel(previousPixel, currentPixel) {
     return previousPixel;
   }
 
-  const diff = euclideanDistance(previousPixel, currentPixel);
+  const diff = euclideanDistance(previousPixel, currentPixel) / MAX_EUCLIDEAN_DISTANCE;
   if (diff === 0) {
     return compose(
       [currentPixel[0], currentPixel[1], currentPixel[2], 50],
