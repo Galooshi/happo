@@ -92,6 +92,7 @@ export default class LCSDiff extends React.Component {
           <ReactWaypoint
             onEnter={this.initialize}
             scrollableAncestor={window}
+            bottomOffset='-50%'
           />
         }
         {progress < 100 &&
