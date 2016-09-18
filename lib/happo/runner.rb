@@ -166,16 +166,17 @@ begin
       File.delete previous_image_path if File.exist? previous_image_path
 
       if File.exist? current_image_path
-        ChunkyPNG::Image.from_file(current_image_path).eql?(screenshot)
+        current_image = ChunkyPNG::Image.from_file(current_image_path)
         log.log '.', false
 
-        if ChunkyPNG::Image.from_file(current_image_path).eql?(screenshot)
+        if current_image.eql?(screenshot)
           # No visual difference was found, so we don't need to do any more
           # work.
           log.log ' No diff.'
           result_summary[:okay_examples] << {
             description: description,
-            viewport: viewport['name']
+            viewport: viewport['name'],
+            height: current_image.height,
           }
         else
           # There was a visual difference between the new snapshot and the
@@ -188,7 +189,8 @@ begin
           log.log log.cyan(" DIFF (#{current_image_path})")
           result_summary[:diff_examples] << {
             description: description,
-            viewport: viewport['name']
+            viewport: viewport['name'],
+            height: [screenshot.height, current_image.height].max,
           }
         end
       else
@@ -203,7 +205,8 @@ begin
         log.log " First snapshot created (#{current_image_path})"
         result_summary[:new_examples] << {
           description: description,
-          viewport: viewport['name']
+          viewport: viewport['name'],
+          height: screenshot.height,
         }
       end
     end

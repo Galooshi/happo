@@ -34,6 +34,10 @@ DiffController.propTypes = {
 };
 
 export default function Diff({ image, selectedView, onClick }) {
+  // Compute minHeight based on the height of the largest image, plus 10% to
+  // leave room for some additional height needed by the diff view.
+  const minHeight = image.height + (image.height / 10);
+
   return (
     <div>
       <ImageHeading
@@ -60,7 +64,12 @@ export default function Diff({ image, selectedView, onClick }) {
           );
         })}
       </div>
-      <div className='Diff__images'>
+      <div
+        className='Diff__images'
+        style={{
+          minHeight,
+        }}
+      >
         <SelectedView image={image} selectedView={selectedView} />
       </div>
     </div>

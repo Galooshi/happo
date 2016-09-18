@@ -9,7 +9,12 @@ export default function NewImage({ image }) {
       <ImageHeading
         image={image}
       />
-      <div className='NewImage__image'>
+      <div
+        className='NewImage__image'
+        style={{
+          minHeight: image.height,
+        }}
+      >
         <img
           role='presentation'
           src={image.current}

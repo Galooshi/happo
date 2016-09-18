@@ -5,4 +5,5 @@ export default {
   viewport: PropTypes.string.isRequired,
   previous: PropTypes.string,
   current: PropTypes.string.isRequired,
+  height: PropTypes.number.isRequired,
 };

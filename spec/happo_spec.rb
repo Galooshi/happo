@@ -95,11 +95,13 @@ describe 'happo' do
         new_examples: [
           {
             description: description,
-            viewport: 'large'
+            viewport: 'large',
+            height: 20,
           }
         ],
         diff_examples: [],
-        okay_examples: []
+        okay_examples: [],
+        height: 20,
       )
     end
   end
@@ -134,7 +136,8 @@ describe 'happo' do
         new_examples: [
           {
             description: description,
-            viewport: 'large'
+            viewport: 'large',
+            height: 20,
           }
         ],
         diff_examples: [],
@@ -223,7 +226,8 @@ describe 'happo' do
           new_examples: [
             {
               description: description,
-              viewport: 'large'
+              viewport: 'large',
+              height: 80,
             }
           ],
           diff_examples: [],
@@ -283,7 +287,8 @@ describe 'happo' do
         new_examples: [
           {
             description: description,
-            viewport: 'large'
+            viewport: 'large',
+            height: 80,
           }
         ],
         diff_examples: [],
@@ -326,7 +331,8 @@ describe 'happo' do
         new_examples: [
           {
             description: description,
-            viewport: 'large'
+            viewport: 'large',
+            height: 40,
           }
         ],
         diff_examples: [],
@@ -373,7 +379,8 @@ describe 'happo' do
           okay_examples: [
             {
               description: description,
-              viewport: 'large'
+              viewport: 'large',
+              height: 20,
             }
           ],
           new_examples: [],
@@ -415,7 +422,8 @@ describe 'happo' do
             diff_examples: [
               {
                 description: description,
-                viewport: 'large'
+                viewport: 'large',
+                height: 20,
               }
             ],
             new_examples: [],
