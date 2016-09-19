@@ -26,7 +26,7 @@ export default function getDiffPixel(previousPixel, currentPixel) {
 
   if (diff === 0) {
     return compose(
-      [currentPixel[0], currentPixel[1], currentPixel[2], 50],
+      [currentPixel[0], currentPixel[1], currentPixel[2], 40],
       WHITE
     );
   }
