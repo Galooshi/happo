@@ -60,9 +60,15 @@ function getAdiffResults({
     diff.length = currentData.height + 2; // number of additions
     return [diff];
   }
+
+  const hashedPreviousData = previousImageData.map(JSON.stringify);
+  self.postMessage({ progress: 30 });
+  const hashedCurrentData = currentImageData.map(JSON.stringify);
+  self.postMessage({ progress: 40 });
+
   return adiff.diff(
-    previousImageData.map(JSON.stringify),
-    currentImageData.map(JSON.stringify)
+    hashedPreviousData,
+    hashedCurrentData
   );
 }
 
@@ -89,7 +95,7 @@ function computeAndInjectDiffs({ previousData, currentData }) {
   const currentImageData = imageTo2DArray(
     currentData, maxWidth - currentData.width);
 
-  self.postMessage({ progress: 30 });
+  self.postMessage({ progress: 20 });
 
   const adiffResults = getAdiffResults({
     previousData,
