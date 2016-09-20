@@ -88,13 +88,6 @@ export default class LCSDiff extends React.Component {
 
     return (
       <div>
-        {progress === 0 &&
-          <ReactWaypoint
-            onEnter={this.initialize}
-            scrollableAncestor={window}
-            bottomOffset='-50%'
-          />
-        }
         {progress < 100 &&
           <div style={{ position: 'absolute' }}>
             <progress
@@ -102,6 +95,13 @@ export default class LCSDiff extends React.Component {
               max={100}
             />
           </div>
+        }
+        {progress === 0 &&
+          <ReactWaypoint
+            onEnter={this.initialize}
+            scrollableAncestor={window}
+            bottomOffset='-50%'
+          />
         }
         <canvas
           ref={(node) => { this.canvas = node; }}
