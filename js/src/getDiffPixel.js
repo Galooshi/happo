@@ -4,14 +4,6 @@ import euclideanDistance, { MAX_EUCLIDEAN_DISTANCE } from './euclideanDistance';
 const WHITE = [255, 255, 255, 255];
 
 export default function getDiffPixel(previousPixel, currentPixel) {
-  if (!previousPixel) {
-    return currentPixel;
-  }
-
-  if (!currentPixel) {
-    return previousPixel;
-  }
-
   // Compute a score that represents the difference between 2 pixels
   //
   // This method simply takes the Euclidean distance between the RGBA channels
