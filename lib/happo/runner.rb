@@ -152,52 +152,45 @@ begin
       # 1. Delete previous.png if it exists.
       # 2. Compare the current snapshot in memory against current.png if it
       #    exists.
-      # 3. If there is a diff, move current.png to previous.png and write out
-      #    diff.png to disk and the current snapshot to current.png.
+      # 3. If there is a diff, move current.png to previous.png
       # 4. If there is no diff, return, leaving the old current.png in place.
       previous_image_path = Happo::Utils.path_to(
-        description, viewport['name'], 'previous.png')
+        description, viewport['name'], 'previous.png'
+      )
       current_image_path = Happo::Utils.path_to(
-        description, viewport['name'], 'current.png')
-      diff_image_path = Happo::Utils.path_to(
-        description, viewport['name'], 'diff.png')
+        description, viewport['name'], 'current.png'
+      )
 
-      # We no longer need the old previous.png and diff.png, so lets remove them
-      # to keep things clean.
+      # We no longer need the old previous.png so lets remove it to keep things
+      # clean.
       File.delete previous_image_path if File.exist? previous_image_path
-      File.delete diff_image_path if File.exist? diff_image_path
 
       if File.exist? current_image_path
-        comparison = Happo::SnapshotComparer.new(
-          ChunkyPNG::Image.from_file(current_image_path),
-          screenshot
-        ).compare!
+        current_image = ChunkyPNG::Image.from_file(current_image_path)
         log.log '.', false
 
-        if comparison[:diff_image]
-          # There was a visual difference between the new snapshot and the
-          # previous, so we want to write the diff image and the new snapshot
-          # image to disk. This will allow it to be reviewed by someone.
-          comparison[:diff_image].save(diff_image_path, :fast_rgba)
-          log.log '.', false
-
-          File.rename(current_image_path, previous_image_path)
-          screenshot.save(current_image_path, :fast_rgba)
-          log.log '.', false
-
-          percent = comparison[:diff_in_percent].round(1)
-          log.log log.cyan(" #{percent}% (#{current_image_path})")
-          result_summary[:diff_examples] << {
-            description: description,
-            viewport: viewport['name']
-          }
-        else
+        if current_image.eql?(screenshot)
           # No visual difference was found, so we don't need to do any more
           # work.
           log.log ' No diff.'
           result_summary[:okay_examples] << {
             description: description,
-            viewport: viewport['name']
+            viewport: viewport['name'],
+            height: current_image.height,
+          }
+        else
+          # There was a visual difference between the new snapshot and the
+          # previous, so we want to write the new snapshot image to disk. This
+          # will allow it to be reviewed by someone.
+          File.rename(current_image_path, previous_image_path)
+          screenshot.save(current_image_path, :fast_rgba)
+          log.log '.', false
+
+          log.log log.cyan(" DIFF (#{current_image_path})")
+          result_summary[:diff_examples] << {
+            description: description,
+            viewport: viewport['name'],
+            height: [screenshot.height, current_image.height].max,
           }
         end
       else
@@ -212,7 +205,8 @@ begin
         log.log " First snapshot created (#{current_image_path})"
         result_summary[:new_examples] << {
           description: description,
-          viewport: viewport['name']
+          viewport: viewport['name'],
+          height: screenshot.height,
         }
       end
     end

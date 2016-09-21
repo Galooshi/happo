@@ -66,7 +66,7 @@ describe Happo::Utils do
     subject { Happo::Utils.path_to(description, viewport_name, file_name) }
     let(:description) { '<MyComponent>' }
     let(:viewport_name) { 'large' }
-    let(:file_name) { 'diff.png' }
-    it { should eq("./snapshots/#{Base64.strict_encode64(description).strip}/@large/diff.png") }
+    let(:file_name) { 'previous.png' }
+    it { should eq("./snapshots/#{Base64.strict_encode64(description).strip}/@large/previous.png") }
   end
 end

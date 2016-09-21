@@ -55,8 +55,13 @@ body {
   padding: 20px 10px 15px;
 }
 
-.HappoDiffs__header > :first-child {
+.HappoDiffs__header > * {
   margin-right: 10px;
+  margin-bottom: 5px;
+}
+
+.HappoDiffs__header > :last-child {
+  margin-right: 0;
 }
 
 .HappoDiffs__headerTitle {
@@ -67,8 +72,11 @@ body {
   padding: 10px;
 }
 
-.Diff__images {
+.Diff__images,
+.NewImage__image {
   white-space: nowrap;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .Diff__buttons {
@@ -79,7 +87,8 @@ body {
   border: 1px solid #ccc;
   border-left-width: 0;
   background-color: #f0f0f0;
-  padding: 5px 15px;
+  padding: 10px 20px;
+  cursor: pointer;
 }
 
 .Diff__button[aria-pressed="true"] {
@@ -124,4 +133,20 @@ body {
 
 .SideBySide__image {
   vertical-align: top;
+}
+
+.SmoothProgress {
+  overflow: hidden;
+  height: 10px;
+  width: 100%;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  transition: opacity 1s;
+}
+
+.SmoothProgress__bar {
+  background-color: rgba(179, 54, 130, .5);
+  height: 100%;
+  width: 100%;
+  transition: transform 1s ease-in-out;
 }

@@ -197,7 +197,7 @@ This will open a browser window pointing at `/debug`, listing all your
 examples. If you click one of them, the example will be rendered in isolation
 and you can do use your developer tools to debug.
 
-### `happo upload_diffs`
+### `happo upload_diffs [<triggered-by-url>]`
 
 Uploads all current diff images to an Amazon S3 account and reports back URLs
 to access those diff images. Requires that `S3_ACCESS_KEY_ID`,
@@ -223,6 +223,13 @@ or by adding them in the beginning of the command:
 
 ```sh
 S3_ACCESS_KEY_ID=<...> S3_SECRET_ACCESS_KEY=<...> ... happo upload_diffs
+```
+
+If you want the diff page to link back to a commit/PR, you can pass in a URL as
+the argument to `happo upload_diffs`. E.g.
+
+```sh
+happo upload_diffs "https://test.example"
 ```
 
 ### `happo clean`

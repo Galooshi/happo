@@ -1,5 +1,8 @@
 require './lib/happo/version'
 
+system('npm', 'install')
+system('npm', 'run', 'webpack')
+
 Gem::Specification.new do |s|
   s.name          = 'happo'
   s.version       = Happo::VERSION
@@ -14,7 +17,6 @@ Gem::Specification.new do |s|
   s.files         = Dir['lib/**/*']
 
   s.add_runtime_dependency 'chunky_png', '1.3.6'
-  s.add_runtime_dependency 'diff-lcs', '~> 1.2'
   s.add_runtime_dependency 'oily_png', '~> 1.2'
   s.add_runtime_dependency 's3', '~> 0.3', '>= 0.3.22'
   s.add_runtime_dependency 'selenium-webdriver', '~> 2.53', '>= 2.53.0'

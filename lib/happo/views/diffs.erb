@@ -4,6 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport">
     <title><%= Happo::Utils.page_title(diff_images, new_images) %></title>
 
     <link rel="shortcut icon" href="<%= Happo::Utils.favicon_as_base64 %>" />
@@ -14,26 +15,20 @@
 
     <script src="https://unpkg.com/react@15.3.1/dist/react.min.js"></script>
     <script src="https://unpkg.com/react-dom@15.3.1/dist/react-dom.min.js"></script>
-    <script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
 
-    <script type="text/babel">
+    <script>
+      window.APP_PROPS = {
+        newImages: <%= new_images.to_json %>,
+        diffImages: <%= diff_images.to_json %>,
+        pageTitle: <%= Happo::Utils.page_title(diff_images, new_images).to_json %>,
+        generatedAt: <%= Time.now.to_s.to_json %>,
+        triggeredByUrl: <%= triggered_by_url.to_json %>
+      };
       <%= Happo::Utils.jsx_code %>
     </script>
   </head>
 
   <body>
     <div id="react-root"></div>
-
-    <script type="text/babel">
-      ReactDOM.render(
-        <HappoDiffs
-          newImages={<%= new_images.to_json %>}
-          diffImages={<%= diff_images.to_json %>}
-          pageTitle={<%= Happo::Utils.page_title(diff_images, new_images).to_json %>}
-          generatedAt={<%= Time.now.to_s.to_json %>}
-        />,
-        document.getElementById('react-root')
-      );
-    </script>
   </body>
 </html>

@@ -18,6 +18,7 @@ describe 'happo' do
     happo.define('#{description}', function() {
       var elem = document.createElement('div');
       elem.innerHTML = 'Foo';
+      elem.style.lineHeight = '20px';
       document.body.appendChild(elem);
     }, #{example_config});
   EOS
@@ -82,11 +83,9 @@ describe 'happo' do
       expect(run_happo[:exit_status]).to eq(0)
     end
 
-    it 'generates a new current, but no diff' do
+    it 'generates a new current' do
       run_happo
       expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-        .to eq(false)
-      expect(snapshot_file_exists?(description, '@large', 'diff.png'))
         .to eq(false)
       expect(snapshot_file_exists?(description, '@large', 'current.png'))
         .to eq(true)
@@ -97,11 +96,12 @@ describe 'happo' do
         new_examples: [
           {
             description: description,
-            viewport: 'large'
+            viewport: 'large',
+            height: 20,
           }
         ],
         diff_examples: [],
-        okay_examples: []
+        okay_examples: [],
       )
     end
   end
@@ -112,6 +112,7 @@ describe 'happo' do
         var elem = document.createElement('div');
 
         var nested = document.createElement('span');
+        nested.style.lineHeight = '20px';
         nested.innerHTML = 'Foo';
         elem.appendChild(nested);
 
@@ -123,11 +124,9 @@ describe 'happo' do
       expect(run_happo[:exit_status]).to eq(0)
     end
 
-    it 'generates a new current, but no diff' do
+    it 'generates a new current' do
       run_happo
       expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-        .to eq(false)
-      expect(snapshot_file_exists?(description, '@large', 'diff.png'))
         .to eq(false)
       expect(snapshot_file_exists?(description, '@large', 'current.png'))
         .to eq(true)
@@ -138,7 +137,8 @@ describe 'happo' do
         new_examples: [
           {
             description: description,
-            viewport: 'large'
+            viewport: 'large',
+            height: 20,
           }
         ],
         diff_examples: [],
@@ -239,11 +239,9 @@ describe 'happo' do
         expect(no_scrollbar).to eq(true)
       end
 
-      it 'generates a new current, but no diff' do
+      it 'generates a new current' do
         run_happo
         expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-          .to eq(false)
-        expect(snapshot_file_exists?(description, '@large', 'diff.png'))
           .to eq(false)
         expect(snapshot_file_exists?(description, '@large', 'current.png'))
           .to eq(true)
@@ -254,7 +252,8 @@ describe 'happo' do
           new_examples: [
             {
               description: description,
-              viewport: 'large'
+              viewport: 'large',
+              height: 80,
             }
           ],
           diff_examples: [],
@@ -301,11 +300,9 @@ describe 'happo' do
       expect(run_happo[:exit_status]).to eq(0)
     end
 
-    it 'generates a new current, but no diff' do
+    it 'generates a new current' do
       run_happo
       expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-        .to eq(false)
-      expect(snapshot_file_exists?(description, '@large', 'diff.png'))
         .to eq(false)
       expect(snapshot_file_exists?(description, '@large', 'current.png'))
         .to eq(true)
@@ -316,7 +313,8 @@ describe 'happo' do
         new_examples: [
           {
             description: description,
-            viewport: 'large'
+            viewport: 'large',
+            height: 80,
           }
         ],
         diff_examples: [],
@@ -337,6 +335,7 @@ describe 'happo' do
       happo.define('#{description}', function() {
         var elem = document.createElement('div');
         elem.style.margin = '10px';
+        elem.style.lineHeight = '20px';
         elem.innerHTML = 'Foo';
         document.body.appendChild(elem);
       }, #{example_config});
@@ -346,11 +345,9 @@ describe 'happo' do
       expect(run_happo[:exit_status]).to eq(0)
     end
 
-    it 'generates a new current, but no diff' do
+    it 'generates a new current' do
       run_happo
       expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-        .to eq(false)
-      expect(snapshot_file_exists?(description, '@large', 'diff.png'))
         .to eq(false)
       expect(snapshot_file_exists?(description, '@large', 'current.png'))
         .to eq(true)
@@ -361,7 +358,8 @@ describe 'happo' do
         new_examples: [
           {
             description: description,
-            viewport: 'large'
+            viewport: 'large',
+            height: 40,
           }
         ],
         diff_examples: [],
@@ -395,11 +393,9 @@ describe 'happo' do
         expect(run_happo[:exit_status]).to eq(0)
       end
 
-      it 'keeps the current, and creates no diff' do
+      it 'keeps the current' do
         run_happo
         expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-          .to eq(false)
-        expect(snapshot_file_exists?(description, '@large', 'diff.png'))
           .to eq(false)
         expect(snapshot_file_exists?(description, '@large', 'current.png'))
           .to eq(true)
@@ -410,7 +406,8 @@ describe 'happo' do
           okay_examples: [
             {
               description: description,
-              viewport: 'large'
+              viewport: 'large',
+              height: 20,
             }
           ],
           new_examples: [],
@@ -439,11 +436,9 @@ describe 'happo' do
           end
         end
 
-        it 'keeps the previous, and generates a diff' do
+        it 'keeps the previous' do
           run_happo
           expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-            .to eq(true)
-          expect(snapshot_file_exists?(description, '@large', 'diff.png'))
             .to eq(true)
           expect(snapshot_file_exists?(description, '@large', 'current.png'))
             .to eq(true)
@@ -454,7 +449,8 @@ describe 'happo' do
             diff_examples: [
               {
                 description: description,
-                viewport: 'large'
+                viewport: 'large',
+                height: 20,
               }
             ],
             new_examples: [],
@@ -486,11 +482,9 @@ describe 'happo' do
         end
       end
 
-      it 'keeps the previous, and generates a diff' do
+      it 'keeps the previous' do
         run_happo
         expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-          .to eq(true)
-        expect(snapshot_file_exists?(description, '@large', 'diff.png'))
           .to eq(true)
         expect(snapshot_file_exists?(description, '@large', 'current.png'))
           .to eq(true)
@@ -564,11 +558,9 @@ describe 'happo' do
       }, #{example_config});
     EOS
 
-    it 'generates a current, but no diff' do
+    it 'generates a current' do
       run_happo
       expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-        .to eq(false)
-      expect(snapshot_file_exists?(description, '@large', 'diff.png'))
         .to eq(false)
       expect(snapshot_file_exists?(description, '@large', 'current.png'))
         .to eq(true)
@@ -580,11 +572,9 @@ describe 'happo' do
           run_happo
         end
 
-        it 'keeps the existing current, and creates no diff' do
+        it 'keeps the existing current' do
           run_happo
           expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-            .to eq(false)
-          expect(snapshot_file_exists?(description, '@large', 'diff.png'))
             .to eq(false)
           expect(snapshot_file_exists?(description, '@large', 'current.png'))
             .to eq(true)
@@ -610,11 +600,9 @@ describe 'happo' do
             end
           end
 
-          it 'keeps the previous, and generates a diff' do
+          it 'keeps the previous' do
             run_happo
             expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-              .to eq(true)
-            expect(snapshot_file_exists?(description, '@large', 'diff.png'))
               .to eq(true)
             expect(snapshot_file_exists?(description, '@large', 'current.png'))
               .to eq(true)
@@ -638,11 +626,9 @@ describe 'happo' do
       }, #{example_config});
     EOS
 
-    it 'generates a new current, but no diff' do
+    it 'generates a new current' do
       run_happo
       expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-        .to eq(false)
-      expect(snapshot_file_exists?(description, '@large', 'diff.png'))
         .to eq(false)
       expect(snapshot_file_exists?(description, '@large', 'current.png'))
         .to eq(true)
@@ -654,11 +640,9 @@ describe 'happo' do
           run_happo
         end
 
-        it 'keeps the current, and creates no diff' do
+        it 'keeps the current' do
           run_happo
           expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-            .to eq(false)
-          expect(snapshot_file_exists?(description, '@large', 'diff.png'))
             .to eq(false)
           expect(snapshot_file_exists?(description, '@large', 'current.png'))
             .to eq(true)
@@ -684,11 +668,9 @@ describe 'happo' do
             end
           end
 
-          it 'keeps the previous, and generates a diff' do
+          it 'keeps the previous' do
             run_happo
             expect(snapshot_file_exists?(description, '@large', 'previous.png'))
-              .to eq(true)
-            expect(snapshot_file_exists?(description, '@large', 'diff.png'))
               .to eq(true)
             expect(snapshot_file_exists?(description, '@large', 'current.png'))
               .to eq(true)

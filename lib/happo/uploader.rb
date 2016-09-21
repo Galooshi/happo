@@ -13,7 +13,7 @@ module Happo
       @s3_bucket_path = ENV['S3_BUCKET_PATH']
     end
 
-    def upload_diffs
+    def upload_diffs(triggered_by_url)
       result_summary = Happo::Utils.last_result_summary
 
       return [] if result_summary[:diff_examples].empty? &&
@@ -21,7 +21,6 @@ module Happo
 
       diff_images = result_summary[:diff_examples].map do |example|
         example[:previous] = upload_image(example, 'previous')
-        example[:diff] = upload_image(example, 'diff')
         example[:current] = upload_image(example, 'current')
         example
       end

@@ -39,7 +39,7 @@ when 'clean'
 
 when 'upload_diffs'
   # `upload_diffs` returns a URL to a static html file
-  puts Happo::Uploader.new.upload_diffs
+  puts Happo::Uploader.new.upload_diffs(ARGV[1])
 
 when '--version'
   puts "happo version #{Happo::VERSION}"
