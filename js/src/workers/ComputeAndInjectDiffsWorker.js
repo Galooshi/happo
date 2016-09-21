@@ -39,7 +39,7 @@ function imageTo2DArray({ data, width, height }, paddingRight) {
       pixelsInRow.push(getPixelAt(col, row));
     }
     for (let pad = 0; pad < paddingRight; pad++) {
-      pixelsInRow.push([0, 0, 0, 0]);
+      pixelsInRow.push(TRANSPARENT_PIXEL);
     }
     newData.push(pixelsInRow);
   }
