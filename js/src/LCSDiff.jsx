@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import ReactWaypoint from 'react-waypoint';
 
+import SmoothProgress from './SmoothProgress';
 import getImageData from './getImageData';
 
 const ImageDiffWorker =
@@ -25,11 +26,15 @@ export default class LCSDiff extends React.Component {
     Promise.all([
       getImageData(previous),
       getImageData(current),
-    ]).then((result) => {
-      this.setState({ progress: 10 });
+    ]).then(([previousData, currentData]) => {
+      this.setState({
+        progress: 10,
+        width: previousData.width,
+        height: previousData.height,
+      });
       this.computeDiffs({
-        previousData: result[0],
-        currentData: result[1],
+        previousData,
+        currentData,
       });
     });
   }
@@ -87,14 +92,16 @@ export default class LCSDiff extends React.Component {
     } = this.state;
 
     return (
-      <div>
+      <div
+        style={{
+          height,
+          width,
+        }}
+      >
         {progress < 100 &&
-          <div style={{ position: 'absolute' }}>
-            <progress
-              value={progress}
-              max={100}
-            />
-          </div>
+          <SmoothProgress
+            value={progress}
+          />
         }
         {progress === 0 &&
           <ReactWaypoint

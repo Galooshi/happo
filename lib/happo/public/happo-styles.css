@@ -134,3 +134,18 @@ body {
 .SideBySide__image {
   vertical-align: top;
 }
+
+.SmoothProgress {
+  overflow: hidden;
+  height: 10px;
+  width: 100%;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+}
+
+.SmoothProgress__bar {
+  background-color: rgba(179, 54, 130, .5);
+  height: 100%;
+  width: 100%;
+  transition: transform 1s ease-in-out;
+}
