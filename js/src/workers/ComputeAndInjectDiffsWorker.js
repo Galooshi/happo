@@ -1,7 +1,5 @@
 import adiff from 'adiff';
 
-import flattenImageData from '../flattenImageData';
-
 function imageTo2DArray({ data, width, height }, paddingRight) {
   // The imageData is a 1D array. Each element in the array corresponds to a
   // decimal value that represents one of the RGBA channels for that pixel.
@@ -113,12 +111,12 @@ function computeAndInjectDiffs({ previousData, currentData }) {
 
   return {
     currentData: {
-      data: flattenImageData(currentImageData),
+      data: currentImageData,
       height: currentImageData.length,
       width: maxWidth,
     },
     previousData: {
-      data: flattenImageData(previousImageData),
+      data: previousImageData,
       height: previousImageData.length,
       width: maxWidth,
     },
