@@ -2,44 +2,16 @@ import adiff from 'adiff';
 
 import flattenImageData from '../flattenImageData';
 
-const TRANSPARENT_PIXEL = [0, 0, 0, 0];
-
-/**
- * Construct a line of transparent pixels
- *
- * @param {Number} width
- * @return {Array}
- */
-function constructTransparentLine(width) {
-  const line = [];
-  for (let i = 0; i < width; i++) {
-    line.push(TRANSPARENT_PIXEL);
-  }
-  return line;
-}
-
 function imageTo2DArray({ data, width, height }, paddingRight) {
   // The imageData is a 1D array. Each element in the array corresponds to a
   // decimal value that represents one of the RGBA channels for that pixel.
   const rowSize = width * 4;
-  const getPixelAt = (x, y) => {
-    const startIndex = (y * rowSize) + (x * 4);
-    return [
-      data[startIndex],
-      data[startIndex + 1],
-      data[startIndex + 2],
-      data[startIndex + 3],
-    ];
-  };
 
   const newData = [];
   for (let row = 0; row < height; row++) {
-    const pixelsInRow = [];
-    for (let col = 0; col < width; col++) {
-      pixelsInRow.push(getPixelAt(col, row));
-    }
-    for (let pad = 0; pad < paddingRight; pad++) {
-      pixelsInRow.push(TRANSPARENT_PIXEL);
+    const pixelsInRow = new Uint8ClampedArray(rowSize + (paddingRight * 4));
+    for (let location = 0; location < rowSize; location++) {
+      pixelsInRow[location] = data[(row * rowSize) + location];
     }
     newData.push(pixelsInRow);
   }
@@ -87,7 +59,7 @@ function getAdiffResults({
 function computeAndInjectDiffs({ previousData, currentData }) {
   const maxWidth = Math.max(previousData.width, currentData.width);
 
-  const transparentLine = constructTransparentLine(maxWidth);
+  const transparentLine = new Uint8ClampedArray(maxWidth * 4);
 
   const previousImageData = imageTo2DArray(
     previousData, maxWidth - previousData.width);
