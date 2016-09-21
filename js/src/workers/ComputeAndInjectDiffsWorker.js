@@ -2,17 +2,18 @@ import adiff from 'adiff';
 
 import flattenImageData from '../flattenImageData';
 
+const TRANSPARENT_PIXEL = [0, 0, 0, 0];
+
 /**
- * Construct a line of pixels of a certain rgba color
+ * Construct a line of transparent pixels
  *
- * @param {Array} rgba
  * @param {Number} width
  * @return {Array}
  */
-function constructColoredLine(rgba, width) {
+function constructTransparentLine(width) {
   const line = [];
   for (let i = 0; i < width; i++) {
-    line.push(rgba);
+    line.push(TRANSPARENT_PIXEL);
   }
   return line;
 }
@@ -86,8 +87,7 @@ function getAdiffResults({
 function computeAndInjectDiffs({ previousData, currentData }) {
   const maxWidth = Math.max(previousData.width, currentData.width);
 
-  const redLine = constructColoredLine([255, 0, 0, 255], maxWidth);
-  const greenLine = constructColoredLine([0, 255, 0, 255], maxWidth);
+  const transparentLine = constructTransparentLine(maxWidth);
 
   const previousImageData = imageTo2DArray(
     previousData, maxWidth - previousData.width);
@@ -116,8 +116,7 @@ function computeAndInjectDiffs({ previousData, currentData }) {
       if (y < deletedItems) {
         // ignore, we just keep the old line
       } else {
-        // add a green line to signal an addition
-        previousImageData.splice(atIndex + y, 0, greenLine);
+        previousImageData.splice(atIndex + y, 0, transparentLine);
       }
     }
   });
@@ -134,8 +133,7 @@ function computeAndInjectDiffs({ previousData, currentData }) {
       if (y < addedItems) {
         // ignore, we just keep the old line
       } else {
-        // add a red line to signal a deletion
-        currentImageData.splice(atIndex + y, 0, redLine);
+        currentImageData.splice(atIndex + y, 0, transparentLine);
       }
     }
   }
