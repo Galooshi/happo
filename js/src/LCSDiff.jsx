@@ -70,10 +70,10 @@ export default class LCSDiff extends React.Component {
 
   constructDiffImage({ previousData, currentData }) {
     const worker = new ImageDiffWorker();
-    worker.addEventListener('message', ({ data }) => {
+    worker.addEventListener('message', ({ data: { data, width, height } }) => {
+      this.setState({ progress: 99, width, height });
       const context = this.canvas.getContext('2d');
-      const diffImage = context.createImageData(
-        this.state.width, this.state.height);
+      const diffImage = context.createImageData(width, height);
       diffImage.data.set(data);
       context.putImageData(diffImage, 0, 0);
       this.setState({ progress: 100 });

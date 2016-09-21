@@ -17,14 +17,20 @@ export default function getDiffPixel(previousPixel, currentPixel) {
   const diff = euclideanDistance(previousPixel, currentPixel) / MAX_EUCLIDEAN_DISTANCE;
 
   if (diff === 0) {
-    return compose(
-      [currentPixel[0], currentPixel[1], currentPixel[2], 40],
-      WHITE
-    );
+    return {
+      diff,
+      pixel: compose(
+        [currentPixel[0], currentPixel[1], currentPixel[2], 40],
+        WHITE
+      ),
+    };
   }
 
-  return compose(
-    [179, 54, 130, 255 * Math.max(0.2, diff)],
-    WHITE
-  );
+  return {
+    diff,
+    pixel: compose(
+      [179, 54, 130, 255 * Math.max(0.2, diff)],
+      WHITE
+    ),
+  };
 }
