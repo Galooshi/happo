@@ -141,6 +141,7 @@ body {
   width: 100%;
   border: 1px solid #cccccc;
   border-radius: 5px;
+  transition: opacity 1s;
 }
 
 .SmoothProgress__bar {

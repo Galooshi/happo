@@ -98,7 +98,7 @@ export default class LCSDiff extends React.Component {
           width,
         }}
       >
-        {progress < 100 &&
+        {progress > 0 && progress < 100 &&
           <SmoothProgress
             value={progress}
           />
