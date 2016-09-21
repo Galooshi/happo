@@ -1,4 +1,4 @@
 # Defines the gem version.
 module Happo
-  VERSION = '2.7.7'
+  VERSION = '2.8.0'
 end
