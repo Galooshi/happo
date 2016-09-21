@@ -108,6 +108,7 @@ export default class LCSDiff extends React.Component {
             onEnter={this.initialize}
             scrollableAncestor={window}
             bottomOffset='-50%'
+            topOffset='-70%'
           />
         }
         <canvas
