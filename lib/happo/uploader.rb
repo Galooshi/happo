@@ -75,7 +75,9 @@ module Happo
                                                 "#{variant}.png"))
       image.content_type = 'image/png'
       image.save
-      URI.escape(img_name)
+
+      # http://stackoverflow.com/questions/2834034/how-do-i-raw-url-encode-decode-in-javascript-and-ruby-to-get-the-same-values-in-b
+      URI.escape(img_name, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
     end
   end
 end
