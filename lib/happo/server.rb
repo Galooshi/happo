@@ -88,6 +88,13 @@ module Happo
           height: 718,
         },
         {
+          description: 'Globe',
+          viewport: 'large',
+          current: '/globe-current.png',
+          previous: '/globe-previous.png',
+          height: 1200,
+        },
+        {
           description: 'Completely different',
           viewport: 'small',
           previous: '/modal-previous.png',
