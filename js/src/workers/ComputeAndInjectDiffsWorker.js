@@ -1,4 +1,4 @@
-import adiff from 'adiff';
+import alignArrays from '../alignArrays';
 
 function imageTo2DArray({ data, width, height }, paddingRight) {
   // The imageData is a 1D array. Each element in the array corresponds to a
@@ -16,31 +16,34 @@ function imageTo2DArray({ data, width, height }, paddingRight) {
   return newData;
 }
 
-function getAdiffResults({
-  previousData,
-  currentData,
+function align({
   previousImageData,
   currentImageData,
+  maxWidth,
 }) {
-  if (previousData.width !== currentData.width) {
-    // we know that all rows will be different here, so we can take a shortcut
-    const diff = [
-      0, // diff starts at index 0
-      previousData.height, // number of deletions
-    ];
-    diff.length = currentData.height + 2; // number of additions
-    return [diff];
-  }
-
   const hashedPreviousData = previousImageData.map(JSON.stringify);
   self.postMessage({ progress: 40 });
   const hashedCurrentData = currentImageData.map(JSON.stringify);
   self.postMessage({ progress: 60 });
 
-  return adiff.diff(
+  alignArrays(
     hashedPreviousData,
     hashedCurrentData
   );
+
+  const transparentLine = new Uint8ClampedArray(maxWidth * 4);
+
+  hashedPreviousData.forEach((hashedLine, i) => {
+    if (hashedLine === '+') {
+      previousImageData.splice(i, 0, transparentLine);
+    }
+  });
+
+  hashedCurrentData.forEach((hashedLine, i) => {
+    if (hashedLine === '+') {
+      currentImageData.splice(i, 0, transparentLine);
+    }
+  });
 }
 
 /**
@@ -57,8 +60,6 @@ function getAdiffResults({
 function computeAndInjectDiffs({ previousData, currentData }) {
   const maxWidth = Math.max(previousData.width, currentData.width);
 
-  const transparentLine = new Uint8ClampedArray(maxWidth * 4);
-
   const previousImageData = imageTo2DArray(
     previousData, maxWidth - previousData.width);
 
@@ -67,47 +68,13 @@ function computeAndInjectDiffs({ previousData, currentData }) {
 
   self.postMessage({ progress: 20 });
 
-  const adiffResults = getAdiffResults({
-    previousData,
-    currentData,
+  align({
     previousImageData,
     currentImageData,
+    maxWidth,
   });
 
   self.postMessage({ progress: 85 });
-
-  // iterate and apply changes to previous data
-  adiffResults.forEach((instruction) => {
-    const atIndex = instruction[0];
-    const deletedItems = instruction[1];
-    const addedItems = instruction.length - 2;
-
-    for (let y = 0; y < Math.max(deletedItems, addedItems); y++) {
-      if (y < deletedItems) {
-        // ignore, we just keep the old line
-      } else {
-        previousImageData.splice(atIndex + y, 0, transparentLine);
-      }
-    }
-  });
-  self.postMessage({ progress: 95 });
-
-  // iterate backwards and apply changes to current data
-  for (let i = adiffResults.length - 1; i >= 0; i--) {
-    const instruction = adiffResults[i];
-    const atIndex = instruction[0];
-    const deletedItems = instruction[1];
-    const addedItems = instruction.length - 2;
-
-    for (let y = 0; y < Math.max(deletedItems, addedItems); y++) {
-      if (y < addedItems) {
-        // ignore, we just keep the old line
-      } else {
-        currentImageData.splice(atIndex + y, 0, transparentLine);
-      }
-    }
-  }
-  self.postMessage({ progress: 98 });
 
   return {
     currentData: {
