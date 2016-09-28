@@ -1,8 +1,8 @@
 const MOVEMENT = {
   none: 0,
-  diagonal: 1,
-  vertical: 2,
-  horizontal: 3,
+  upLeft: 1,
+  up: 2,
+  left: 3,
 };
 
 export const PLACEHOLDER = '+';
@@ -41,15 +41,15 @@ function longestCommonSubsequence(a, b) {
   for (let i = 1; i <= aLength; i++) {
     for (let j = 1; j <= bLength; j++) {
       if (a[i - 1] === b[j - 1]) {
-        // diagonal
+        // upLeft
         memo[i][j] = memo[i - 1][j - 1] + 1;
-        solution[i][j] = MOVEMENT.diagonal;
+        solution[i][j] = MOVEMENT.upLeft;
       } else {
         memo[i][j] = Math.max(memo[i - 1][j], memo[i][j - 1]);
         if (memo[i][j] === memo[i - 1][j]) {
-          solution[i][j] = MOVEMENT.vertical;
+          solution[i][j] = MOVEMENT.up;
         } else {
-          solution[i][j] = MOVEMENT.horizontal;
+          solution[i][j] = MOVEMENT.left;
         }
       }
     }
@@ -83,7 +83,7 @@ function applySolution(solution, a, b) {
   let changes = 0;
 
   while (movement !== MOVEMENT.none) {
-    if (movement === MOVEMENT.diagonal) {
+    if (movement === MOVEMENT.upLeft) {
       if (changes < 0) {
         b.splice(bi, 0, ...placeholders(Math.abs(changes)));
       } else if (changes > 0) {
@@ -92,10 +92,10 @@ function applySolution(solution, a, b) {
       ai--;
       bi--;
       changes = 0;
-    } else if (movement === MOVEMENT.horizontal) {
+    } else if (movement === MOVEMENT.left) {
       bi--;
       changes++;
-    } else if (movement === MOVEMENT.vertical) {
+    } else if (movement === MOVEMENT.up) {
       ai--;
       changes--;
     }
