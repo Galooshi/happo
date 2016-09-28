@@ -4,7 +4,7 @@
   "description": "Command-line tool to visually diff JavaScript components",
   "scripts": {
     "eslint": "eslint --ext .js,.jsx",
-    "test": "jest",
+    "test": "npm run --silent eslint -- . && jest",
     "webpack": "webpack -p",
     "webpack-dev": "webpack --devtool eval-source-map --progress --watch"
   },
@@ -39,5 +39,8 @@
     "react-dom": "^15.3.1",
     "react-waypoint": "^3.1.2",
     "worker-loader": "^0.7.1"
+  },
+  "jest": {
+    "testRegex": "/__tests__/.*-test.(js|jsx)$"
   }
 }
