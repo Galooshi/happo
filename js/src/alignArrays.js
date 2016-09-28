@@ -5,7 +5,7 @@ const MOVEMENT = {
   horizontal: 3,
 };
 
-const PLACEHOLDER = '+';
+export const PLACEHOLDER = '+';
 
 /**
  * Creates a 2d matrix of a certain size.

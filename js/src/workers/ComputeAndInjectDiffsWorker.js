@@ -1,4 +1,4 @@
-import alignArrays from '../alignArrays';
+import alignArrays, { PLACEHOLDER } from '../alignArrays';
 
 function imageTo2DArray({ data, width, height }, paddingRight) {
   // The imageData is a 1D array. Each element in the array corresponds to a
@@ -34,13 +34,13 @@ function align({
   const transparentLine = new Uint8ClampedArray(maxWidth * 4);
 
   hashedPreviousData.forEach((hashedLine, i) => {
-    if (hashedLine === '+') {
+    if (hashedLine === PLACEHOLDER) {
       previousImageData.splice(i, 0, transparentLine);
     }
   });
 
   hashedCurrentData.forEach((hashedLine, i) => {
-    if (hashedLine === '+') {
+    if (hashedLine === PLACEHOLDER) {
       currentImageData.splice(i, 0, transparentLine);
     }
   });
