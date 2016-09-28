@@ -21,9 +21,9 @@ function align({
   currentImageData,
   maxWidth,
 }) {
-  const hashedPreviousData = previousImageData.map(JSON.stringify);
+  const hashedPreviousData = previousImageData.map(btoa);
   self.postMessage({ progress: 40 });
-  const hashedCurrentData = currentImageData.map(JSON.stringify);
+  const hashedCurrentData = currentImageData.map(btoa);
   self.postMessage({ progress: 60 });
 
   alignArrays(
