@@ -16,14 +16,21 @@ function imageTo2DArray({ data, width, height }, paddingRight) {
   return newData;
 }
 
-// Safari has a bug where trying to reference `btoa` inside a web worker will
-// result in an error, so we fall back to the slower (?) `JSON.stringify`. The
-// only way to prevent this seems to be by using a try/catch. We do this in its
-// own function to prevent our align function from being de-optimized.
-//
-// https://bugs.webkit.org/show_bug.cgi?id=158576
 function hashFn() {
+  // Safari has a bug where trying to reference `btoa` inside a web worker will
+  // result in an error, so we fall back to the slower (?) `JSON.stringify`. The
+  // only way to prevent this seems to be by using a try/catch. We do this in its
+  // own function to prevent our align function from being de-optimized.
+  //
+  // https://bugs.webkit.org/show_bug.cgi?id=158576
   try {
+    // Firefox, for some reason, gives us the same string when feeding typed
+    // arrays to `btoa`. Here, we can detect this behavior and fall back to the
+    // slower (?) but more accurate `JSON.stringify`.
+    if (btoa(new Uint8ClampedArray([0])) === btoa(new Uint8ClampedArray([1]))) {
+      // Firefox
+      return JSON.stringify;
+    }
     return btoa;
   } catch (e) {
     return JSON.stringify;
