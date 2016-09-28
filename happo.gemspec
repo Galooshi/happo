@@ -1,7 +1,7 @@
 require './lib/happo/version'
 
 system('npm', 'install')
-system('npm', 'run', 'webpack')
+system('npm', 'run', 'build')
 
 Gem::Specification.new do |s|
   s.name          = 'happo'
