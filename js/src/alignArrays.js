@@ -1,11 +1,12 @@
 const MOVEMENT = {
   none: 0,
-  diagonal: 1,
-  vertical: 2,
-  horizontal: 3,
+  upLeft: 1,
+  up: 2,
+  left: 3,
 };
 
-const PLACEHOLDER = '+';
+export const PLACEHOLDER = '+';
+const DRIFT_RANGE = 200;
 
 /**
  * Creates a 2d matrix of a certain size.
@@ -39,17 +40,21 @@ function longestCommonSubsequence(a, b) {
 
   // Loop and find the solution
   for (let i = 1; i <= aLength; i++) {
-    for (let j = 1; j <= bLength; j++) {
+    for (
+      let j = Math.max(1, i - (DRIFT_RANGE / 2));
+      j <= Math.min(bLength, i + (DRIFT_RANGE / 2));
+      j++
+    ) {
       if (a[i - 1] === b[j - 1]) {
-        // diagonal
+        // upLeft
         memo[i][j] = memo[i - 1][j - 1] + 1;
-        solution[i][j] = MOVEMENT.diagonal;
+        solution[i][j] = MOVEMENT.upLeft;
       } else {
         memo[i][j] = Math.max(memo[i - 1][j], memo[i][j - 1]);
         if (memo[i][j] === memo[i - 1][j]) {
-          solution[i][j] = MOVEMENT.vertical;
+          solution[i][j] = MOVEMENT.up;
         } else {
-          solution[i][j] = MOVEMENT.horizontal;
+          solution[i][j] = MOVEMENT.left;
         }
       }
     }
@@ -77,13 +82,14 @@ function placeholders(count) {
  * @param {Array} b
  */
 function applySolution(solution, a, b) {
-  let movement = solution[a.length][b.length];
+  // Start at the bottom right end of the solution
   let ai = a.length;
   let bi = b.length;
   let changes = 0;
 
+  let movement = solution[ai][bi];
   while (movement !== MOVEMENT.none) {
-    if (movement === MOVEMENT.diagonal) {
+    if (movement === MOVEMENT.upLeft) {
       if (changes < 0) {
         b.splice(bi, 0, ...placeholders(Math.abs(changes)));
       } else if (changes > 0) {
@@ -92,10 +98,10 @@ function applySolution(solution, a, b) {
       ai--;
       bi--;
       changes = 0;
-    } else if (movement === MOVEMENT.horizontal) {
+    } else if (movement === MOVEMENT.left) {
       bi--;
       changes++;
-    } else if (movement === MOVEMENT.vertical) {
+    } else if (movement === MOVEMENT.up) {
       ai--;
       changes--;
     }

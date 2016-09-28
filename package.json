@@ -4,7 +4,8 @@
   "description": "Command-line tool to visually diff JavaScript components",
   "scripts": {
     "eslint": "eslint --ext .js,.jsx",
-    "test": "npm run --silent eslint -- . && jest",
+    "jest": "jest",
+    "test": "npm run --silent eslint -- . && npm run --silent jest",
     "webpack": "webpack -p",
     "webpack-dev": "webpack --devtool eval-source-map --progress --watch"
   },
