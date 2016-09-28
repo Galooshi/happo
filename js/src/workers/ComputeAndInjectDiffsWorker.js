@@ -16,14 +16,30 @@ function imageTo2DArray({ data, width, height }, paddingRight) {
   return newData;
 }
 
+// Safari has a bug where trying to reference `btoa` inside a web worker will
+// result in an error, so we fall back to the slower (?) `JSON.stringify`. The
+// only way to prevent this seems to be by using a try/catch. We do this in its
+// own function to prevent our align function from being de-optimized.
+//
+// https://bugs.webkit.org/show_bug.cgi?id=158576
+function hashFn() {
+  try {
+    return btoa;
+  } catch (e) {
+    return JSON.stringify;
+  }
+}
+
+const HASH_FN = hashFn();
+
 function align({
   previousImageData,
   currentImageData,
   maxWidth,
 }) {
-  const hashedPreviousData = previousImageData.map(btoa);
+  const hashedPreviousData = previousImageData.map(HASH_FN);
   self.postMessage({ progress: 40 });
-  const hashedCurrentData = currentImageData.map(btoa);
+  const hashedCurrentData = currentImageData.map(HASH_FN);
   self.postMessage({ progress: 60 });
 
   alignArrays(
