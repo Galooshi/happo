@@ -6,7 +6,7 @@
     "eslint": "eslint --ext .js,.jsx",
     "jest": "jest",
     "test": "npm run --silent eslint -- . && npm run --silent jest",
-    "webpack": "webpack -p",
+    "webpack": "webpack --optimize-minimize",
     "webpack-dev": "webpack --devtool eval-source-map --progress --watch"
   },
   "repository": {
