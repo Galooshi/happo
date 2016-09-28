@@ -77,11 +77,12 @@ function placeholders(count) {
  * @param {Array} b
  */
 function applySolution(solution, a, b) {
-  let movement = solution[a.length][b.length];
+  // Start at the bottom right end of the solution
   let ai = a.length;
   let bi = b.length;
   let changes = 0;
 
+  let movement = solution[ai][bi];
   while (movement !== MOVEMENT.none) {
     if (movement === MOVEMENT.upLeft) {
       if (changes < 0) {
