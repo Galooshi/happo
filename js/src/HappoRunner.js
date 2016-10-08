@@ -1,4 +1,5 @@
 import getFullRect from './getFullRect';
+import waitForImagesToRender from './waitForImagesToRender';
 
 function handleError(currentExample, error) {
   console.error(error.stack); // eslint-disable-line no-console
@@ -114,7 +115,7 @@ window.happo = {
         // once it is done executing. This can be used to write functions that
         // have asynchronous code in them.
         tryAsync(func).then(() => {
-          doneFunc(this.processExample(currentExample));
+          this.processExample(currentExample).then(doneFunc);
         }).catch((error) => {
           doneFunc(handleError(currentExample, error));
         });
@@ -127,14 +128,14 @@ window.happo = {
           // The function returned a promise, so we need to wait for it to
           // resolve before proceeding.
           result.then(() => {
-            doneFunc(this.processExample(currentExample));
+            this.processExample(currentExample).then(doneFunc);
           }).catch((error) => {
             doneFunc(handleError(currentExample, error));
           });
         } else {
           // The function did not return a promise, so we assume it gave us an
           // element that we can process immediately.
-          doneFunc(this.processExample(currentExample));
+          this.processExample(currentExample).then(doneFunc);
         }
       }
     } catch (error) {
@@ -153,26 +154,33 @@ window.happo = {
     return document.body.children;
   },
 
+  /**
+   * @return {Promise}
+   */
   processExample(currentExample) {
-    const rootNodes = this.getRootNodes();
-    try {
-      const {
-        height,
-        left,
-        top,
-        width,
-      } = getFullRect(rootNodes);
+    return new Promise((resolve) => {
+      waitForImagesToRender().then(() => {
+        try {
+          const rootNodes = this.getRootNodes();
+          const {
+            height,
+            left,
+            top,
+            width,
+          } = getFullRect(rootNodes);
 
-      return {
-        description: currentExample.description,
-        height,
-        left,
-        top,
-        width,
-      };
-    } catch (error) {
-      return handleError(currentExample, error);
-    }
+          resolve({
+            description: currentExample.description,
+            height,
+            left,
+            top,
+            width,
+          });
+        } catch (error) {
+          resolve(handleError(currentExample, error));
+        }
+      });
+    });
   },
 };
 
