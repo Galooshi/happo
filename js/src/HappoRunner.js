@@ -1,3 +1,67 @@
+import removeScrollbars from './removeScrollbars';
+
+function handleError(currentExample, error) {
+  console.error(error.stack); // eslint-disable-line no-console
+  return {
+    description: currentExample.description,
+    error: error.message,
+  };
+}
+
+/**
+ * @param {Function} func The happo.describe function from the current
+ *   example being rendered. This function takes a callback as an argument
+ *   that is called when it is done.
+ * @return {Promise}
+ */
+function tryAsync(func) {
+  return new Promise((resolve, reject) => {
+    // Safety valve: if the function does not finish after 3s, then something
+    // went haywire and we need to move on.
+    const timeout = setTimeout(() => {
+      reject(new Error('Async callback was not invoked within timeout.'));
+    }, 3000);
+
+    // This function is called by the example when it is done executing.
+    const doneCallback = () => {
+      clearTimeout(timeout);
+      resolve();
+    };
+
+    func(doneCallback);
+  });
+}
+
+/**
+ * Wrapper around Math.min to handle undefined values.
+ */
+function min(a, b) {
+  if (a === undefined) {
+    return b;
+  }
+  return Math.min(a, b);
+}
+
+// This function takes a node and a box object that we will mutate.
+function getFullRectRecursive(node, box) {
+  // Since we are already traversing through every node, let's piggyback on
+  // that work and remove scrollbars to prevent spurious diffs.
+  removeScrollbars(node);
+
+  const rect = node.getBoundingClientRect();
+
+  /* eslint-disable no-param-reassign */
+  box.bottom = Math.max(box.bottom, rect.bottom);
+  box.left = min(box.left, rect.left);
+  box.right = Math.max(box.right, rect.right);
+  box.top = min(box.top, rect.top);
+  /* eslint-enable no-param-reassign */
+
+  for (let i = 0; i < node.children.length; i++) {
+    this.getFullRectRecursive(node.children[i], box);
+  }
+}
+
 window.happo = {
   defined: {},
   fdefined: [],
@@ -40,38 +104,6 @@ window.happo = {
     });
   },
 
-  handleError(currentExample, error) {
-    console.error(error.stack); // eslint-disable-line no-console
-    return {
-      description: currentExample.description,
-      error: error.message,
-    };
-  },
-
-  /**
-   * @param {Function} func The happo.describe function from the current
-   *   example being rendered. This function takes a callback as an argument
-   *   that is called when it is done.
-   * @return {Promise}
-   */
-  tryAsync(func) {
-    return new Promise((resolve, reject) => {
-      // Safety valve: if the function does not finish after 3s, then something
-      // went haywire and we need to move on.
-      const timeout = setTimeout(() => {
-        reject(new Error('Async callback was not invoked within timeout.'));
-      }, 3000);
-
-      // This function is called by the example when it is done executing.
-      const doneCallback = () => {
-        clearTimeout(timeout);
-        resolve();
-      };
-
-      func(doneCallback);
-    });
-  },
-
   /**
    * Clean up the DOM for a rendered element that has already been processed.
    * This can be overridden by consumers to define their own clean out method,
@@ -111,10 +143,10 @@ window.happo = {
         // The function takes an argument, which is a callback that is called
         // once it is done executing. This can be used to write functions that
         // have asynchronous code in them.
-        this.tryAsync(func).then(() => {
+        tryAsync(func).then(() => {
           doneFunc(this.processExample(currentExample));
         }).catch((error) => {
-          doneFunc(this.handleError(currentExample, error));
+          doneFunc(handleError(currentExample, error));
         });
       } else {
         // The function does not take an argument, so we can run it
@@ -127,7 +159,7 @@ window.happo = {
           result.then(() => {
             doneFunc(this.processExample(currentExample));
           }).catch((error) => {
-            doneFunc(this.handleError(currentExample, error));
+            doneFunc(handleError(currentExample, error));
           });
         } else {
           // The function did not return a promise, so we assume it gave us an
@@ -136,68 +168,7 @@ window.happo = {
         }
       }
     } catch (error) {
-      doneFunc(this.handleError(currentExample, error));
-    }
-  },
-
-  isAutoOrScroll(overflow) {
-    return overflow === 'auto' || overflow === 'scroll';
-  },
-
-  // Scrollbars inside of elements may cause spurious visual diffs. To avoid
-  // this issue, we can hide them automatically by styling the overflow to be
-  // hidden.
-  removeScrollbars(node) {
-    const isOverflowing =
-      node.scrollHeight !== node.clientHeight
-      || node.scrollWidth !== node.clientWidth;
-
-    if (!isOverflowing) {
-      // This node has no overflowing content. We're returning early to prevent
-      // calling getComputedStyle down below (which is an expensive operation).
-      return;
-    }
-
-    const style = window.getComputedStyle(node);
-    if (
-      this.isAutoOrScroll(style.getPropertyValue('overflow-y'))
-      || this.isAutoOrScroll(style.getPropertyValue('overflow-x'))
-      || this.isAutoOrScroll(style.getPropertyValue('overflow'))
-    ) {
-      // We style this via node.style.cssText so that we can override any styles
-      // that might already be `!important`.
-      // eslint-disable-next-line no-param-reassign
-      node.style.cssText += 'overflow: hidden !important';
-    }
-  },
-
-  /**
-   * Wrapper around Math.min to handle undefined values.
-   */
-  min(a, b) {
-    if (a === undefined) {
-      return b;
-    }
-    return Math.min(a, b);
-  },
-
-  // This function takes a node and a box object that we will mutate.
-  getFullRectRecursive(node, box) {
-    // Since we are already traversing through every node, let's piggyback on
-    // that work and remove scrollbars to prevent spurious diffs.
-    this.removeScrollbars(node);
-
-    const rect = node.getBoundingClientRect();
-
-    /* eslint-disable no-param-reassign */
-    box.bottom = Math.max(box.bottom, rect.bottom);
-    box.left = this.min(box.left, rect.left);
-    box.right = Math.max(box.right, rect.right);
-    box.top = this.min(box.top, rect.top);
-    /* eslint-enable no-param-reassign */
-
-    for (let i = 0; i < node.children.length; i++) {
-      this.getFullRectRecursive(node.children[i], box);
+      doneFunc(handleError(currentExample, error));
     }
   },
 
@@ -234,7 +205,7 @@ window.happo = {
     for (let i = 0; i < rootNodes.length; i++) {
       const node = rootNodes[i];
 
-      this.getFullRectRecursive(node, box);
+      getFullRectRecursive(node, box);
 
       // getBoundingClientRect does not include margin, so we need to use
       // getComputedStyle. Since this is slow and the margin of descendent
@@ -288,7 +259,7 @@ window.happo = {
         width,
       };
     } catch (error) {
-      return this.handleError(currentExample, error);
+      return handleError(currentExample, error);
     }
   },
 };
