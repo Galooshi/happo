@@ -1,31 +1,22 @@
-/* eslint strict: 0 */
-/* eslint object-shorthand: 0 */
-/* eslint prefer-template: 0 */
-/* eslint comma-dangle: 0 */
-/* eslint no-var: 0 */
-/* eslint prefer-arrow-callback: 0 */
-/* eslint vars-on-top: 1 */
-'use strict';
-
 window.happo = {
   defined: {},
   fdefined: [],
   errors: [],
 
-  define: function define(description, func, options) {
+  define(description, func, options) {
     // Make sure we don't have a duplicate description
     if (this.defined[description]) {
-      throw new Error('Error while defining "' + description +
-        '": Duplicate description detected');
+      throw new Error(
+        `Error while defining "${description}": Duplicate description detected`);
     }
     this.defined[description] = {
-      description: description,
-      func: func,
-      options: options || {}
+      description,
+      func,
+      options: options || {},
     };
   },
 
-  fdefine: function fdefine(description, func, options) {
+  fdefine(description, func, options) {
     this.define(description, func, options); // add the example
     this.fdefined.push(description);
   },
@@ -33,27 +24,27 @@ window.happo = {
   /**
    * @return {Array.<Object>}
    */
-  getAllExamples: function getAllExamples() {
-    var descriptions = this.fdefined.length ?
+  getAllExamples() {
+    const descriptions = this.fdefined.length ?
       this.fdefined :
       Object.keys(this.defined);
 
-    return descriptions.map(function processDescription(description) {
-      var example = this.defined[description];
+    return descriptions.map((description) => {
+      const example = this.defined[description];
       // We return a subset of the properties of an example (only those relevant
       // for happo_runner.rb).
       return {
         description: example.description,
         options: example.options,
       };
-    }.bind(this));
+    });
   },
 
-  handleError: function handleError(currentExample, error) {
-    console.error(error.stack);
+  handleError(currentExample, error) {
+    console.error(error.stack); // eslint-disable-line no-console
     return {
       description: currentExample.description,
-      error: error.message
+      error: error.message,
     };
   },
 
@@ -63,16 +54,16 @@ window.happo = {
    *   that is called when it is done.
    * @return {Promise}
    */
-  tryAsync: function tryAsync(func) {
-    return new Promise(function tryAsyncPromise(resolve, reject) {
+  tryAsync(func) {
+    return new Promise((resolve, reject) => {
       // Safety valve: if the function does not finish after 3s, then something
       // went haywire and we need to move on.
-      var timeout = setTimeout(function tryAsyncTimeout() {
+      const timeout = setTimeout(() => {
         reject(new Error('Async callback was not invoked within timeout.'));
       }, 3000);
 
       // This function is called by the example when it is done executing.
-      var doneCallback = function doneCallback() {
+      const doneCallback = () => {
         clearTimeout(timeout);
         resolve();
       };
@@ -86,10 +77,8 @@ window.happo = {
    * This can be overridden by consumers to define their own clean out method,
    * which can allow for this to be used to unmount React components, for
    * example.
-   *
-   * @param {Object} renderedElement
    */
-  cleanOutElement: function cleanOutElement() {
+  cleanOutElement() {
   },
 
   /**
@@ -100,13 +89,13 @@ window.happo = {
    * @param {Function} doneFunc injected by driver.execute_async_script in
    *   happo/runner.rb
    */
-  renderExample: function renderExample(exampleDescription, doneFunc) {
-    var currentExample = this.defined[exampleDescription];
+  renderExample(exampleDescription, doneFunc) {
+    const currentExample = this.defined[exampleDescription];
 
     try {
       if (!currentExample) {
         throw new Error(
-          'No example found with description "' + exampleDescription + '"');
+          `No example found with description "${exampleDescription}"`);
       }
 
       // Clear out the body of the document
@@ -117,29 +106,29 @@ window.happo = {
         document.body.removeChild(document.body.firstChild);
       }
 
-      var func = currentExample.func;
+      const { func } = currentExample;
       if (func.length) {
         // The function takes an argument, which is a callback that is called
         // once it is done executing. This can be used to write functions that
         // have asynchronous code in them.
-        this.tryAsync(func).then(function () {
+        this.tryAsync(func).then(() => {
           doneFunc(this.processExample(currentExample));
-        }.bind(this)).catch(function (error) {
+        }).catch((error) => {
           doneFunc(this.handleError(currentExample, error));
-        }.bind(this));
+        });
       } else {
         // The function does not take an argument, so we can run it
         // synchronously.
-        var result = func();
+        const result = func();
 
         if (result instanceof Promise) {
           // The function returned a promise, so we need to wait for it to
           // resolve before proceeding.
-          result.then(function () {
+          result.then(() => {
             doneFunc(this.processExample(currentExample));
-          }.bind(this)).catch(function (error) {
+          }).catch((error) => {
             doneFunc(this.handleError(currentExample, error));
-          }.bind(this));
+          });
         } else {
           // The function did not return a promise, so we assume it gave us an
           // element that we can process immediately.
@@ -151,15 +140,15 @@ window.happo = {
     }
   },
 
-  isAutoOrScroll: function isAutoOrScroll(overflow) {
+  isAutoOrScroll(overflow) {
     return overflow === 'auto' || overflow === 'scroll';
   },
 
   // Scrollbars inside of elements may cause spurious visual diffs. To avoid
   // this issue, we can hide them automatically by styling the overflow to be
   // hidden.
-  removeScrollbars: function removeScrollbars(node) {
-    var isOverflowing =
+  removeScrollbars(node) {
+    const isOverflowing =
       node.scrollHeight !== node.clientHeight
       || node.scrollWidth !== node.clientWidth;
 
@@ -169,7 +158,7 @@ window.happo = {
       return;
     }
 
-    var style = window.getComputedStyle(node);
+    const style = window.getComputedStyle(node);
     if (
       this.isAutoOrScroll(style.getPropertyValue('overflow-y'))
       || this.isAutoOrScroll(style.getPropertyValue('overflow-x'))
@@ -185,7 +174,7 @@ window.happo = {
   /**
    * Wrapper around Math.min to handle undefined values.
    */
-  min: function min(a, b) {
+  min(a, b) {
     if (a === undefined) {
       return b;
     }
@@ -193,12 +182,12 @@ window.happo = {
   },
 
   // This function takes a node and a box object that we will mutate.
-  getFullRectRecursive: function getFullRectRecursive(node, box) {
+  getFullRectRecursive(node, box) {
     // Since we are already traversing through every node, let's piggyback on
     // that work and remove scrollbars to prevent spurious diffs.
     this.removeScrollbars(node);
 
-    var rect = node.getBoundingClientRect();
+    const rect = node.getBoundingClientRect();
 
     /* eslint-disable no-param-reassign */
     box.bottom = Math.max(box.bottom, rect.bottom);
@@ -207,7 +196,7 @@ window.happo = {
     box.top = this.min(box.top, rect.top);
     /* eslint-enable no-param-reassign */
 
-    for (var i = 0; i < node.children.length; i++) {
+    for (let i = 0; i < node.children.length; i++) {
       this.getFullRectRecursive(node.children[i], box);
     }
   },
@@ -217,9 +206,9 @@ window.happo = {
    * default version simply gets the direct children of document.body, but you
    * can override this method to better control the root nodes.
    *
-   * @return Array|NodeList
+   * @return {Array|NodeList}
    */
-  getRootNodes: function getRootNodes() {
+  getRootNodes() {
     return document.body.children;
   },
 
@@ -227,22 +216,23 @@ window.happo = {
   // including all descendent nodes. This allows us to ensure that the
   // screenshot includes absolutely positioned elements. It is important that
   // this is fast, since we may be iterating over a high number of nodes.
-  getFullRect: function getFullRect() {
+  getFullRect() {
     // Set up the initial object that we will mutate in our recursive function.
-    var box = {
+    const box = {
       bottom: 0,
       left: undefined,
       right: 0,
       top: undefined,
     };
 
-    var rootNodes = this.getRootNodes();
+    const rootNodes = this.getRootNodes();
 
     // If there are any children, we want to iterate over them recursively,
     // mutating our box object along the way to expand to include all descendent
     // nodes.
-    for (var i = 0; i < rootNodes.length; i++) {
-      var node = rootNodes[i];
+    // Remember! rootNodes can be either an Array or a NodeList.
+    for (let i = 0; i < rootNodes.length; i++) {
+      const node = rootNodes[i];
 
       this.getFullRectRecursive(node, box);
 
@@ -250,7 +240,7 @@ window.happo = {
       // getComputedStyle. Since this is slow and the margin of descendent
       // elements is significantly less likely to matter, let's include the
       // margin only from the topmost nodes.
-      var computedStyle = window.getComputedStyle(node);
+      const computedStyle = window.getComputedStyle(node);
       box.bottom += parseFloat(computedStyle.getPropertyValue('margin-bottom'));
       box.left -= parseFloat(computedStyle.getPropertyValue('margin-left'));
       box.right += parseFloat(computedStyle.getPropertyValue('margin-right'));
@@ -281,52 +271,57 @@ window.happo = {
     return box;
   },
 
-  processExample: function processExample(currentExample) {
+  processExample(currentExample) {
     try {
-      var rect = this.getFullRect();
+      const {
+        height,
+        left,
+        top,
+        width,
+      } = this.getFullRect();
 
       return {
         description: currentExample.description,
-        width: rect.width,
-        height: rect.height,
-        top: rect.top,
-        left: rect.left,
+        height,
+        left,
+        top,
+        width,
       };
     } catch (error) {
       return this.handleError(currentExample, error);
     }
-  }
+  },
 };
 
-window.addEventListener('load', function handleWindowLoad() {
-  var matches = window.location.search.match(/description=([^&]*)/);
+window.addEventListener('load', () => {
+  const matches = window.location.search.match(/description=([^&]*)/);
   if (!matches) {
     return;
   }
-  var example = decodeURIComponent(matches[1]);
-  window.happo.renderExample(example, function () {});
+  const example = decodeURIComponent(matches[1]);
+  window.happo.renderExample(example, () => {});
 });
 
 // We need to redefine a few global functions that halt execution. Without this,
 // there's a chance that the Ruby code can't communicate with the browser.
-window.alert = function alert(message) {
-  console.log('`window.alert` called', message);
+window.alert = (message) => {
+  console.log('`window.alert` called', message); // eslint-disable-line
 };
 
-window.confirm = function confirm(message) {
-  console.log('`window.confirm` called', message);
+window.confirm = (message) => {
+  console.log('`window.confirm` called', message); // eslint-disable-line
   return true;
 };
 
-window.prompt = function prompt(message, value) {
-  console.log('`window.prompt` called', message, value);
+window.prompt = (message, value) => {
+  console.log('`window.prompt` called', message, value); // eslint-disable-line
   return null;
 };
 
-window.onerror = function onerror(message, url, lineNumber) {
+window.onerror = (message, url, lineNumber) => {
   window.happo.errors.push({
-    message: message,
-    url: url,
-    lineNumber: lineNumber
+    message,
+    url,
+    lineNumber,
   });
 };
