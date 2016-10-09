@@ -26,7 +26,7 @@ function getFullRectRecursive(node, box) {
   /* eslint-enable no-param-reassign */
 
   for (let i = 0; i < node.children.length; i++) {
-    this.getFullRectRecursive(node.children[i], box);
+    getFullRectRecursive(node.children[i], box);
   }
 }
 
