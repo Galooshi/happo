@@ -9,7 +9,7 @@ function waitForImageToLoad(url) {
 
 export default function waitForImagesToRender() {
   return new Promise((resolve, reject) => {
-    const promises = Array.from(document.querySelectorAll('img'))
+    const promises = Array.prototype.slice.call(document.querySelectorAll('img'))
       .map(img => img.src)
       .filter(Boolean)
       .map(url => waitForImageToLoad(url));
