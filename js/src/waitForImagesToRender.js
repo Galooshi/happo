@@ -1,14 +1,14 @@
 function waitForImageToLoad(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.onerror = reject;
+    img.onerror = () => reject(new Error(`Failed to load image with url ${url}`));
     img.onload = resolve;
     img.src = url;
   });
 }
 
 export default function waitForImagesToRender() {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const promises = Array.from(document.querySelectorAll('img'))
       .map(img => img.src)
       .filter(Boolean)
@@ -30,6 +30,6 @@ export default function waitForImagesToRender() {
           resolve();
         });
       });
-    });
+    }).catch(reject);
   });
 }

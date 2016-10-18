@@ -115,7 +115,7 @@ window.happo = {
         // once it is done executing. This can be used to write functions that
         // have asynchronous code in them.
         tryAsync(func).then(() => {
-          this.processExample(currentExample).then(doneFunc);
+          this.processExample(currentExample).then(doneFunc).catch(doneFunc);
         }).catch((error) => {
           doneFunc(handleError(currentExample, error));
         });
@@ -128,14 +128,14 @@ window.happo = {
           // The function returned a promise, so we need to wait for it to
           // resolve before proceeding.
           result.then(() => {
-            this.processExample(currentExample).then(doneFunc);
+            this.processExample(currentExample).then(doneFunc).catch(doneFunc);
           }).catch((error) => {
             doneFunc(handleError(currentExample, error));
           });
         } else {
           // The function did not return a promise, so we assume it gave us an
           // element that we can process immediately.
-          this.processExample(currentExample).then(doneFunc);
+          this.processExample(currentExample).then(doneFunc).catch(doneFunc);
         }
       }
     } catch (error) {
@@ -158,7 +158,7 @@ window.happo = {
    * @return {Promise}
    */
   processExample(currentExample) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       waitForImagesToRender().then(() => {
         try {
           const rootNodes = this.getRootNodes();
@@ -177,8 +177,10 @@ window.happo = {
             width,
           });
         } catch (error) {
-          resolve(handleError(currentExample, error));
+          reject(handleError(currentExample, error));
         }
+      }).catch((error) => {
+        reject(handleError(currentExample, error));
       });
     });
   },
