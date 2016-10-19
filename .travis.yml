@@ -9,8 +9,18 @@ rvm:
   - 2.1
   - 2.2
 
+env:
+  - TRAVIS_NODE_VERSION="6"
+
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
 
-script: bundle exec ruby headless_rspec.rb
+install:
+  - 'rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION'
+  - 'npm install && npm run build'
+  - bundle install
+
+script:
+  - npm test
+  - bundle exec ruby headless_rspec.rb

@@ -1,11 +1,14 @@
 module.exports = {
-  entry: './js/src/HappoApp.jsx',
+  entry: {
+    HappoApp: './js/src/HappoApp.jsx',
+    HappoRunner: './js/src/HappoRunner.js',
+  },
   resolve: {
     extensions: ['', '.js', '.jsx'],
   },
   output: {
     path: './lib/happo/public',
-    filename: 'HappoApp.bundle.js',
+    filename: '[name].bundle.js',
   },
   module: {
     loaders: [

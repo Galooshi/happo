@@ -1,7 +1,13 @@
 require './lib/happo/version'
 
-system('npm', 'install')
-system('npm', 'run', 'build')
+puts
+puts '====================================================='
+puts
+puts 'Hey! Are you publishing a new version of the gem? '
+puts 'Remember to run `npm install && npm run build` first.'
+puts
+puts '====================================================='
+puts
 
 Gem::Specification.new do |s|
   s.name          = 'happo'

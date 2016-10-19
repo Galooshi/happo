@@ -40,7 +40,7 @@
         href="/resource?file=<%= ERB::Util.url_encode(stylesheet) %>">
     <% end %>
 
-    <script src="/happo-runner.js"></script>
+    <script src="/HappoRunner.bundle.js"></script>
     <% @config['source_files'].each do |source_file| %>
       <script src="/resource?file=<%= ERB::Util.url_encode(source_file) %>"></script>
     <% end %>
