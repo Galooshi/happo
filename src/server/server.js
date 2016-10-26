@@ -26,5 +26,6 @@ app.get('/debug', (request, response) => {
 });
 
 app.listen(config.port, () => {
-  console.log('Happo listening on http://localhost:' + config.port);
+  console.log(`Happo listening on ${config.port}`);
+  console.log(`=> http://localhost:${config.port}/debug`);
 });
