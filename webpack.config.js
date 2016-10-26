@@ -1,7 +1,7 @@
 module.exports = {
   entry: {
-    HappoApp: './js/src/HappoApp.jsx',
-    HappoRunner: './js/src/HappoRunner.js',
+    HappoApp: './src/HappoApp.jsx',
+    HappoRunner: './src/HappoRunner.js',
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],

@@ -10,7 +10,7 @@ const app = express();
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
-const CSS_FILE_PATH = path.join(__dirname, '../public/happo-styles.css');
+const CSS_FILE_PATH = path.join(__dirname, '../../public/happo-styles.css');
 
 function prepareViewData(data) {
   return Object.assign({}, {
