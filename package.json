@@ -4,7 +4,7 @@
   "description": "Command-line tool to visually diff JavaScript components",
   "scripts": {
     "build": "npm run --silent clean && npm run --silent webpack",
-    "clean": "rimraf lib/happo/public/*.worker.js",
+    "clean": "rimraf public/*.worker.js",
     "eslint": "eslint --ext .js,.jsx",
     "jest": "jest",
     "test": "npm run --silent eslint -- . && npm run --silent jest",
@@ -39,6 +39,8 @@
     "webpack": "^1.13.2"
   },
   "dependencies": {
+    "ejs": "^2.5.2",
+    "express": "^4.14.0",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
     "react-waypoint": "^3.1.2",

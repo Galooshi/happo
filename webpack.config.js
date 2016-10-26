@@ -7,7 +7,7 @@ module.exports = {
     extensions: ['', '.js', '.jsx'],
   },
   output: {
-    path: './lib/happo/public',
+    path: './public',
     filename: '[name].bundle.js',
   },
   module: {
