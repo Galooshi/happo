@@ -1,5 +1,5 @@
 function isNodeFile(file) {
-  return file.indexOf('lib/') !== -1;
+  return file.indexOf('src/server') !== -1;
 }
 module.exports = {
   environments: function({ pathToCurrentFile }) {
