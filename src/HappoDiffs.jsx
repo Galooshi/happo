@@ -11,6 +11,7 @@ export default function HappoDiffs({
   newImages,
   triggeredByUrl,
 }) {
+  const date = new Date(generatedAt);
   return (
     <div>
       <header className='HappoDiffs__header'>
@@ -18,7 +19,11 @@ export default function HappoDiffs({
           {pageTitle}
         </h1>
         <div>
-          Generated: {generatedAt}
+          Generated:
+          {' '}
+          {date.toLocaleDateString()}
+          {' '}
+          {date.toLocaleTimeString()}
         </div>
         {triggeredByUrl && (
           <div>
