@@ -1,15 +1,24 @@
 const commander = require('commander');
 
+const constructUrl = require('./constructUrl');
+const runVisualDiffs = require('./runVisualDiffs');
 const server = require('./server');
 
 commander.command('debug').action(() => {
-  server.start().then(({ port }) => {
-    console.log(`=> http://localhost:${port}/debug`);
+  server.start().then(() => {
+    console.log(`=> ${constructUrl('/debug')}`);
   });
 });
 
 commander.command('run').action(() => {
-  throw new Error('not yet implemented');
+  server.start().then(() => {
+    runVisualDiffs()
+      .then(() => process.exit(0))
+      .catch((error) => {
+        console.error(error);
+        process.exit(1);
+      });
+  });
 });
 
 commander.command('review').action(() => {
@@ -17,8 +26,8 @@ commander.command('review').action(() => {
 });
 
 commander.command('review-demo').action(() => {
-  server.start().then(({ port }) => {
-    console.log(`=> http://localhost:${port}/review-demo`);
+  server.start().then(() => {
+    console.log(`=> ${constructUrl('/review-demo')}`);
   });
 });
 

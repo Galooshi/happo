@@ -23,6 +23,23 @@ function prepareViewData(data) {
   }, data);
 }
 
+app.get('/', (request, response) => {
+  response.render('index', prepareViewData({
+    sourceFiles: config.sourceFiles,
+    stylesheets: config.stylesheets,
+    debugMode: request.params.debug,
+  }));
+});
+
+app.get('/resource', (request, response) => {
+  const file = request.params.file;
+  if (file.startsWith('http')) {
+    response.redirect(file);
+  } else {
+    response.sendFile(file);
+  }
+});
+
 app.get('/debug', (request, response) => {
   response.render('debug', prepareViewData({
     sourceFiles: config.sourceFiles,
@@ -45,7 +62,7 @@ module.exports = {
     return new Promise((resolve) => {
       app.listen(config.port, () => {
         console.log(`Happo listening on ${config.port}`);
-        resolve({ port: config.port });
+        resolve();
       });
     });
   },

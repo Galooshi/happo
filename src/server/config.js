@@ -2,6 +2,8 @@
 const defaultConfig = {
   port: 4567,
   sourceFiles: [],
+  stylesheets: [],
+  driver: 'firefox',
 };
 
 module.exports = defaultConfig;
