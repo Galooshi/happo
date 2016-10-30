@@ -40,8 +40,13 @@ app.get('/review-demo', (request, response) => {
   }));
 });
 
-app.listen(config.port, () => {
-  console.log(`Happo listening on ${config.port}`);
-  console.log(`=> http://localhost:${config.port}/debug`);
-  console.log(`=> http://localhost:${config.port}/review-demo`);
-});
+module.exports = {
+  start() {
+    return new Promise((resolve) => {
+      app.listen(config.port, () => {
+        console.log(`Happo listening on ${config.port}`);
+        resolve({ port: config.port });
+      });
+    });
+  },
+};

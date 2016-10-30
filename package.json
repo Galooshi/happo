@@ -2,6 +2,9 @@
   "name": "happo",
   "version": "0.0.0",
   "description": "Command-line tool to visually diff JavaScript components",
+  "bin": {
+    "happojs": "./bin/happo"
+  },
   "scripts": {
     "build": "npm run --silent clean && npm run --silent webpack",
     "clean": "rimraf public/*.worker.js",
@@ -39,6 +42,7 @@
     "webpack": "^1.13.2"
   },
   "dependencies": {
+    "commander": "^2.9.0",
     "ejs": "^2.5.2",
     "express": "^4.14.0",
     "react": "^15.3.1",
