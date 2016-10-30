@@ -13,14 +13,16 @@ function initializeDriver() {
   });
 }
 
-function testConnection(driver) {
+function checkForInitializationErrors(driver) {
   return new Promise((resolve, reject) => {
-    const happoDefined = driver.executeScript('return window.happo;');
-    if (!happoDefined) {
-      reject('`window.happo` is not defined');
-    } else {
-      resolve(driver);
-    }
+    driver.executeScript('return window.happo.errors;').then((errors) => {
+      if (errors.length) {
+        reject(new Error(
+          `JavaScript errors found during initialization:\n${JSON.stringify(errors)}`));
+      } else {
+        resolve(driver);
+      }
+    });
   });
 }
 
@@ -33,5 +35,5 @@ function loadTestPage(driver) {
 module.exports = function runVisualDiffs() {
   return initializeDriver()
     .then(loadTestPage)
-    .then(testConnection);
+    .then(checkForInitializationErrors);
 };
