@@ -10,7 +10,8 @@ const reviewDemoData = require('../reviewDemoData');
 
 const app = express();
 app.set('view engine', 'ejs');
-app.use(express.static('public'));
+app.set('views', path.resolve(__dirname, '../../views'));
+app.use(express.static(path.resolve(__dirname, '../../public')));
 
 const CSS_FILE_PATH = path.join(__dirname, '../../public/happo-styles.css');
 const JS_FILE_PATH = path.join(__dirname, '../../public/HappoApp.bundle.js');
@@ -32,11 +33,11 @@ app.get('/', (request, response) => {
 });
 
 app.get('/resource', (request, response) => {
-  const file = request.params.file;
+  const file = request.query.file;
   if (file.startsWith('http')) {
     response.redirect(file);
   } else {
-    response.sendFile(file);
+    response.sendFile(path.join(process.cwd(), file));
   }
 });
 

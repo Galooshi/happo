@@ -1,4 +1,6 @@
-// TODO: read .happo.js file and merge with this
+const fs = require('fs');
+const path = require('path');
+
 const defaultConfig = {
   port: 4567,
   sourceFiles: [],
@@ -6,4 +8,12 @@ const defaultConfig = {
   driver: 'firefox',
 };
 
-module.exports = defaultConfig;
+function readUserConfig() {
+  const file = path.join(process.cwd(), '.happo.js');
+  if (!fs.existsSync(file)) {
+    return {};
+  }
+  return require(file); // eslint-disable-line global-require
+}
+
+module.exports = Object.assign(defaultConfig, readUserConfig());
