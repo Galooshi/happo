@@ -32,8 +32,71 @@ function loadTestPage(driver) {
   });
 }
 
+function resolveViewports(example) {
+  const viewports = example.options.viewports ||
+    Object.keys(config.viewports).slice(0, 1);
+
+  return viewports.map((viewport) =>
+    Object.assign({}, config.viewports[viewport], { name: viewport }));
+}
+
+function getExamplesByViewport(driver) {
+  return new Promise((resolve, reject) => {
+    driver.executeScript('return window.happo.getAllExamples();').then((examples) => {
+      if (!examples.length) {
+        reject(new Error('No happo examples found'));
+      } else {
+        const examplesByViewport = {};
+        examples.forEach((example) => {
+          resolveViewports(example).forEach((viewport) => {
+            examplesByViewport[viewport.name] =
+              examplesByViewport[viewport.name] || {};
+
+            examplesByViewport[viewport.name].viewport =
+              examplesByViewport[viewport.name].viewport || viewport;
+
+            examplesByViewport[viewport.name].examples =
+              examplesByViewport[viewport.name].examples || [];
+
+            examplesByViewport[viewport.name].examples.push(example);
+          });
+        });
+        resolve({ driver, examplesByViewport });
+      }
+    });
+  });
+}
+
+function performDiffs({ driver, examplesByViewport }) {
+  return new Promise((resolve) => {
+    const viewportNames = Object.keys(examplesByViewport);
+    function processViewportIter() { // eslint-disable-line consistent-return
+      const name = viewportNames.shift();
+      if (!name) {
+        // we're out of viewports
+        return resolve();
+      }
+      const {
+        viewport,
+        viewport: { width, height },
+        examples,
+      } = examplesByViewport[name];
+
+      driver.manage().window().setSize(width, height).then(() => {
+        console.log('viewport', viewport);
+        console.log('examples', examples);
+        // TODO: render the examples
+        processViewportIter();
+      });
+    }
+    processViewportIter();
+  });
+}
+
 module.exports = function runVisualDiffs() {
   return initializeDriver()
     .then(loadTestPage)
-    .then(checkForInitializationErrors);
+    .then(checkForInitializationErrors)
+    .then(getExamplesByViewport)
+    .then(performDiffs);
 };
