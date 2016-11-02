@@ -70,21 +70,18 @@ function getExamplesByViewport(driver) {
 function performDiffs({ driver, examplesByViewport }) {
   return new Promise((resolve) => {
     const viewportNames = Object.keys(examplesByViewport);
-    function processViewportIter() { // eslint-disable-line consistent-return
+    function processViewportIter() {
       const name = viewportNames.shift();
       if (!name) {
         // we're out of viewports
-        return resolve();
+        resolve();
+        return;
       }
       const {
-        viewport,
         viewport: { width, height },
-        examples,
       } = examplesByViewport[name];
 
       driver.manage().window().setSize(width, height).then(() => {
-        console.log('viewport', viewport);
-        console.log('examples', examples);
         // TODO: render the examples
         processViewportIter();
       });
