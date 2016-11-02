@@ -1,3 +1,4 @@
+const pngCrop = require('png-crop');
 const seleniumWebdriver = require('selenium-webdriver');
 
 const config = require('./config');
@@ -67,8 +68,72 @@ function getExamplesByViewport(driver) {
   });
 }
 
+function renderExamples({ driver, examples }) {
+  const script = `
+    var doneFunc = arguments[arguments.length - 1];
+    window.happo.renderExample(arguments[0], arguments[arguments.length - 1]);
+  `;
+
+  return new Promise((resolve, reject) => {
+    process.stdout.write('  ');
+
+    function processNextExample() {
+      if (!examples.length) {
+        console.log(' done!');
+        resolve(driver);
+        return;
+      }
+
+      const { description } = examples.shift();
+      driver.executeAsyncScript(script, description)
+        .then(({ error, width, height, top, left }) => {
+          if (error) {
+            const errorMessage = `Error rendering "${description}":\n  ${error}`;
+            throw new Error(errorMessage);
+          }
+
+          driver.takeScreenshot().then(screenshot => {
+            const cropConfig = { width, height, top, left };
+            // TODO we might need to guard against overcropping or
+            // undercropping here, depending on png-crop's behavior.
+
+            // This is deprecated in Node 6. We will eventually need to change
+            // this to:
+            //
+            //   Buffer.from(screenshot, 'base64')
+            const screenshotBuffer = new Buffer(screenshot, 'base64');
+
+            pngCrop.cropToStream(screenshotBuffer, cropConfig, (cropError, outputStream) => {
+              if (cropError) {
+                throw cropError;
+              }
+
+              // This is potentially expensive code that is run in a tight loop
+              // for every snapshot that we will be taking. With that in mind,
+              // we want to do as little work here as possible to keep runs
+              // fast. Therefore, we have landed on the following algorithm:
+              //
+              // 1. Delete previous.png if it exists.
+              // 2. Compare the current snapshot in memory against current.png
+              //    if it exists.
+              // 3. If there is a diff, move current.png to previous.png
+              // 4. If there is no diff, return, leaving the old current.png in
+              //    place.
+              // TODO implement this algorithm
+
+              process.stdout.write('.');
+              processNextExample();
+            });
+          });
+        });
+    }
+
+    processNextExample();
+  });
+}
+
 function performDiffs({ driver, examplesByViewport }) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const viewportNames = Object.keys(examplesByViewport);
     function processViewportIter() {
       const name = viewportNames.shift();
@@ -78,12 +143,15 @@ function performDiffs({ driver, examplesByViewport }) {
         return;
       }
       const {
+        examples,
         viewport: { width, height },
       } = examplesByViewport[name];
 
       driver.manage().window().setSize(width, height).then(() => {
-        // TODO: render the examples
-        processViewportIter();
+        console.log(`${name} (${width}x${height})`);
+        renderExamples({ driver, examples })
+          .then(processViewportIter)
+          .catch(reject);
       });
     }
     processViewportIter();
@@ -96,4 +164,5 @@ module.exports = function runVisualDiffs() {
     .then(checkForInitializationErrors)
     .then(getExamplesByViewport)
     .then(performDiffs);
+  // TODO write out result summary file
 };

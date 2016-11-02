@@ -93,6 +93,7 @@ window.happo = {
    *   happo/runner.rb
    */
   renderExample(exampleDescription, doneFunc) {
+    console.log(exampleDescription);
     const currentExample = this.defined[exampleDescription];
 
     try {
