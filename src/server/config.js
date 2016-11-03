@@ -2,10 +2,11 @@ const fs = require('fs');
 const path = require('path');
 
 const defaultConfig = {
+  driver: 'firefox',
   port: 4567,
+  snapshotsFolder: './snapshots',
   sourceFiles: [],
   stylesheets: [],
-  driver: 'firefox',
   viewports: {
     large: {
       width: 1024,
