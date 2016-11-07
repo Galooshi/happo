@@ -39,7 +39,7 @@ function checkForInitializationErrors(driver) {
 
 function loadTestPage(driver) {
   return new Promise((resolve) => {
-    driver.get(constructUrl('/')).then(() => resolve(driver));
+    driver.get(constructUrl('/snapshot')).then(() => resolve(driver));
   });
 }
 

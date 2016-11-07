@@ -24,8 +24,8 @@ function prepareViewData(data) {
   }, data);
 }
 
-app.get('/', (request, response) => {
-  response.render('index', prepareViewData({
+app.get('/snapshot', (request, response) => {
+  response.render('snapshot', prepareViewData({
     sourceFiles: config.sourceFiles,
     stylesheets: config.stylesheets,
     debugMode: request.params.debug,
