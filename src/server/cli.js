@@ -37,4 +37,7 @@ commander.command('upload-diffs').action(() => {
 
 module.exports = function cli(argv) {
   commander.parse(argv);
+  if (!argv.slice(2).length) {
+    commander.outputHelp();
+  }
 };
