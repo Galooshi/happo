@@ -14,7 +14,7 @@ export default function HappoDebug() {
           Click on an item to render that example in isolation.
         </p>
         <ul>
-          {Object.keys(window.happo.defined).map((description) => (
+          {Object.keys(window.happo.defined).sort().map((description) => (
             <li>
               <a href={`/snapshot?description=${encodeURIComponent(description)}`}>
                 {description}
