@@ -1,3 +1,5 @@
+import cssesc from 'cssesc';
+
 export default function imageSlug(image) {
-  return btoa(image.description + image.viewport);
+  return cssesc(`${image.description}@${image.viewport}`);
 }

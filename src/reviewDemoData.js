@@ -2,7 +2,7 @@ module.exports = {
   triggeredByUrl: 'https://test.example',
   diffImages: [
     {
-      description: '<Small>',
+      description: '“normal” <Small>',
       viewport: 'small',
       previous: '/small-previous.png',
       current: '/small-current.png',
