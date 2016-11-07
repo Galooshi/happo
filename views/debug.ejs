@@ -7,36 +7,23 @@
     <link rel="shortcut icon" href="<%= favicon %>" />
 
     <style>
-      <%= css %>
+      <%- css %>
     </style>
 
+    <script src="https://unpkg.com/react@15.3.1/dist/react.min.js"></script>
+    <script src="https://unpkg.com/react-dom@15.3.1/dist/react-dom.min.js"></script>
+
+    <script>
+      <%- jsCode %>
+    </script>
     <script src="/HappoRunner.bundle.js"></script>
+
     <% sourceFiles.forEach(function(sourceFile) { %>
       <script src="/resource?file=<%= encodeURIComponent(sourceFile) %>"></script>
     <% }); %>
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   </head>
 
   <body>
-    <header class="header">
-      <h1 class="header__title">Happo Debug Tool</h1>
-    </header>
-
-    <main class="main">
-      <p>Click on an item to render that example in isolation.</p>
-      <script>
-        (function() {
-          var ul = $('<ul>');
-          $('main').append(ul);
-          $.each(happo.defined, function(_, example) {
-            ul.append($('<li>').append(
-              $('<a>', {
-                href: '/snapshot?description=' + encodeURIComponent(example.description)
-              }).text(example.description)
-            ));
-          });
-        }());
-      </script>
-    </main>
+    <div id="react-root"></div>
   </body>
 </html>

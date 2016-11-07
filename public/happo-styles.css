@@ -49,14 +49,19 @@ body {
   opacity: 1;
 }
 
+
+.HappoDebug__header,
 .HappoDiffs__header {
-  align-items: baseline;
   background-color: #ffffff;
   box-shadow: 0 0 4px rgba(0, 0, 0, .3);
+  padding: 20px 10px 15px;
+}
+
+.HappoDiffs__header {
+  align-items: baseline;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 20px 10px 15px;
 }
 
 .HappoDiffs__header > * {
@@ -68,10 +73,12 @@ body {
   margin-right: 0;
 }
 
+.HappoDebug__headerTitle,
 .HappoDiffs__headerTitle {
   margin: 0;
 }
 
+.HappoDebug__main,
 .HappoDiffs__main {
   padding: 10px;
 }
