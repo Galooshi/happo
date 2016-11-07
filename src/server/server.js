@@ -28,7 +28,7 @@ app.get('/snapshot', (request, response) => {
   response.render('snapshot', prepareViewData({
     sourceFiles: config.sourceFiles,
     stylesheets: config.stylesheets,
-    debugMode: request.params.debug,
+    debugMode: !!request.query.description,
   }));
 });
 

@@ -24,7 +24,7 @@
       body {
         background-color: #fff;
         margin: 0;
-        <% if (debugMode) { %>
+        <% if (!debugMode) { %>
         /*
           We disable pointer events to prevent spurious diffs happening as a
           result of an accidental mouse hover (or click) in the browser
