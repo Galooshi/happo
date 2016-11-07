@@ -194,6 +194,7 @@ window.addEventListener('load', () => {
   }
   const example = decodeURIComponent(matches[1]);
   window.happo.renderExample(example, () => {});
+  document.title = `${example} · Happo`;
 });
 
 // We need to redefine a few global functions that halt execution. Without this,
