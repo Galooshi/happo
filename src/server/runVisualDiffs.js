@@ -193,19 +193,46 @@ function compareAndSave({ description, viewportName, snapshotImage }) {
   });
 }
 
+class RunResult {
+  constructor() {
+    this.new = [];
+    this.diff = [];
+    this.equal = [];
+  }
+
+  add({
+    result,
+    description,
+    height,
+    viewportName,
+  }) {
+    this[result].push({
+      description,
+      height,
+      viewportName,
+    });
+  }
+
+  merge(runResult) {
+    this.new.push(...runResult.new);
+    this.diff.push(...runResult.diff);
+    this.equal.push(...runResult.equal);
+  }
+}
+
 function renderExamples({ driver, examples, viewportName }) {
   const script = `
     var doneFunc = arguments[arguments.length - 1];
     window.happo.renderExample(arguments[0], arguments[arguments.length - 1]);
   `;
 
-  return new Promise((resolve) => {
-    process.stdout.write('  ');
+  const runResult = new RunResult();
 
+  return new Promise((resolve) => {
     function processNextExample() {
       if (!examples.length) {
-        console.log(' done!');
-        resolve(driver);
+        process.stdout.write('\n');
+        resolve({ driver, runResult });
         return;
       }
 
@@ -223,6 +250,12 @@ function renderExamples({ driver, examples, viewportName }) {
             .then(({ result /* , height: resultingHeight */ }) => {
               // TODO add result to summary object
               process.stdout.write(result === 'diff' ? 'D' : '.');
+              runResult.add({
+                result,
+                description,
+                height,
+                viewportName,
+              });
               processNextExample();
             });
         });
@@ -235,21 +268,26 @@ function renderExamples({ driver, examples, viewportName }) {
 function performDiffs({ driver, examplesByViewport }) {
   return new Promise((resolve, reject) => {
     const viewportNames = Object.keys(examplesByViewport);
+    const combinedResult = new RunResult();
+
     function processViewportIter() {
-      const name = viewportNames.shift();
-      if (!name) {
+      const viewportName = viewportNames.shift();
+      if (!viewportName) {
         // we're out of viewports
-        resolve();
+        resolve(combinedResult);
         return;
       }
       const {
         examples,
         viewport: { width, height },
-      } = examplesByViewport[name];
+      } = examplesByViewport[viewportName];
 
       driver.manage().window().setSize(width, height).then(() => {
-        console.log(`${name} (${width}x${height})`);
-        renderExamples({ driver, examples, viewportName: name })
+        process.stdout.write(`${viewportName} (${width}x${height}) `);
+        renderExamples({ driver, examples, viewportName })
+          .then(({ runResult }) => {
+            combinedResult.merge(runResult);
+          })
           .then(processViewportIter)
           .catch(reject);
       });
@@ -258,11 +296,24 @@ function performDiffs({ driver, examplesByViewport }) {
   });
 }
 
+function saveResultToFile(runResult) {
+  return new Promise((resolve, reject) => {
+    const pathToFile = path.join(config.snapshotsFolder, 'resultSummary.json');
+    fs.writeFile(pathToFile, JSON.stringify(runResult), (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
 module.exports = function runVisualDiffs() {
   return initializeDriver()
     .then(loadTestPage)
     .then(checkForInitializationErrors)
     .then(getExamplesByViewport)
-    .then(performDiffs);
-  // TODO write out result summary file
+    .then(performDiffs)
+    .then(saveResultToFile);
 };
