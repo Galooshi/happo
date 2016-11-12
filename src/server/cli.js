@@ -22,7 +22,9 @@ commander.command('run').action(() => {
 });
 
 commander.command('review').action(() => {
-  throw new Error('not yet implemented');
+  server.start().then(() => {
+    console.log(`=> ${constructUrl('/review')}`);
+  });
 });
 
 commander.command('review-demo').action(() => {

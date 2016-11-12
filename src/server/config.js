@@ -5,6 +5,7 @@ const defaultConfig = {
   driver: 'firefox',
   port: 4567,
   snapshotsFolder: './snapshots',
+  resultSummaryFilename: 'resultSummary.json',
   sourceFiles: [],
   stylesheets: [],
   viewports: {

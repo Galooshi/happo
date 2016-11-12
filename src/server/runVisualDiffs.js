@@ -134,17 +134,17 @@ function areImagesEqual(a, b) {
 
 function compareAndSave({ description, viewportName, snapshotImage }) {
   return new Promise((resolve) => {
-    const previousImagePath = pathToSnapshot({
+    const previousImagePath = path.join(process.cwd(), pathToSnapshot({
       description,
       viewportName,
       fileName: 'previous.png',
-    });
+    }));
 
-    const currentImagePath = pathToSnapshot({
+    const currentImagePath = path.join(process.cwd(), pathToSnapshot({
       description,
       viewportName,
       fileName: 'current.png',
-    });
+    }));
 
     // This is potentially expensive code that is run in a tight loop
     // for every snapshot that we will be taking. With that in mind,
@@ -195,9 +195,8 @@ function compareAndSave({ description, viewportName, snapshotImage }) {
 
 class RunResult {
   constructor() {
-    this.new = [];
-    this.diff = [];
-    this.equal = [];
+    this.newImages = [];
+    this.diffImages = [];
   }
 
   add({
@@ -206,7 +205,10 @@ class RunResult {
     height,
     viewportName,
   }) {
-    this[result].push({
+    if (result === 'equal') {
+      return;
+    }
+    this[`${result}Images`].push({
       description,
       height,
       viewportName,
@@ -214,9 +216,8 @@ class RunResult {
   }
 
   merge(runResult) {
-    this.new.push(...runResult.new);
-    this.diff.push(...runResult.diff);
-    this.equal.push(...runResult.equal);
+    this.newImages.push(...runResult.newImages);
+    this.diffImages.push(...runResult.diffImages);
   }
 }
 
@@ -298,8 +299,14 @@ function performDiffs({ driver, examplesByViewport }) {
 
 function saveResultToFile(runResult) {
   return new Promise((resolve, reject) => {
-    const pathToFile = path.join(config.snapshotsFolder, 'resultSummary.json');
-    fs.writeFile(pathToFile, JSON.stringify(runResult), (err) => {
+    const resultToSerialize = Object.assign({
+      generatedAt: Date.now(),
+    }, runResult);
+
+    const pathToFile = path.join(
+      config.snapshotsFolder, config.resultSummaryFilename);
+
+    fs.writeFile(pathToFile, JSON.stringify(resultToSerialize), (err) => {
       if (err) {
         reject(err);
       } else {

@@ -10,7 +10,7 @@ export default function ImageHeading({ image }) {
       <InlineLink to={imageSlug(image)}>
         {image.description}
         {' @ '}
-        {image.viewport}
+        {image.viewportName}
       </InlineLink>
     </h3>
   );

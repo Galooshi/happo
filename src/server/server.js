@@ -6,6 +6,7 @@ const express = require('express');
 const config = require('./config');
 const faviconAsBase64 = require('./faviconAsBase64');
 const pageTitle = require('./pageTitle');
+const pathToSnapshot = require('./pathToSnapshot');
 const reviewDemoData = require('../reviewDemoData');
 
 const app = express();
@@ -37,6 +38,7 @@ app.get('/resource', (request, response) => {
   if (file.startsWith('http')) {
     response.redirect(file);
   } else {
+    // TODO: add security...
     response.sendFile(path.join(process.cwd(), file));
   }
 });
@@ -44,6 +46,37 @@ app.get('/resource', (request, response) => {
 app.get('/debug', (request, response) => {
   response.render('debug', prepareViewData({
     sourceFiles: config.sourceFiles,
+  }));
+});
+
+function reviewImageUrl(image, fileName) {
+  const pathToFile = pathToSnapshot(Object.assign({}, image, { fileName }));
+  return `/resource?file=${encodeURIComponent(pathToFile)}`;
+}
+
+app.get('/review', (request, response) => {
+  const resultSummaryJSON = fs.readFileSync(
+    path.join(config.snapshotsFolder, config.resultSummaryFilename),
+    'utf8'
+  );
+  const resultSummary = JSON.parse(resultSummaryJSON);
+  const title = pageTitle(resultSummary);
+
+  /* eslint-disable no-param-reassign */
+  resultSummary.newImages.forEach((img) => {
+    img.current = reviewImageUrl(img, 'current.png');
+  });
+  resultSummary.diffImages.forEach((img) => {
+    img.current = reviewImageUrl(img, 'current.png');
+    img.previous = reviewImageUrl(img, 'previous.png');
+  });
+  /* eslint-enable no-param-reassign */
+
+  response.render('review', prepareViewData({
+    pageTitle: title,
+    appProps: Object.assign({}, resultSummary, {
+      pageTitle: title,
+    }),
   }));
 });
 
