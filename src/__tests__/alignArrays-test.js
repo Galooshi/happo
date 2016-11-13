@@ -1,4 +1,4 @@
-import alignArrays from '../src/alignArrays';
+import alignArrays from '../alignArrays';
 
 describe('alignArrays', () => {
   function test(aStr, bStr, expectedAStr, expectedBStr) {
