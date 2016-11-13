@@ -2,6 +2,10 @@ const config = require('../config');
 const runVisualDiffs = require('../runVisualDiffs');
 const server = require('../server');
 
+function notExpected(error) {
+  throw new Error("We shouldn't end up here", error);
+}
+
 describe('runVisualDiffs', function () { // eslint-disable-line func-names
   beforeAll((done) => {
     server.start().then(done);
@@ -18,9 +22,7 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
 
   describe('when there are no examples', () => {
     it('fails with an informative message', (done) => {
-      runVisualDiffs().then(() => {
-        throw new Error("We shouldn't end up here");
-      }).catch((error) => {
+      runVisualDiffs().then(notExpected).catch((error) => {
         expect(error.message).toEqual('No happo examples found');
         done();
       });
@@ -33,9 +35,7 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
     });
 
     it('fails with an informative message', (done) => {
-      runVisualDiffs().then(() => {
-        throw new Error("We shouldn't end up here");
-      }).catch((error) => {
+      runVisualDiffs().then(notExpected).catch((error) => {
         expect(error.message).toMatch(/JavaScript errors found/);
         done();
       });
@@ -48,9 +48,7 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
     });
 
     it('fails with an informative message', (done) => {
-      runVisualDiffs().then(() => {
-        throw new Error("We shouldn't end up here");
-      }).catch((error) => {
+      runVisualDiffs().then(notExpected).catch((error) => {
         expect(error.message).toMatch(/Error rendering "foo"/);
         done();
       });
@@ -72,7 +70,7 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
       jasmine.DEFAULT_TIMEOUT_INTERVAL = this.originalTimeout;
     });
 
-    it('does the right thing', (done) => {
+    it('does the right things', (done) => {
       runVisualDiffs().then((firstResult) => {
         expect(firstResult.newImages.length).toEqual(3);
         expect(firstResult.diffImages.length).toEqual(0);
@@ -81,9 +79,7 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
         expect(secondResult.diffImages.length).toEqual(1);
         done();
       })
-      .catch((error) => {
-        throw error;
-      });
+      .catch(notExpected);
     });
   });
 });
