@@ -317,10 +317,21 @@ function saveResultToFile(runResult) {
 }
 
 module.exports = function runVisualDiffs() {
-  return initializeDriver()
-    .then(loadTestPage)
-    .then(checkForInitializationErrors)
-    .then(getExamplesByViewport)
-    .then(performDiffs)
-    .then(saveResultToFile);
+  return new Promise((resolve, reject) => {
+    initializeDriver().then((driver) => {
+      loadTestPage(driver)
+        .then(checkForInitializationErrors)
+        .then(getExamplesByViewport)
+        .then(performDiffs)
+        .then(saveResultToFile)
+        .then(() => {
+          driver.close();
+          resolve();
+        })
+        .catch((error) => {
+          driver.close();
+          reject(error);
+        });
+    }).catch(reject);
+  });
 };
