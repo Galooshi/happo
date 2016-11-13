@@ -229,7 +229,7 @@ function renderExamples({ driver, examples, viewportName }) {
 
   const runResult = new RunResult();
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     function processNextExample() {
       if (!examples.length) {
         process.stdout.write('\n');
@@ -242,7 +242,8 @@ function renderExamples({ driver, examples, viewportName }) {
         .then(({ error, width, height, top, left }) => {
           if (error) {
             const errorMessage = `Error rendering "${description}":\n  ${error}`;
-            throw new Error(errorMessage);
+            reject(new Error(errorMessage));
+            return;
           }
 
           takeCroppedScreenshot({ driver, description, width, height, top, left })

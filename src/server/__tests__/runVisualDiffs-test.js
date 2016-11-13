@@ -41,4 +41,19 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
       });
     });
   });
+
+  describe('when there is an error in an example', () => {
+    beforeEach(() => {
+      config.sourceFiles = ['src/server/__tests__/fixtures/errorInExample.js'];
+    });
+
+    it('fails with an informative message', (done) => {
+      runVisualDiffs().then(() => {
+        throw new Error("We shouldn't end up here");
+      }).catch((error) => {
+        expect(error.message).toMatch(/Error rendering "foo"/);
+        done();
+      });
+    });
+  });
 });
