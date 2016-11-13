@@ -56,4 +56,34 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
       });
     });
   });
+
+  describe('with multiple examples', () => {
+    beforeEach(() => {
+      config.sourceFiles = ['src/server/__tests__/fixtures/multipleExamples.js'];
+      config.snapshotsFolder = `tmp-${Math.random()}`;
+      this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+    });
+
+    afterEach(() => {
+      // TODO: clean out snapshotsfolder
+      // fs.unlinkSync(config.snapshotsFolder);
+
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = this.originalTimeout;
+    });
+
+    it('does the right thing', (done) => {
+      runVisualDiffs().then((firstResult) => {
+        expect(firstResult.newImages.length).toEqual(3);
+        expect(firstResult.diffImages.length).toEqual(0);
+      }).then(runVisualDiffs).then((secondResult) => {
+        expect(secondResult.newImages.length).toEqual(0);
+        expect(secondResult.diffImages.length).toEqual(1);
+        done();
+      })
+      .catch((error) => {
+        throw error;
+      });
+    });
+  });
 });

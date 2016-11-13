@@ -311,7 +311,7 @@ function saveResultToFile(runResult) {
       if (err) {
         reject(err);
       } else {
-        resolve();
+        resolve(resultToSerialize);
       }
     });
   });
@@ -325,9 +325,9 @@ module.exports = function runVisualDiffs() {
         .then(getExamplesByViewport)
         .then(performDiffs)
         .then(saveResultToFile)
-        .then(() => {
+        .then((result) => {
           driver.close();
-          resolve();
+          resolve(result);
         })
         .catch((error) => {
           driver.close();
