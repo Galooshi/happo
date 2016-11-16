@@ -1,3 +1,4 @@
 example-project/
 public/*.bundle.*
 public/*.worker.*
+lib/

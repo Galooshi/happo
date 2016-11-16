@@ -8,10 +8,11 @@
   "scripts": {
     "build": "npm run --silent clean && npm run --silent webpack",
     "clean": "rimraf public/*.worker.js",
-    "eslint": "eslint --ext .js,.jsx",
     "jest": "jest",
     "jest:watch": "jest --watch",
-    "test": "npm run --silent eslint -- . && npm run --silent jest",
+    "lint": "eslint --ext .js,.jsx .",
+    "pretest": "npm run --silent lint",
+    "test": "npm run --silent jest",
     "webpack": "webpack --optimize-minimize",
     "webpack-dev": "webpack --devtool eval-source-map --progress --watch"
   },
