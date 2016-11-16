@@ -166,11 +166,7 @@ it('works with multiple top-level elements', () => {
   });
 });
 
-it.skip('includes the margin of all top-level elements', () => {
-  // TODO: There is currently a bug that causes the margins of all top-level
-  // elements to be added to each other instead of being properly handled as
-  // extensions of each individual box. When we fix this bug, this test should
-  // pass as it is written.
+it('includes the margin of all top-level elements', () => {
   const div1 = createElement({ width: 40, height: 40, margin: 5 });
   const div2 = createElement({ width: 40, height: 40, margin: 5, left: 50 });
   document.body.appendChild(div1);

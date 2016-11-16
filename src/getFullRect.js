@@ -10,6 +10,15 @@ function min(a, b) {
   return Math.min(a, b);
 }
 
+function mergeBoxes(a, b) {
+  /* eslint-disable no-param-reassign */
+  a.bottom = Math.max(a.bottom, b.bottom);
+  a.left = min(a.left, b.left);
+  a.right = Math.max(a.right, b.right);
+  a.top = min(a.top, b.top);
+  /* eslint-enable no-param-reassign */
+}
+
 // This function takes a node and a box object that we will mutate.
 function getFullRectRecursive(node, box) {
   // Since we are already traversing through every node, let's piggyback on
@@ -18,12 +27,7 @@ function getFullRectRecursive(node, box) {
 
   const rect = node.getBoundingClientRect();
 
-  /* eslint-disable no-param-reassign */
-  box.bottom = Math.max(box.bottom, rect.bottom);
-  box.left = min(box.left, rect.left);
-  box.right = Math.max(box.right, rect.right);
-  box.top = min(box.top, rect.top);
-  /* eslint-enable no-param-reassign */
+  mergeBoxes(box, rect);
 
   for (let i = 0; i < node.children.length; i++) {
     getFullRectRecursive(node.children[i], box);
@@ -35,13 +39,7 @@ function getFullRectRecursive(node, box) {
 // screenshot includes absolutely positioned elements. It is important that
 // this is fast, since we may be iterating over a high number of nodes.
 export default function getFullRect(rootNodes) {
-  // Set up the initial object that we will mutate in our recursive function.
-  const box = {
-    bottom: 0,
-    left: undefined,
-    right: 0,
-    top: undefined,
-  };
+  const boxes = [];
 
   // If there are any children, we want to iterate over them recursively,
   // mutating our box object along the way to expand to include all descendent
@@ -49,6 +47,14 @@ export default function getFullRect(rootNodes) {
   // Remember! rootNodes can be either an Array or a NodeList.
   for (let i = 0; i < rootNodes.length; i++) {
     const node = rootNodes[i];
+
+    // Set up the initial object that we will mutate in our recursive function.
+    const box = {
+      bottom: 0,
+      left: undefined,
+      right: 0,
+      top: undefined,
+    };
 
     getFullRectRecursive(node, box);
 
@@ -61,7 +67,20 @@ export default function getFullRect(rootNodes) {
     box.left -= parseFloat(computedStyle.getPropertyValue('margin-left') || 0);
     box.right += parseFloat(computedStyle.getPropertyValue('margin-right') || 0);
     box.top -= parseFloat(computedStyle.getPropertyValue('margin-top') || 0);
+
+    boxes.push(box);
   }
+
+  // Merge all boxes together.
+  const box = boxes.reduce((a, b) => {
+    mergeBoxes(a, b);
+    return a;
+  }, {
+    bottom: 0,
+    left: undefined,
+    right: 0,
+    top: undefined,
+  });
 
   // Since getBoundingClientRect() and margins can contain subpixel values, we
   // want to round everything before calculating the width and height to
