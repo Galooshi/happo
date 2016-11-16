@@ -57,10 +57,10 @@ export default function getFullRect(rootNodes) {
     // elements is significantly less likely to matter, let's include the
     // margin only from the topmost nodes.
     const computedStyle = window.getComputedStyle(node);
-    box.bottom += parseFloat(computedStyle.getPropertyValue('margin-bottom'));
-    box.left -= parseFloat(computedStyle.getPropertyValue('margin-left'));
-    box.right += parseFloat(computedStyle.getPropertyValue('margin-right'));
-    box.top -= parseFloat(computedStyle.getPropertyValue('margin-top'));
+    box.bottom += parseFloat(computedStyle.getPropertyValue('margin-bottom') || 0);
+    box.left -= parseFloat(computedStyle.getPropertyValue('margin-left') || 0);
+    box.right += parseFloat(computedStyle.getPropertyValue('margin-right') || 0);
+    box.top -= parseFloat(computedStyle.getPropertyValue('margin-top') || 0);
   }
 
   // Since getBoundingClientRect() and margins can contain subpixel values, we
