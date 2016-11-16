@@ -3,4 +3,8 @@ module.exports = {
     jasmine: true,
     jest: true,
   },
+
+  rules: {
+    'import/imports-first': 0,
+  },
 };
