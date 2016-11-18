@@ -1,3 +1,6 @@
+const os = require('os');
+const path = require('path');
+
 const rimraf = require('rimraf');
 
 const config = require('../config');
@@ -60,7 +63,7 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
   describe('with multiple examples', () => {
     beforeEach(() => {
       config.sourceFiles = ['src/server/__tests__/fixtures/multipleExamples.js'];
-      config.snapshotsFolder = `tmp-${Math.random()}`;
+      config.snapshotsFolder = path.join(os.tmpdir(), `happo-${Math.random()}`);
       this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
     });

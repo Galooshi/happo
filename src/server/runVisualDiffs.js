@@ -134,17 +134,17 @@ function areImagesEqual(a, b) {
 
 function compareAndSave({ description, viewportName, snapshotImage }) {
   return new Promise((resolve) => {
-    const previousImagePath = path.join(process.cwd(), pathToSnapshot({
+    const previousImagePath = pathToSnapshot({
       description,
       viewportName,
       fileName: 'previous.png',
-    }));
+    });
 
-    const currentImagePath = path.join(process.cwd(), pathToSnapshot({
+    const currentImagePath = pathToSnapshot({
       description,
       viewportName,
       fileName: 'current.png',
-    }));
+    });
 
     // This is potentially expensive code that is run in a tight loop
     // for every snapshot that we will be taking. With that in mind,
