@@ -13,7 +13,14 @@ function notExpected(error) {
 
 describe('runVisualDiffs', function () { // eslint-disable-line func-names
   beforeAll((done) => {
-    server.start().then(done);
+    server.start().then(({ expressServer }) => {
+      this.expressServer = expressServer;
+      done();
+    });
+  });
+
+  afterAll((done) => {
+    this.expressServer.close().then(done);
   });
 
   beforeEach(() => {
