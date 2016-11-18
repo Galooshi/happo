@@ -12,5 +12,9 @@ module.exports = function pageTitle({
     title.push(`${newImages.length} new`);
   }
 
+  if (!title.length) {
+    return 'Happo';
+  }
+
   return `${title.join(', ')} · Happo`;
 };
