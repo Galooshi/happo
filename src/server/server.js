@@ -24,6 +24,12 @@ function reviewImageUrl(image, fileName) {
   return `/resource?file=${encodeURIComponent(pathToFile)}`;
 }
 
+function isValidResource(file) {
+  return config.sourceFiles.includes(file) ||
+    config.stylesheets.includes(file) ||
+    file.startsWith(config.snapshotsFolder);
+}
+
 function createApp() {
   const express = require('express'); // eslint-disable-line global-require
 
@@ -45,9 +51,10 @@ function createApp() {
     const file = request.query.file;
     if (file.startsWith('http')) {
       response.redirect(file);
+    } else if (isValidResource(file)) {
+      response.sendFile(file, { root: process.cwd() });
     } else {
-      // TODO: add security...
-      response.sendFile(path.join(process.cwd(), file));
+      response.sendStatus(403);
     }
   });
 
