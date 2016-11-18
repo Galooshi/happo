@@ -1,3 +1,5 @@
+const rimraf = require('rimraf');
+
 const config = require('../config');
 const runVisualDiffs = require('../runVisualDiffs');
 const server = require('../server');
@@ -64,9 +66,7 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
     });
 
     afterEach(() => {
-      // TODO: clean out snapshotsfolder
-      // fs.unlinkSync(config.snapshotsFolder);
-
+      rimraf.sync(config.snapshotsFolder);
       jasmine.DEFAULT_TIMEOUT_INTERVAL = this.originalTimeout;
     });
 
