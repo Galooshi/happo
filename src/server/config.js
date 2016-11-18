@@ -6,6 +6,7 @@ const defaultConfig = {
   port: 4567,
   snapshotsFolder: 'snapshots',
   resultSummaryFilename: 'resultSummary.json',
+  publicDirectories: [],
   sourceFiles: [],
   stylesheets: [],
   viewports: {

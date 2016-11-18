@@ -5,6 +5,9 @@ module.exports = {
   stylesheets: [
     'css/styles.css',
   ],
+  publicDirectories: [
+    'public-root',
+  ],
   viewports: {
     desktop: {
       width: 1024,

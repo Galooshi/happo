@@ -37,6 +37,9 @@ function createApp() {
   app.set('view engine', 'ejs');
   app.set('views', path.resolve(__dirname, '../../views'));
   app.use(express.static(path.resolve(__dirname, '../../public')));
+  config.publicDirectories.forEach((directory) => {
+    app.use(express.static(path.join(process.cwd(), directory)));
+  });
 
 
   app.get('/snapshot', (request, response) => {
