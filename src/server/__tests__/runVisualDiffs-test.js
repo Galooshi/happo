@@ -7,20 +7,16 @@ const config = require('../config');
 const runVisualDiffs = require('../runVisualDiffs');
 const server = require('../server');
 
-function notExpected(error) {
-  throw new Error("We shouldn't end up here", error);
-}
-
 describe('runVisualDiffs', function () { // eslint-disable-line func-names
-  beforeAll((done) => {
-    server.start().then(({ expressServer }) => {
+  beforeAll(() => {
+    config.publicDirectories = ['src/server/__tests__/fixtures'];
+    return server.start().then(({ expressServer }) => {
       this.expressServer = expressServer;
-      done();
     });
   });
 
-  afterAll((done) => {
-    this.expressServer.close().then(done);
+  afterAll(() => {
+    return this.expressServer.close();
   });
 
   beforeEach(() => {
@@ -33,10 +29,9 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
   });
 
   describe('when there are no examples', () => {
-    it('fails with an informative message', (done) => {
-      runVisualDiffs().then(notExpected).catch((error) => {
+    it('fails with an informative message', () => {
+      return runVisualDiffs().catch((error) => {
         expect(error.message).toEqual('No happo examples found');
-        done();
       });
     });
   });
@@ -46,10 +41,9 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
       config.sourceFiles = ['src/server/__tests__/fixtures/scriptingError.js'];
     });
 
-    it('fails with an informative message', (done) => {
-      runVisualDiffs().then(notExpected).catch((error) => {
+    it('fails with an informative message', () => {
+      return runVisualDiffs().catch((error) => {
         expect(error.message).toMatch(/JavaScript errors found/);
-        done();
       });
     });
   });
@@ -59,20 +53,18 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
       config.sourceFiles = ['src/server/__tests__/fixtures/errorInExample.js'];
     });
 
-    it('fails with an informative message', (done) => {
-      runVisualDiffs().then(notExpected).catch((error) => {
+    it('fails with an informative message', () => {
+      return runVisualDiffs().catch((error) => {
         expect(error.message).toMatch(/Error rendering "foo"/);
-        done();
       });
     });
   });
 
-  describe('with multiple examples', () => {
+  describe('successful runs', () => {
     beforeEach(() => {
-      config.sourceFiles = ['src/server/__tests__/fixtures/multipleExamples.js'];
       config.snapshotsFolder = path.join(os.tmpdir(), `happo-${Math.random()}`);
       this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-      jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
     });
 
     afterEach(() => {
@@ -80,16 +72,33 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
       jasmine.DEFAULT_TIMEOUT_INTERVAL = this.originalTimeout;
     });
 
-    it('does the right things', (done) => {
-      runVisualDiffs().then((firstResult) => {
-        expect(firstResult.newImages.length).toEqual(3);
-        expect(firstResult.diffImages.length).toEqual(0);
-      }).then(runVisualDiffs).then((secondResult) => {
-        expect(secondResult.newImages.length).toEqual(0);
-        expect(secondResult.diffImages.length).toEqual(1);
-        done();
-      })
-      .catch(notExpected);
+    describe('with multiple examples', () => {
+      beforeEach(() => {
+        config.sourceFiles = ['src/server/__tests__/fixtures/multipleExamples.js'];
+      });
+
+      it('does the right things', (done) => {
+        return runVisualDiffs().then((firstResult) => {
+          expect(firstResult.newImages.length).toEqual(3);
+          expect(firstResult.diffImages.length).toEqual(0);
+        }).then(runVisualDiffs).then((secondResult) => {
+          expect(secondResult.newImages.length).toEqual(0);
+          expect(secondResult.diffImages.length).toEqual(1);
+          done();
+        });
+      });
+    });
+
+    describe('serving files via publicDirectories', () => {
+      beforeEach(() => {
+        config.sourceFiles = ['src/server/__tests__/fixtures/tinyImage.js'];
+      });
+
+      it('succeeds', () => {
+        return runVisualDiffs().then((result) => {
+          expect(result.newImages.length).toEqual(1);
+        });
+      });
     });
   });
 });
