@@ -23,24 +23,34 @@ AWS.config = new AWS.Config({
   region: 'us-west-2',
 });
 
+/**
+ * Creates a bucket (or gets it if already exists).
+ *
+ * @return {Promise}
+ */
 function getOrCreateBucket(s3) {
   return new Promise((resolve, reject) => {
-    s3.headBucket({ Bucket }, (headErr, headData) => {
+    s3.headBucket({ Bucket }, (headErr) => {
       if (headErr) {
-        s3.createBucket({ Bucket }, (createErr, createData) => {
+        s3.createBucket({ Bucket }, (createErr) => {
           if (createErr) {
             reject(createErr);
           } else {
-            resolve(createData.Location);
+            resolve();
           }
         });
       } else {
-        resolve(headData.Location);
+        resolve();
       }
     });
   });
 }
 
+/**
+ * Uploads an image of a particular variant (current or previous).
+ *
+ * @return {Promise}
+ */
 function uploadImage({ s3, directory, image, variant }) {
   return new Promise((resolve, reject) => {
     const imageName = `${image.description}_${image.viewportName}_${variant}.png`;
@@ -68,6 +78,12 @@ function uploadImage({ s3, directory, image, variant }) {
   });
 }
 
+/**
+ * Serializes an review page and uploads it. Resolves the promise with a URL to
+ * the uploaded file.
+ *
+ * @return {Promise} that resolves with a URL
+ */
 function uploadHTMLFile({ s3, directory, diffImages, newImages }) {
   return new Promise((resolve, reject) => {
     const template = fs.readFileSync(
