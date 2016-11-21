@@ -92,6 +92,7 @@ function uploadHTMLFile({ s3, directory, diffImages, newImages }) {
     const html = ejs.render(template, prepareViewData({
       appProps: {
         diffImages,
+        generatedAt: Date.now(),
         newImages,
         pageTitle: title,
       },
