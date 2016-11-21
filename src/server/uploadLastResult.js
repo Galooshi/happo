@@ -84,7 +84,7 @@ function uploadImage({ s3, directory, image, variant }) {
  *
  * @return {Promise} that resolves with a URL
  */
-function uploadHTMLFile({ s3, directory, diffImages, newImages }) {
+function uploadHTMLFile({ s3, directory, diffImages, newImages, triggeredByUrl }) {
   return new Promise((resolve, reject) => {
     const template = fs.readFileSync(
       path.resolve(__dirname, '../../views/review.ejs'), 'utf8');
@@ -95,6 +95,7 @@ function uploadHTMLFile({ s3, directory, diffImages, newImages }) {
         generatedAt: Date.now(),
         newImages,
         pageTitle: title,
+        triggeredByUrl,
       },
       pageTitle: title,
     }));
@@ -120,7 +121,7 @@ function uploadHTMLFile({ s3, directory, diffImages, newImages }) {
  * @return {Promise} that resolves with a URL to the html document uploaded to
  *   s3.
  */
-module.exports = function uploadLastResult() {
+module.exports = function uploadLastResult(triggeredByUrl) {
   return new Promise((resolve, reject) => {
     const { diffImages, newImages } = getLastResultSummary();
 
@@ -145,7 +146,7 @@ module.exports = function uploadLastResult() {
       });
 
       Promise.all(uploadPromises).then(() => {
-        uploadHTMLFile({ s3, directory, diffImages, newImages })
+        uploadHTMLFile({ s3, directory, diffImages, newImages, triggeredByUrl })
           .then(resolve)
           .catch(reject);
       });
