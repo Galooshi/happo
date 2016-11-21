@@ -1,80 +1,33 @@
-const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
 const ejs = require('ejs');
 
+const S3Uploader = require('./S3Uploader');
 const getLastResultSummary = require('./getLastResultSummary');
 const pageTitle = require('./pageTitle');
 const pathToSnapshot = require('./pathToSnapshot');
 const prepareViewData = require('./prepareViewData');
-
-const AWS = require('aws-sdk'); // lazy-load to avoid
-
-const {
-  S3_ACCESS_KEY_ID,
-  S3_SECRET_ACCESS_KEY,
-  S3_BUCKET_NAME: Bucket,
-} = process.env;
-
-AWS.config = new AWS.Config({
-  accessKeyId: S3_ACCESS_KEY_ID,
-  secretAccessKey: S3_SECRET_ACCESS_KEY,
-  region: 'us-west-2',
-});
-
-/**
- * Creates a bucket (or gets it if already exists).
- *
- * @return {Promise}
- */
-function getOrCreateBucket(s3) {
-  return new Promise((resolve, reject) => {
-    s3.headBucket({ Bucket }, (headErr) => {
-      if (headErr) {
-        s3.createBucket({ Bucket }, (createErr) => {
-          if (createErr) {
-            reject(createErr);
-          } else {
-            resolve();
-          }
-        });
-      } else {
-        resolve();
-      }
-    });
-  });
-}
 
 /**
  * Uploads an image of a particular variant (current or previous).
  *
  * @return {Promise}
  */
-function uploadImage({ s3, directory, image, variant }) {
-  return new Promise((resolve, reject) => {
-    const imageName = `${image.description}_${image.viewportName}_${variant}.png`;
-    const fileStream = fs.createReadStream(
-      pathToSnapshot(Object.assign({}, image, {
-        fileName: `${variant}.png`,
-      }))
-    );
-    const uploadParams = {
-      Body: fileStream,
-      Bucket,
-      ContentType: 'image/png',
-      Key: `${directory}/${imageName}`,
-    };
-
-    s3.upload(uploadParams, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        image[variant] = // eslint-disable-line no-param-reassign
-          encodeURIComponent(imageName);
-        resolve();
-      }
-    });
+function uploadImage({ uploader, image, variant }) {
+  const fileName = `${image.description}_${image.viewportName}_${variant}.png`;
+  const stream = fs.createReadStream(
+    pathToSnapshot(Object.assign({}, image, {
+      fileName: `${variant}.png`,
+    }))
+  );
+  return uploader.upload({
+    contentType: 'image/png',
+    fileName,
+    body: stream,
+  }).then(() => {
+    image[variant] = // eslint-disable-line no-param-reassign
+      encodeURIComponent(fileName);
   });
 }
 
@@ -84,36 +37,26 @@ function uploadImage({ s3, directory, image, variant }) {
  *
  * @return {Promise} that resolves with a URL
  */
-function uploadHTMLFile({ s3, directory, diffImages, newImages, triggeredByUrl }) {
-  return new Promise((resolve, reject) => {
-    const template = fs.readFileSync(
-      path.resolve(__dirname, '../../views/review.ejs'), 'utf8');
-    const title = pageTitle({ diffImages, newImages });
-    const html = ejs.render(template, prepareViewData({
-      appProps: {
-        diffImages,
-        generatedAt: Date.now(),
-        newImages,
-        pageTitle: title,
-        triggeredByUrl,
-      },
+function uploadHTMLFile({ uploader, diffImages, newImages, triggeredByUrl }) {
+  const template = fs.readFileSync(
+    path.resolve(__dirname, '../../views/review.ejs'), 'utf8');
+  const title = pageTitle({ diffImages, newImages });
+  const html = ejs.render(template, prepareViewData({
+    appProps: {
+      diffImages,
+      generatedAt: Date.now(),
+      newImages,
       pageTitle: title,
-    }));
-    const uploadParams = {
-      Body: html,
-      Bucket,
-      ContentType: 'text/html',
-      ContentEncoding: 'utf-8',
-      Key: `${directory}/index.html`,
-    };
+      triggeredByUrl,
+    },
+    pageTitle: title,
+  }));
 
-    s3.upload(uploadParams, (err, { Location }) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(Location);
-      }
-    });
+  return uploader.upload({
+    body: html,
+    contentType: 'text/html',
+    contentEncoding: 'utf-8',
+    fileName: 'index.html',
   });
 }
 
@@ -130,23 +73,22 @@ module.exports = function uploadLastResult(triggeredByUrl) {
       return;
     }
 
-    const s3 = new AWS.S3();
-    getOrCreateBucket(s3).then(() => {
-      const directory = crypto.randomBytes(16).toString('hex');
+    const uploader = new S3Uploader();
+    uploader.prepare().then(() => {
       const uploadPromises = [];
       diffImages.forEach((image) => {
         uploadPromises.push(
-          uploadImage({ s3, directory, image, variant: 'previous' }),
-          uploadImage({ s3, directory, image, variant: 'current' })
+          uploadImage({ uploader, image, variant: 'previous' }),
+          uploadImage({ uploader, image, variant: 'current' })
         );
       });
       newImages.forEach((image) => {
         uploadPromises.push(
-          uploadImage({ s3, directory, image, variant: 'current' }));
+          uploadImage({ uploader, image, variant: 'current' }));
       });
 
       Promise.all(uploadPromises).then(() => {
-        uploadHTMLFile({ s3, directory, diffImages, newImages, triggeredByUrl })
+        uploadHTMLFile({ uploader, diffImages, newImages, triggeredByUrl })
           .then(resolve)
           .catch(reject);
       });
