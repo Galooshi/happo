@@ -15,9 +15,7 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
     });
   });
 
-  afterAll(() => {
-    return this.expressServer.close();
-  });
+  afterAll(() => this.expressServer.close());
 
   beforeEach(() => {
     this.originalConfig = Object.assign({}, config);
@@ -29,11 +27,10 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
   });
 
   describe('when there are no examples', () => {
-    it('fails with an informative message', () => {
-      return runVisualDiffs().catch((error) => {
+    it('fails with an informative message', () =>
+      runVisualDiffs().catch((error) => {
         expect(error.message).toEqual('No happo examples found');
-      });
-    });
+      }));
   });
 
   describe('when there is a scripting error at startup', () => {
@@ -41,11 +38,10 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
       config.sourceFiles = ['src/server/__tests__/fixtures/scriptingError.js'];
     });
 
-    it('fails with an informative message', () => {
-      return runVisualDiffs().catch((error) => {
+    it('fails with an informative message', () =>
+      runVisualDiffs().catch((error) => {
         expect(error.message).toMatch(/JavaScript errors found/);
-      });
-    });
+      }));
   });
 
   describe('when there is an error in an example', () => {
@@ -53,11 +49,10 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
       config.sourceFiles = ['src/server/__tests__/fixtures/errorInExample.js'];
     });
 
-    it('fails with an informative message', () => {
-      return runVisualDiffs().catch((error) => {
+    it('fails with an informative message', () =>
+      runVisualDiffs().catch((error) => {
         expect(error.message).toMatch(/Error rendering "foo"/);
-      });
-    });
+      }));
   });
 
   describe('successful runs', () => {
@@ -77,16 +72,15 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
         config.sourceFiles = ['src/server/__tests__/fixtures/multipleExamples.js'];
       });
 
-      it('does the right things', (done) => {
-        return runVisualDiffs().then((firstResult) => {
+      it('does the right things', (done) =>
+        runVisualDiffs().then((firstResult) => {
           expect(firstResult.newImages.length).toEqual(3);
           expect(firstResult.diffImages.length).toEqual(0);
         }).then(runVisualDiffs).then((secondResult) => {
           expect(secondResult.newImages.length).toEqual(0);
           expect(secondResult.diffImages.length).toEqual(1);
           done();
-        });
-      });
+        }));
     });
 
     describe('serving files via publicDirectories', () => {
@@ -94,11 +88,9 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
         config.sourceFiles = ['src/server/__tests__/fixtures/tinyImage.js'];
       });
 
-      it('succeeds', () => {
-        return runVisualDiffs().then((result) => {
-          expect(result.newImages.length).toEqual(1);
-        });
-      });
+      it('succeeds', () =>
+        runVisualDiffs().then((result) =>
+          expect(result.newImages.length).toEqual(1)));
     });
   });
 });
