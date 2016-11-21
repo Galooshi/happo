@@ -1,23 +1,11 @@
-const fs = require('fs');
 const path = require('path');
 
-
 const config = require('./config');
-const faviconAsBase64 = require('./faviconAsBase64');
+const getLastResultSummary = require('./getLastResultSummary');
 const pageTitle = require('./pageTitle');
 const pathToSnapshot = require('./pathToSnapshot');
+const prepareViewData = require('./prepareViewData');
 const reviewDemoData = require('../reviewDemoData');
-
-const CSS_FILE_PATH = path.join(__dirname, '../../public/happo-styles.css');
-const JS_FILE_PATH = path.join(__dirname, '../../public/HappoApp.bundle.js');
-
-function prepareViewData(data) {
-  return Object.assign({}, {
-    favicon: faviconAsBase64,
-    css: fs.readFileSync(CSS_FILE_PATH, 'utf8'),
-    jsCode: fs.readFileSync(JS_FILE_PATH, 'utf8'),
-  }, data);
-}
 
 function reviewImageUrl(image, fileName) {
   const pathToFile = pathToSnapshot(Object.assign({}, image, { fileName }));
@@ -69,11 +57,7 @@ function createApp() {
 
 
   app.get('/review', (request, response) => {
-    const resultSummaryJSON = fs.readFileSync(
-      path.join(config.snapshotsFolder, config.resultSummaryFilename),
-      'utf8'
-    );
-    const resultSummary = JSON.parse(resultSummaryJSON);
+    const resultSummary = getLastResultSummary();
     const title = pageTitle(resultSummary);
 
     /* eslint-disable no-param-reassign */

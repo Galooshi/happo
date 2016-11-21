@@ -3,6 +3,12 @@ const commander = require('commander');
 const constructUrl = require('./constructUrl');
 const runVisualDiffs = require('./runVisualDiffs');
 const server = require('./server');
+const uploadLastResult = require('./uploadLastResult');
+
+function logAndExit(error) {
+  console.error(error);
+  process.exit(1);
+}
 
 commander.command('debug').action(() => {
   server.start().then(() => {
@@ -14,10 +20,7 @@ commander.command('run').action(() => {
   server.start().then(() => {
     runVisualDiffs()
       .then(() => process.exit(0))
-      .catch((error) => {
-        console.error(error);
-        process.exit(1);
-      });
+      .catch(logAndExit);
   });
 });
 
@@ -33,8 +36,10 @@ commander.command('review-demo').action(() => {
   });
 });
 
-commander.command('upload-diffs').action(() => {
-  throw new Error('not yet implemented');
+commander.command('upload').action(() => {
+  uploadLastResult()
+    .then((url) => console.log(url))
+    .catch(logAndExit);
 });
 
 module.exports = function cli(argv) {
