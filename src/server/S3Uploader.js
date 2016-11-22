@@ -5,6 +5,7 @@ const {
   S3_ACCESS_KEY_ID,
   S3_SECRET_ACCESS_KEY,
   S3_BUCKET_NAME: Bucket,
+  S3_BUCKET_PATH,
 } = process.env;
 
 module.exports = class S3Uploader {
@@ -15,7 +16,10 @@ module.exports = class S3Uploader {
       region: 'us-west-2',
     });
     this.s3 = new AWS.S3();
-    this.directory = crypto.randomBytes(16).toString('hex');
+    this.directory = [
+      S3_BUCKET_PATH,
+      crypto.randomBytes(16).toString('hex'),
+    ].filter(Boolean).join('/');
   }
 
   /**
