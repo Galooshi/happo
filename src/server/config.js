@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const defaultConfig = {
+  bind: 'localhost',
   driver: 'firefox',
   port: 4567,
   snapshotsFolder: 'snapshots',

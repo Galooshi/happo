@@ -95,7 +95,7 @@ module.exports = {
   start() {
     return new Promise((resolve) => {
       const app = createApp();
-      const expressServer = app.listen(config.port, () => {
+      const expressServer = app.listen(config.port, config.bind, () => {
         console.log(`Happo listening on ${config.port}`);
         resolve({ expressServer });
       });

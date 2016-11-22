@@ -1,4 +1,6 @@
 module.exports = {
+  bind: '0.0.0.0',
+  port: 5555,
   sourceFiles: [
     'example.js',
   ],
