@@ -1,5 +1,0 @@
-require 'json'
-require 'happo/utils'
-require 'happo/uploader'
-require 'happo/version'
-require 'happo/logger'
