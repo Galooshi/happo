@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Command-line tool to visually diff JavaScript components",
   "bin": {
-    "happojs": "./bin/happo"
+    "happo": "./bin/happo"
   },
   "scripts": {
     "build": "npm run --silent clean && npm run --silent webpack",
