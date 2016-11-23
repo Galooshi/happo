@@ -26,7 +26,6 @@
     "url": "https://github.com/Galooshi/happo/issues"
   },
   "homepage": "https://github.com/Galooshi/happo#readme",
-  "private": true,
   "devDependencies": {
     "babel-core": "^6.14.0",
     "babel-jest": "^15.0.0",
