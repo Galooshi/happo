@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const { HAPPO_CONFIG_FILE } = process.env;
+
 const defaultConfig = {
   bind: 'localhost',
   driver: 'firefox',
@@ -27,7 +29,7 @@ const defaultConfig = {
 };
 
 function readUserConfig() {
-  const file = path.join(process.cwd(), '.happo.js');
+  const file = path.join(process.cwd(), HAPPO_CONFIG_FILE || '.happo.js');
   if (!fs.existsSync(file)) {
     return {};
   }
