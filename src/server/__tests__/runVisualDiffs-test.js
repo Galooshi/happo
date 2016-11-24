@@ -55,6 +55,17 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
       }));
   });
 
+  describe('when an example does not render anything', () => {
+    beforeEach(() => {
+      config.sourceFiles = ['src/server/__tests__/fixtures/renderNothingExample.js'];
+    });
+
+    it('fails with an informative message', () =>
+      runVisualDiffs().catch((error) => {
+        expect(error.message).toMatch(/Nothing rendered by "foo"/);
+      }));
+  });
+
   describe('successful runs', () => {
     beforeEach(() => {
       config.snapshotsFolder = path.join(os.tmpdir(), `happo-${Math.random()}`);

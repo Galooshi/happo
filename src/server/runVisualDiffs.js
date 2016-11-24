@@ -241,8 +241,12 @@ function renderExamples({ driver, examples, viewportName }) {
       driver.executeAsyncScript(script, description)
         .then(({ error, width, height, top, left }) => {
           if (error) {
-            const errorMessage = `Error rendering "${description}":\n  ${error}`;
-            reject(new Error(errorMessage));
+            reject(new Error(`Error rendering "${description}":\n  ${error}`));
+            return;
+          }
+
+          if (!width || !height) {
+            reject(new Error(`Nothing rendered by "${description}"`));
             return;
           }
 
