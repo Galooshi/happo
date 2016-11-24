@@ -223,8 +223,13 @@ class RunResult {
 
 function renderExamples({ driver, examples, viewportName }) {
   const script = `
-    var doneFunc = arguments[arguments.length - 1];
-    window.happo.renderExample(arguments[0], arguments[arguments.length - 1]);
+    var callback = arguments[arguments.length - 1];
+    function doneFunc(result) {
+      requestAnimationFrame(function() {
+        callback(result);
+      });
+    };
+    window.happo.renderExample(arguments[0], doneFunc);
   `;
 
   const runResult = new RunResult();
