@@ -1,5 +1,7 @@
-const AWS = require('aws-sdk');
 const crypto = require('crypto');
+const fs = require('fs');
+
+const AWS = require('aws-sdk');
 
 const {
   S3_ACCESS_KEY_ID,
@@ -48,14 +50,18 @@ module.exports = class S3Uploader {
   /**
    * Uploads a file stream or a string.
    *
-   * @param {stream|string} body
+   * @param {string} body
+   * @param {string} pathToFile
    * @param {string} contentType
    * @param {string} fileName
    *
    * @return {Promise}
    */
-  upload({ body, contentType, contentEncoding, fileName }) {
+  upload({ body, pathToFile, contentType, contentEncoding, fileName }) {
     return new Promise((resolve, reject) => {
+      if (!body) {
+        body = fs.createReadStream(pathToFile); // eslint-disable-line no-param-reassign
+      }
       const uploadParams = {
         Body: body,
         Bucket,

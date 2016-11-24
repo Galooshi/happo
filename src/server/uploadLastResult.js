@@ -16,15 +16,12 @@ const prepareViewData = require('./prepareViewData');
  */
 function uploadImage({ uploader, image, variant }) {
   const fileName = `${image.description}_${image.viewportName}_${variant}.png`;
-  const stream = fs.createReadStream(
-    pathToSnapshot(Object.assign({}, image, {
-      fileName: `${variant}.png`,
-    }))
-  );
   return uploader.upload({
     contentType: 'image/png',
     fileName,
-    body: stream,
+    pathToFile: pathToSnapshot(Object.assign({}, image, {
+      fileName: `${variant}.png`,
+    })),
   }).then((remoteUrl) => {
     /* eslint-disable no-param-reassign */
     image[variant] = encodeURIComponent(fileName);
