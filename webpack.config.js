@@ -17,6 +17,10 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
       },
+      {
+        test: /cssesc\.js$/,
+        loader: 'babel-loader',
+      },
     ],
   },
   externals: {
