@@ -25,9 +25,11 @@ function uploadImage({ uploader, image, variant }) {
     contentType: 'image/png',
     fileName,
     body: stream,
-  }).then(() => {
-    image[variant] = // eslint-disable-line no-param-reassign
-      encodeURIComponent(fileName);
+  }).then((remoteUrl) => {
+    /* eslint-disable no-param-reassign */
+    image[variant] = encodeURIComponent(fileName);
+    image[`${variant}Url`] = remoteUrl;
+    /* eslint-enable no-param-reassign */
   });
 }
 
@@ -50,6 +52,7 @@ function uploadHTMLFile({ uploader, diffImages, newImages, triggeredByUrl }) {
       triggeredByUrl,
     },
     pageTitle: title,
+    ogImageUrl: diffImages[0].currentUrl,
   }));
 
   return uploader.upload({

@@ -71,6 +71,7 @@ function createApp() {
     /* eslint-enable no-param-reassign */
 
     response.render('review', prepareViewData({
+      ogImageUrl: '',
       pageTitle: title,
       appProps: Object.assign({}, resultSummary, {
         pageTitle: title,
@@ -81,6 +82,7 @@ function createApp() {
   app.get('/review-demo', (request, response) => {
     const title = pageTitle(reviewDemoData);
     response.render('review', prepareViewData({
+      ogImageUrl: '',
       pageTitle: title,
       appProps: Object.assign({}, reviewDemoData, {
         pageTitle: title,
