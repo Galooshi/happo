@@ -100,8 +100,30 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
       });
 
       it('succeeds', () =>
-        runVisualDiffs().then((result) =>
-          expect(result.newImages.length).toEqual(1)));
+        runVisualDiffs().then((result) => {
+          expect(result.newImages.length).toEqual(1);
+        }));
+    });
+
+    describe('with an example that shrinks between runs', () => {
+      it('saves the max height of the two snapshots', (done) => {
+        // Use a tall example to begin with
+        config.sourceFiles = ['src/server/__tests__/fixtures/tallExample.js'];
+        return runVisualDiffs().then((firstResult) => {
+          expect(firstResult.newImages.length).toEqual(1);
+          expect(firstResult.diffImages.length).toEqual(0);
+          expect(firstResult.newImages[0].height).toEqual(100);
+
+          // Switch to a short example
+          config.sourceFiles = ['src/server/__tests__/fixtures/shortExample.js'];
+        }).then(runVisualDiffs).then((secondResult) => {
+          expect(secondResult.diffImages.length).toEqual(1);
+
+          // We expect height to be the max of the before and after
+          expect(secondResult.diffImages[0].height).toEqual(100);
+          done();
+        });
+      });
     });
   });
 });

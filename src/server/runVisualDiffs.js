@@ -253,13 +253,12 @@ function renderExamples({ driver, examples, viewportName }) {
           takeCroppedScreenshot({ driver, description, width, height, top, left })
             .then((snapshotImage) =>
               compareAndSave({ description, viewportName, snapshotImage }))
-            .then(({ result /* , height: resultingHeight */ }) => {
-              // TODO add result to summary object
+            .then(({ result, height: resultingHeight }) => {
               process.stdout.write(result === 'diff' ? 'D' : '.');
               runResult.add({
                 result,
                 description,
-                height,
+                height: resultingHeight,
                 viewportName,
               });
               processNextExample();
