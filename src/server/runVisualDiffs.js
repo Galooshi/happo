@@ -254,7 +254,7 @@ function renderExamples({ driver, examples, viewportName }) {
             .then((snapshotImage) =>
               compareAndSave({ description, viewportName, snapshotImage }))
             .then(({ result, height: resultingHeight }) => {
-              process.stdout.write(result === 'diff' ? 'D' : '.');
+              process.stdout.write(result === 'diff' ? '×' : '·');
               runResult.add({
                 result,
                 description,
