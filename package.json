@@ -6,8 +6,8 @@
     "happo": "./bin/happo"
   },
   "scripts": {
-    "build": "npm run --silent clean && npm run --silent webpack",
-    "clean": "rimraf public/*.worker.js",
+    "prepublish": "npm run --silent clean && npm run --silent webpack",
+    "clean": "rimraf public/*.worker.js public/*.bundle.js*",
     "jest": "jest",
     "jest:watch": "jest --watch",
     "lint": "eslint --ext .js,.jsx .",
