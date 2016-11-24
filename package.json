@@ -38,7 +38,7 @@
     "eslint-plugin-import": "^1.14.0",
     "eslint-plugin-jsx-a11y": "^2.2.0",
     "eslint-plugin-react": "^6.2.0",
-    "jest": "^17.0.2",
+    "jest": "^17.0.3",
     "rimraf": "^2.5.4",
     "webpack": "^1.13.2"
   },
@@ -48,7 +48,6 @@
     "cssesc": "^1.0.0",
     "ejs": "^2.5.2",
     "express": "^4.14.0",
-    "jest": "^17.0.3",
     "mkdirp": "^0.5.1",
     "png-crop": "0.0.1",
     "pngjs": "^2.3.1",
