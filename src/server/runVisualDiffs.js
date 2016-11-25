@@ -235,10 +235,14 @@ function renderExamples({ driver, examples, viewportName }) {
   const runResult = new RunResult();
 
   return new Promise((resolve, reject) => {
+    const compareAndSavePromises = [];
+
     function processNextExample() {
       if (!examples.length) {
-        process.stdout.write('\n');
-        resolve({ driver, runResult });
+        Promise.all(compareAndSavePromises).then(() => {
+          process.stdout.write('\n');
+          resolve({ driver, runResult });
+        });
         return;
       }
 
@@ -256,16 +260,19 @@ function renderExamples({ driver, examples, viewportName }) {
           }
 
           takeCroppedScreenshot({ driver, description, width, height, top, left })
-            .then((snapshotImage) =>
-              compareAndSave({ description, viewportName, snapshotImage }))
-            .then(({ result, height: resultingHeight }) => {
-              process.stdout.write(result === 'diff' ? '×' : '·');
-              runResult.add({
-                result,
-                description,
-                height: resultingHeight,
-                viewportName,
-              });
+            .then((snapshotImage) => {
+              compareAndSavePromises.push(
+                compareAndSave({ description, viewportName, snapshotImage })
+                  .then(({ result, height: resultingHeight }) => {
+                    process.stdout.write(result === 'diff' ? '×' : '·');
+                    runResult.add({
+                      result,
+                      description,
+                      height: resultingHeight,
+                      viewportName,
+                    });
+                  })
+              );
               processNextExample();
             });
         });
