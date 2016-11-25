@@ -1,11 +1,20 @@
 
 {
-  "lib/*.rb": {
-    "alternate": "spec/{}_spec.rb",
+  "*.js": {
+    "alternate": "{dirname}/__tests__/{basename}-test.js",
     "type": "source"
   },
-  "spec/*_spec.rb": {
-    "alternate": "lib/{}.rb",
+  "*.jsx": {
+    "alternate": "{dirname}/__tests__/{basename}-test.jsx",
+    "type": "source"
+  },
+
+  "**/__tests__/*-test.js": {
+    "alternate": "{dirname}/{basename}.js",
+    "type": "test"
+  },
+  "**/__tests__/*-test.jsx": {
+    "alternate": "{dirname}/{basename}.jsx",
     "type": "test"
   }
 }
