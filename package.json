@@ -52,8 +52,8 @@
     "mkdirp": "^0.5.1",
     "png-crop": "0.0.1",
     "pngjs": "^2.3.1",
-    "react": "^15.3.1",
-    "react-dom": "^15.3.1",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
     "react-waypoint": "^4.1.0",
     "selenium-webdriver": "^2.53.3",
     "worker-loader": "^0.7.1"
