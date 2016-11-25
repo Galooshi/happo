@@ -53,7 +53,7 @@
     "pngjs": "^2.3.1",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
-    "react-waypoint": "^3.1.2",
+    "react-waypoint": "^4.1.0",
     "selenium-webdriver": "^2.53.3",
     "worker-loader": "^0.7.1"
   },
