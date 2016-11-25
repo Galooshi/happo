@@ -5,7 +5,7 @@ const getLastResultSummary = require('./getLastResultSummary');
 const pageTitle = require('./pageTitle');
 const pathToSnapshot = require('./pathToSnapshot');
 const prepareViewData = require('./prepareViewData');
-const reviewDemoData = require('../reviewDemoData');
+const reviewDemoData = require('./reviewDemoData');
 
 function reviewImageUrl(image, fileName) {
   const pathToFile = pathToSnapshot(Object.assign({}, image, { fileName }));

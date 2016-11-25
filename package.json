@@ -6,11 +6,12 @@
     "happo": "./bin/happo"
   },
   "scripts": {
-    "prepublish": "npm run --silent clean && npm run --silent webpack",
-    "clean": "rimraf public/*.worker.js public/*.bundle.js*",
+    "build": "npm run --silent clean && babel src/server/ -d lib/server/ --ignore __tests__ && npm run --silent webpack",
+    "clean": "rimraf lib public/*.worker.js public/*.bundle.js*",
     "jest": "jest",
     "jest:watch": "jest --watch",
     "lint": "eslint --ext .js,.jsx .",
+    "prepublish": "npm run --silent build",
     "pretest": "npm run --silent lint",
     "test": "npm run --silent jest",
     "webpack": "webpack --optimize-minimize",
@@ -43,6 +44,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.7.5",
+    "babel-cli": "^6.18.0",
     "commander": "^2.9.0",
     "cssesc": "^1.0.0",
     "ejs": "^2.5.2",
