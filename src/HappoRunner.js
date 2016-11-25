@@ -85,8 +85,8 @@ window.happo = {
   },
 
   /**
-   * This function is called from Ruby asynchronously. Therefore, we need to
-   * call doneFunc when the method has completed so that Ruby knows to continue.
+   * This function is called asynchronously. Therefore, we need to call doneFunc
+   * when the method has completed so that Happo knows to continue.
    *
    * @param {String} exampleDescription
    * @param {Function} doneFunc injected by driver.execute_async_script in
@@ -198,7 +198,7 @@ window.addEventListener('load', () => {
 });
 
 // We need to redefine a few global functions that halt execution. Without this,
-// there's a chance that the Ruby code can't communicate with the browser.
+// there's a chance that the we can't communicate with the browser.
 window.alert = (message) => {
   console.log('`window.alert` called', message); // eslint-disable-line
 };
