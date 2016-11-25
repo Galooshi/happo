@@ -1,4 +1,6 @@
 Gemfile.lock
+example-project/snapshots
+lib
 node_modules
 public/*.bundle.*
 public/*.worker.*
