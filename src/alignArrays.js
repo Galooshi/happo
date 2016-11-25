@@ -17,7 +17,7 @@ const DRIFT_RANGE = 200;
  */
 function initMatrix(height, width) {
   const rows = new Array(height);
-  for (let i = 0; i < rows.length; i++) {
+  for (let i = 0; i < rows.length; i += 1) {
     rows[i] = new Int32Array(width);
   }
   return rows;
@@ -39,11 +39,11 @@ function longestCommonSubsequence(a, b) {
   const solution = initMatrix(aLength + 1, bLength + 1);
 
   // Loop and find the solution
-  for (let i = 1; i <= aLength; i++) {
+  for (let i = 1; i <= aLength; i += 1) {
     for (
       let j = Math.max(1, i - (DRIFT_RANGE / 2));
       j <= Math.min(bLength, i + (DRIFT_RANGE / 2));
-      j++
+      j += 1
     ) {
       if (a[i - 1] === b[j - 1]) {
         // upLeft
@@ -95,15 +95,15 @@ function applySolution(solution, a, b) {
       } else if (changes > 0) {
         a.splice(ai, 0, ...placeholders(changes));
       }
-      ai--;
-      bi--;
+      ai -= 1;
+      bi -= 1;
       changes = 0;
     } else if (movement === MOVEMENT.left) {
-      bi--;
-      changes++;
+      bi -= 1;
+      changes += 1;
     } else if (movement === MOVEMENT.up) {
-      ai--;
-      changes--;
+      ai -= 1;
+      changes -= 1;
     }
     movement = solution[ai][bi];
   }

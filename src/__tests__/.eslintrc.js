@@ -5,6 +5,6 @@ module.exports = {
   },
 
   rules: {
-    'import/imports-first': 0,
+    'import/first': 0,
   },
 };

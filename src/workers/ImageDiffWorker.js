@@ -24,7 +24,7 @@ self.addEventListener('message', ({
 
   const data = new Uint8ClampedArray(diffImageSize);
 
-  for (let row = 0; row < height; row++) {
+  for (let row = 0; row < height; row += 1) {
     // Render image
     let isRowChanged = false;
     for (let index = 0; index < width; index += 4) {

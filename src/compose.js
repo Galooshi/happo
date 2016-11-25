@@ -15,6 +15,7 @@ function isFullyTransparent(color) {
  */
 function int8Mult(a, b) {
   const t = (a * b) + 0x80;
+  // eslint-disable-next-line no-bitwise
   return ((t >> 8) + t) >> 8;
 }
 

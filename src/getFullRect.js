@@ -29,7 +29,7 @@ function getFullRectRecursive(node, box) {
 
   mergeBoxes(box, rect);
 
-  for (let i = 0; i < node.children.length; i++) {
+  for (let i = 0; i < node.children.length; i += 1) {
     getFullRectRecursive(node.children[i], box);
   }
 }
@@ -45,7 +45,7 @@ export default function getFullRect(rootNodes) {
   // mutating our box object along the way to expand to include all descendent
   // nodes.
   // Remember! rootNodes can be either an Array or a NodeList.
-  for (let i = 0; i < rootNodes.length; i++) {
+  for (let i = 0; i < rootNodes.length; i += 1) {
     const node = rootNodes[i];
 
     // Set up the initial object that we will mutate in our recursive function.

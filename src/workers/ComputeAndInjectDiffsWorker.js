@@ -6,9 +6,9 @@ function imageTo2DArray({ data, width, height }, paddingRight) {
   const rowSize = width * 4;
 
   const newData = [];
-  for (let row = 0; row < height; row++) {
+  for (let row = 0; row < height; row += 1) {
     const pixelsInRow = new Uint8ClampedArray(rowSize + (paddingRight * 4));
-    for (let location = 0; location < rowSize; location++) {
+    for (let location = 0; location < rowSize; location += 1) {
       pixelsInRow[location] = data[(row * rowSize) + location];
     }
     newData.push(pixelsInRow);
