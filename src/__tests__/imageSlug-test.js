@@ -6,7 +6,7 @@ describe('imageSlug', () => {
       imageSlug({
         description: '“curly quotes”',
         viewport: 'small',
-      })
+      }),
     ).not.toThrowError();
   });
 });

@@ -12,12 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
       <HappoDiffs
         {...window.APP_PROPS}
       />,
-      rootElement
+      rootElement,
     );
   } else {
     ReactDOM.render(
       <HappoDebug />,
-      rootElement
+      rootElement,
     );
   }
 });

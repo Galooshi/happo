@@ -51,7 +51,7 @@ function align({
 
   alignArrays(
     hashedPreviousData,
-    hashedCurrentData
+    hashedCurrentData,
   );
 
   const transparentLine = new Uint8ClampedArray(maxWidth * 4);

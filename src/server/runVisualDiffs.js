@@ -47,7 +47,7 @@ function resolveViewports(example) {
   const viewports = example.options.viewports ||
     Object.keys(config.viewports).slice(0, 1);
 
-  return viewports.map((viewport) =>
+  return viewports.map(viewport =>
     Object.assign({}, config.viewports[viewport], { name: viewport }));
 }
 
@@ -94,7 +94,7 @@ function getImageFromStream(stream) {
 
 function takeCroppedScreenshot({ driver, width, height, top, left }) {
   return new Promise((resolve, reject) => {
-    driver.takeScreenshot().then(screenshot => {
+    driver.takeScreenshot().then((screenshot) => {
       const cropConfig = { width, height, top, left };
       // TODO we might need to guard against overcropping or
       // undercropping here, depending on png-crop's behavior.
@@ -271,7 +271,7 @@ function renderExamples({ driver, examples, viewportName }) {
                       height: resultingHeight,
                       viewportName,
                     });
-                  })
+                  }),
               );
               processNextExample();
             });

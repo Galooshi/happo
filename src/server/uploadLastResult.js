@@ -79,7 +79,7 @@ module.exports = function uploadLastResult(triggeredByUrl) {
       diffImages.forEach((image) => {
         uploadPromises.push(
           uploadImage({ uploader, image, variant: 'previous' }),
-          uploadImage({ uploader, image, variant: 'current' })
+          uploadImage({ uploader, image, variant: 'current' }),
         );
       });
       newImages.forEach((image) => {

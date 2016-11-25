@@ -38,7 +38,7 @@ commander.command('review-demo').action(() => {
 
 commander.command('upload [<triggeredByUrl>]').action((triggeredByUrl) => {
   uploadLastResult(triggeredByUrl)
-    .then((url) => console.log(url))
+    .then(url => console.log(url))
     .catch(logAndExit);
 });
 

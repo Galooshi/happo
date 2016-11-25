@@ -40,7 +40,7 @@ self.addEventListener('message', ({
           currentImageData[row][index + 1],
           currentImageData[row][index + 2],
           currentImageData[row][index + 3],
-        ]
+        ],
       );
 
       if (diff > 0) {

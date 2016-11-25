@@ -17,7 +17,7 @@ export default function NewImages({ images }) {
         </InlineLink>
       </h2>
 
-      {images.map((image) => (
+      {images.map(image => (
         <NewImage
           key={image.current}
           image={image}

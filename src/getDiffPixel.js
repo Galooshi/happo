@@ -21,7 +21,7 @@ export default function getDiffPixel(previousPixel, currentPixel) {
       diff,
       pixel: compose(
         [currentPixel[0], currentPixel[1], currentPixel[2], 40],
-        WHITE
+        WHITE,
       ),
     };
   }
@@ -30,7 +30,7 @@ export default function getDiffPixel(previousPixel, currentPixel) {
     diff,
     pixel: compose(
       [179, 54, 130, 255 * Math.max(0.2, diff)],
-      WHITE
+      WHITE,
     ),
   };
 }

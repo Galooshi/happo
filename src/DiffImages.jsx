@@ -17,7 +17,7 @@ export default function DiffImages({ images }) {
         </InlineLink>
       </h2>
 
-      {images.map((image) => (
+      {images.map(image => (
         <DiffController
           key={image.current}
           image={image}

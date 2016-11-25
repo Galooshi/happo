@@ -83,7 +83,7 @@ describe('runVisualDiffs', function () { // eslint-disable-line func-names
         config.sourceFiles = ['src/server/__tests__/fixtures/multipleExamples.js'];
       });
 
-      it('does the right things', (done) =>
+      it('does the right things', done =>
         runVisualDiffs().then((firstResult) => {
           expect(firstResult.newImages.length).toEqual(3);
           expect(firstResult.diffImages.length).toEqual(0);

@@ -14,7 +14,7 @@ describe('alignArrays', () => {
       'ACBDEA',
       'ABCDA',
       'A+CBDEA',
-      'ABC+D+A'
+      'ABC+D+A',
     );
   });
 
@@ -24,7 +24,7 @@ describe('alignArrays', () => {
         'ZACBDEA',
         'XABCDA',
         'ZA+CBDEA',
-        'XABC+D+A'
+        'XABC+D+A',
       );
     });
 
@@ -33,7 +33,7 @@ describe('alignArrays', () => {
         'AA',
         'XAA',
         '+AA',
-        'XAA'
+        'XAA',
       );
     });
   });
@@ -44,7 +44,7 @@ describe('alignArrays', () => {
         'CCCBBBCCC',
         'AAAA',
         'CCCBBBCCC',
-        '+++++AAAA'
+        '+++++AAAA',
       );
     });
 
@@ -53,7 +53,7 @@ describe('alignArrays', () => {
         'AAAA',
         'CCCBBBCCC',
         '+++++AAAA',
-        'CCCBBBCCC'
+        'CCCBBBCCC',
       );
     });
   });

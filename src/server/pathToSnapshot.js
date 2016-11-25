@@ -7,6 +7,6 @@ module.exports = function pathToSnapshot({ description, viewportName, fileName }
     config.snapshotsFolder,
     new Buffer(description).toString('base64'),
     `@${viewportName}`,
-    fileName
+    fileName,
   );
 };
