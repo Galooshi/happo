@@ -170,6 +170,15 @@ window.happo = {
             width,
           } = getFullRect(rootNodes);
 
+          const overlay = document.createElement('div');
+          overlay.style.position = 'absolute';
+          overlay.style.left = `${left}px`;
+          overlay.style.top = `${top}px`;
+          overlay.style.width = `${width}px`;
+          overlay.style.height = `${height}px`;
+          overlay.setAttribute('id', 'happo-screenshot-overlay');
+          document.body.appendChild(overlay);
+
           resolve({
             description: currentExample.description,
             height,
