@@ -17,7 +17,7 @@ information.
 ## Defining examples
 
 You define your examples in a JavaScript file and include it in the
-`source_files` [configuration](#configuration) option.
+`sourceFiles` [configuration](#configuration) option.
 
 Here's an example of a button component being added to a Happo suite:
 
