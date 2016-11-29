@@ -14,3 +14,9 @@
   display: inline-block;
 
 }
+
+.big-background {
+  height: 200px;
+  width: 600px;
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/9/92/Big_Sur_Coast_California.JPG')
+}

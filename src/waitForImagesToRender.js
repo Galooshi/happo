@@ -14,6 +14,16 @@ export default function waitForImagesToRender() {
       .filter(Boolean)
       .map(url => waitForImageToLoad(url));
 
+    document.body.querySelectorAll('*').forEach((element) => {
+      const computedStyle = window.getComputedStyle(element);
+      const bgImage = computedStyle.getPropertyValue('background-image');
+      if (bgImage && bgImage.startsWith('url(')) {
+        const url = computedStyle.getPropertyValue('background-image')
+          .replace(/^url\(['"]/, '').replace(/['"]?\)$/, '');
+        promises.push(waitForImageToLoad(url));
+      }
+    });
+
     if (promises.length === 0) {
       // There are no images to wait for, so we can just resolve right away.
       resolve();

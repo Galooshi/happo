@@ -22,3 +22,9 @@ happo.define('bar', function() {
   elem.innerHTML = 'go bars!<br>bars';
   document.body.appendChild(elem);
 });
+
+happo.define('big image background', function() {
+  var elem = document.createElement('div');
+  elem.setAttribute('class', 'big-background');
+  document.body.appendChild(elem);
+});
