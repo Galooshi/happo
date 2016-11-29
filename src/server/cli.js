@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const commander = require('commander');
 
 const S3Uploader = require('./S3Uploader');
+const checkBrowserVersion = require('./checkBrowserVersion');
 const constructUrl = require('./constructUrl');
 const initializeWebdriver = require('./initializeWebdriver');
 const runVisualDiffs = require('./runVisualDiffs');
@@ -21,8 +22,10 @@ commander.command('debug').action(() => {
 });
 
 commander.command('run').action(() => {
-  server.start().then(() => {
-    initializeWebdriver().then((driver) => {
+  server.start()
+    .then(checkBrowserVersion)
+    .then(initializeWebdriver)
+    .then((driver) => {
       runVisualDiffs(driver)
         .then(() => {
           driver.close();
@@ -33,7 +36,6 @@ commander.command('run').action(() => {
           logAndExit(error);
         });
     });
-  });
 });
 
 commander.command('review').action(() => {

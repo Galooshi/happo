@@ -8,6 +8,9 @@ const initializeWebdriver = require('../initializeWebdriver');
 const runVisualDiffs = require('../runVisualDiffs');
 const server = require('../server');
 
+jest.mock('../checkBrowserVersion');
+const checkBrowserVersion = require('../checkBrowserVersion');
+
 describe('runVisualDiffs', () => {
   let driver;
   let startedServer;
@@ -30,6 +33,7 @@ describe('runVisualDiffs', () => {
 
   beforeEach(() => {
     originalConfig = { ...config };
+    checkBrowserVersion.mockImplementation(() => Promise.resolve());
   });
 
   afterEach(() => {
