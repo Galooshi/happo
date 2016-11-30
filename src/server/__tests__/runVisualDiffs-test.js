@@ -30,7 +30,9 @@ describe('runVisualDiffs', () => {
   });
 
   it('fails with an informative message when there are no examples', () => (
-    runVisualDiffs().catch((error) => {
+    runVisualDiffs().then(() => {
+      throw new Error('I expected an error');
+    }, (error) => {
       expect(error.message).toEqual('No happo examples found');
     })
   ));
@@ -38,7 +40,9 @@ describe('runVisualDiffs', () => {
   it('fails with an informative message when startup has a scripting error', () => {
     config.sourceFiles = ['src/server/__tests__/fixtures/scriptingError.js'];
 
-    return runVisualDiffs().catch((error) => {
+    return runVisualDiffs().then(() => {
+      throw new Error('I expected an error');
+    }, (error) => {
       expect(error.message).toMatch(/JavaScript errors found/);
     });
   });
@@ -46,7 +50,9 @@ describe('runVisualDiffs', () => {
   it('fails with an informative message when an example has an error', () => {
     config.sourceFiles = ['src/server/__tests__/fixtures/errorInExample.js'];
 
-    return runVisualDiffs().catch((error) => {
+    return runVisualDiffs().then(() => {
+      throw new Error('I expected an error');
+    }, (error) => {
       expect(error.message).toMatch(/Error rendering "error"/);
     });
   });
