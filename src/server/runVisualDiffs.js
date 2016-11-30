@@ -38,8 +38,11 @@ function checkForInitializationErrors(driver) {
 }
 
 function loadTestPage(driver) {
-  return new Promise((resolve) => {
-    driver.get(constructUrl('/snapshot')).then(() => resolve(driver));
+  return new Promise((resolve, reject) => {
+    driver
+      .get(constructUrl('/snapshot'))
+      .then(() => resolve(driver))
+      .catch(reject);
   });
 }
 
