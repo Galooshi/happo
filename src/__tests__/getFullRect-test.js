@@ -136,6 +136,45 @@ it('prevents negative top and left values', () => {
   });
 });
 
+it('works without any nodes', () => {
+  expect(getFullRect(document.body.children)).toEqual({
+    left: 0,
+    top: 0,
+    right: 1,
+    bottom: 1,
+    width: 1,
+    height: 1,
+  });
+});
+
+it('prevents 0x0', () => {
+  const div = createElement({ width: 0, height: 0 });
+  document.body.appendChild(div);
+
+  expect(getFullRect(document.body.children)).toEqual({
+    left: 0,
+    top: 0,
+    right: 1,
+    bottom: 1,
+    width: 1,
+    height: 1,
+  });
+});
+
+it('prevents 0x0 in the middle of the screen', () => {
+  const div = createElement({ width: 0, height: 0, left: 10, top: 10 });
+  document.body.appendChild(div);
+
+  expect(getFullRect(document.body.children)).toEqual({
+    left: 10,
+    top: 10,
+    right: 11,
+    bottom: 11,
+    width: 1,
+    height: 1,
+  });
+});
+
 it('prevents negative bottom and right values', () => {
   const div = createElement({ width: 40, height: 40, top: -50, left: -50 });
   document.body.appendChild(div);
@@ -143,10 +182,10 @@ it('prevents negative bottom and right values', () => {
   expect(getFullRect(document.body.children)).toEqual({
     left: 0,
     top: 0,
-    right: 0,
-    bottom: 0,
-    width: 0,
-    height: 0,
+    right: 1,
+    bottom: 1,
+    width: 1,
+    height: 1,
   });
 });
 

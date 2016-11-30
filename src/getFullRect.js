@@ -85,10 +85,10 @@ export default function getFullRect(rootNodes) {
   // Since getBoundingClientRect() and margins can contain subpixel values, we
   // want to round everything before calculating the width and height to
   // ensure that we will take a screenshot of the entire component.
-  box.bottom = Math.ceil(box.bottom);
-  box.left = Math.floor(box.left);
-  box.right = Math.ceil(box.right);
-  box.top = Math.floor(box.top);
+  box.top = Math.floor(box.top || 0);
+  box.left = Math.floor(box.left || 0);
+  box.bottom = Math.ceil(box.bottom || box.top);
+  box.right = Math.ceil(box.right || box.left);
 
   // As the last step, we calculate the width and height for the box. This is
   // to avoid having to do them for every node. Before we do that however, we
@@ -99,6 +99,10 @@ export default function getFullRect(rootNodes) {
   // on the bottom and right.
   box.left = Math.max(box.left, 0);
   box.top = Math.max(box.top, 0);
+
+  // Prevent 0x0.
+  box.right = Math.max(box.right, box.left + 1);
+  box.bottom = Math.max(box.bottom, box.top + 1);
 
   box.width = box.right - box.left;
   box.height = box.bottom - box.top;

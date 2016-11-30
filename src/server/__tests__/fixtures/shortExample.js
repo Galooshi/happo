@@ -1,4 +1,4 @@
-happo.define('foo', () => {
+happo.define('short', () => {
   const elem = document.createElement('div');
   elem.style.height = '20px';
   elem.style.width = '10px';

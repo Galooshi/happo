@@ -1,3 +1,3 @@
-happo.define('foo', () => {
+happo.define('error', () => {
   window.foo.bar();
 });

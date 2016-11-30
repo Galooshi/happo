@@ -51,14 +51,6 @@ describe('runVisualDiffs', () => {
     });
   });
 
-  it('fails with an informative message when an example renders nothing', () => {
-    config.sourceFiles = ['src/server/__tests__/fixtures/renderNothingExample.js'];
-
-    return runVisualDiffs().catch((error) => {
-      expect(error.message).toMatch(/Nothing rendered by "foo"/);
-    });
-  });
-
   describe('successful runs', () => {
     let originalTimeout;
 
@@ -71,6 +63,16 @@ describe('runVisualDiffs', () => {
     afterEach(() => {
       rimraf.sync(config.snapshotsFolder);
       jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+    });
+
+    it('does not fail when an example renders nothing', (done) => {
+      config.sourceFiles = ['src/server/__tests__/fixtures/renderNothingExample.js'];
+
+      return runVisualDiffs().then((result) => {
+        expect(result.newImages.length).toEqual(1);
+        expect(result.newImages[0].height).toEqual(1);
+        done();
+      });
     });
 
     it('does the right things with multiple examples', (done) => {

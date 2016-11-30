@@ -1,3 +1,3 @@
-happo.define('foo', () => {
+happo.define('nothing', () => {
   // intentionally left empty
 });

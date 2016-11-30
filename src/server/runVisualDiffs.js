@@ -254,11 +254,6 @@ function renderExamples({ driver, examples, viewportName }) {
             return;
           }
 
-          if (!width || !height) {
-            reject(new Error(`Nothing rendered by "${description}"`));
-            return;
-          }
-
           takeCroppedScreenshot({ driver, description, width, height, top, left })
             .then((snapshotImage) => {
               compareAndSavePromises.push(
