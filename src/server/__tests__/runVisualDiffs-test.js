@@ -47,7 +47,7 @@ describe('runVisualDiffs', () => {
     config.sourceFiles = ['src/server/__tests__/fixtures/errorInExample.js'];
 
     return runVisualDiffs().catch((error) => {
-      expect(error.message).toMatch(/Error rendering "foo"/);
+      expect(error.message).toMatch(/Error rendering "error"/);
     });
   });
 
