@@ -25,7 +25,10 @@ commander.command('run').action(() => {
           driver.close();
           process.exit(0);
         })
-        .catch(logAndExit);
+        .catch((error) => {
+          driver.close();
+          logAndExit(error);
+        });
     });
   });
 });
