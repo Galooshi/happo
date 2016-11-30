@@ -3,26 +3,12 @@ const path = require('path');
 
 const mkdirp = require('mkdirp');
 const pngCrop = require('png-crop');
-const seleniumWebdriver = require('selenium-webdriver');
 
 const config = require('./config');
 const constructUrl = require('./constructUrl');
 const pathToSnapshot = require('./pathToSnapshot');
 
 const PNG = require('pngjs').PNG;
-
-function initializeDriver() {
-  return new Promise((resolve, reject) => {
-    try {
-      const driver =
-        new seleniumWebdriver.Builder().forBrowser(config.driver).build();
-      driver.manage().timeouts().setScriptTimeout(3000);
-      resolve(driver);
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
 
 function checkForInitializationErrors(driver) {
   return new Promise((resolve, reject) => {
@@ -337,22 +323,10 @@ function saveResultToFile(runResult) {
   });
 }
 
-module.exports = function runVisualDiffs() {
-  return new Promise((resolve, reject) => {
-    initializeDriver().then(driver => (
-      loadTestPage(driver)
-        .then(checkForInitializationErrors)
-        .then(getExamplesByViewport)
-        .then(performDiffs)
-        .then(saveResultToFile)
-        .then((result) => {
-          driver.close();
-          resolve(result);
-        })
-        .catch((error) => {
-          driver.close();
-          reject(error);
-        })
-    )).catch(reject);
-  });
+module.exports = function runVisualDiffs(driver) {
+  return loadTestPage(driver)
+    .then(checkForInitializationErrors)
+    .then(getExamplesByViewport)
+    .then(performDiffs)
+    .then(saveResultToFile);
 };

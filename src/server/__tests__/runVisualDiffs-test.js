@@ -4,10 +4,12 @@ const path = require('path');
 const rimraf = require('rimraf');
 
 const config = require('../config');
+const initializeWebdriver = require('../initializeWebdriver');
 const runVisualDiffs = require('../runVisualDiffs');
 const server = require('../server');
 
 describe('runVisualDiffs', () => {
+  let driver;
   let startedServer;
   let originalConfig;
 
@@ -15,10 +17,16 @@ describe('runVisualDiffs', () => {
     config.publicDirectories = ['src/server/__tests__/fixtures'];
     return server.start().then(({ expressServer }) => {
       startedServer = expressServer;
+      return initializeWebdriver().then((webdriver) => {
+        driver = webdriver;
+      });
     });
   });
 
-  afterAll(() => { startedServer.close(); });
+  afterAll(() => {
+    startedServer.close();
+    driver.close();
+  });
 
   beforeEach(() => {
     originalConfig = { ...config };
@@ -30,7 +38,7 @@ describe('runVisualDiffs', () => {
   });
 
   it('fails with an informative message when there are no examples', () => (
-    runVisualDiffs().then(() => {
+    runVisualDiffs(driver).then(() => {
       throw new Error('I expected an error');
     }, (error) => {
       expect(error.message).toEqual('No happo examples found');
@@ -40,7 +48,7 @@ describe('runVisualDiffs', () => {
   it('fails with an informative message when startup has a scripting error', () => {
     config.sourceFiles = ['src/server/__tests__/fixtures/scriptingError.js'];
 
-    return runVisualDiffs().then(() => {
+    return runVisualDiffs(driver).then(() => {
       throw new Error('I expected an error');
     }, (error) => {
       expect(error.message).toMatch(/JavaScript errors found/);
@@ -50,7 +58,7 @@ describe('runVisualDiffs', () => {
   it('fails with an informative message when an example has an error', () => {
     config.sourceFiles = ['src/server/__tests__/fixtures/errorInExample.js'];
 
-    return runVisualDiffs().then(() => {
+    return runVisualDiffs(driver).then(() => {
       throw new Error('I expected an error');
     }, (error) => {
       expect(error.message).toMatch(/Error rendering "error"/);
@@ -68,60 +76,56 @@ describe('runVisualDiffs', () => {
 
     afterEach(() => {
       jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
-
       return new Promise((resolve) => {
         rimraf(config.snapshotsFolder, resolve);
       });
     });
 
-    it('does not fail when an example renders nothing', (done) => {
+    it('does not fail when an example renders nothing', () => {
       config.sourceFiles = ['src/server/__tests__/fixtures/renderNothingExample.js'];
 
-      return runVisualDiffs().then((result) => {
+      return runVisualDiffs(driver).then((result) => {
         expect(result.newImages.length).toEqual(1);
         expect(result.newImages[0].height).toEqual(1);
-        done();
       });
     });
 
-    it('does the right things with multiple examples', (done) => {
+    it('does the right things with multiple examples', () => {
       config.sourceFiles = ['src/server/__tests__/fixtures/multipleExamples.js'];
 
-      return runVisualDiffs().then((firstResult) => {
+      return runVisualDiffs(driver).then((firstResult) => {
         expect(firstResult.newImages.length).toEqual(3);
         expect(firstResult.diffImages.length).toEqual(0);
-      }).then(runVisualDiffs).then((secondResult) => {
+      }).then(() => runVisualDiffs(driver)).then((secondResult) => {
         expect(secondResult.newImages.length).toEqual(0);
         expect(secondResult.diffImages.length).toEqual(1);
-        done();
       });
     });
 
     it('serves files via publicDirectories', () => {
       config.sourceFiles = ['src/server/__tests__/fixtures/tinyImage.js'];
 
-      return runVisualDiffs().then((result) => {
+      return runVisualDiffs(driver).then((result) => {
         expect(result.newImages.length).toEqual(1);
       });
     });
 
-    it('saves the max height of the snapshots when an example shrinks', (done) => {
+    it('saves the max height of the snapshots when an example shrinks', () => {
       // Use a tall example to begin with
       config.sourceFiles = ['src/server/__tests__/fixtures/tallExample.js'];
 
-      return runVisualDiffs().then((firstResult) => {
+      return runVisualDiffs(driver).then((firstResult) => {
         expect(firstResult.newImages.length).toEqual(1);
         expect(firstResult.diffImages.length).toEqual(0);
         expect(firstResult.newImages[0].height).toEqual(100);
 
         // Switch to a short example
         config.sourceFiles = ['src/server/__tests__/fixtures/shortExample.js'];
-      }).then(runVisualDiffs).then((secondResult) => {
+      }).then(() => runVisualDiffs(driver)).then((secondResult) => {
         expect(secondResult.diffImages.length).toEqual(1);
 
         // We expect height to be the max of the before and after
         expect(secondResult.diffImages[0].height).toEqual(100);
-        done();
       });
     });
   });

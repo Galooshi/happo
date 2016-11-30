@@ -1,6 +1,7 @@
 const commander = require('commander');
 
 const constructUrl = require('./constructUrl');
+const initializeWebdriver = require('./initializeWebdriver');
 const runVisualDiffs = require('./runVisualDiffs');
 const server = require('./server');
 const uploadLastResult = require('./uploadLastResult');
@@ -18,9 +19,14 @@ commander.command('debug').action(() => {
 
 commander.command('run').action(() => {
   server.start().then(() => {
-    runVisualDiffs()
-      .then(() => process.exit(0))
-      .catch(logAndExit);
+    initializeWebdriver().then((driver) => {
+      runVisualDiffs(driver)
+        .then(() => {
+          driver.close();
+          process.exit(0);
+        })
+        .catch(logAndExit);
+    });
   });
 });
 
