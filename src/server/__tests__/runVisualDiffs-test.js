@@ -61,8 +61,11 @@ describe('runVisualDiffs', () => {
     });
 
     afterEach(() => {
-      rimraf.sync(config.snapshotsFolder);
       jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+
+      return new Promise((resolve) => {
+        rimraf(config.snapshotsFolder, resolve);
+      });
     });
 
     it('does not fail when an example renders nothing', (done) => {
