@@ -336,7 +336,7 @@ function saveResultToFile(runResult) {
 
 module.exports = function runVisualDiffs() {
   return new Promise((resolve, reject) => {
-    initializeDriver().then((driver) => {
+    initializeDriver().then(driver => (
       loadTestPage(driver)
         .then(checkForInitializationErrors)
         .then(getExamplesByViewport)
@@ -349,7 +349,7 @@ module.exports = function runVisualDiffs() {
         .catch((error) => {
           driver.close();
           reject(error);
-        });
-    }).catch(reject);
+        })
+    )).catch(reject);
   });
 };
