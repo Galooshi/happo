@@ -52,30 +52,31 @@ function resolveViewports(example) {
 }
 
 function getExamplesByViewport(driver) {
-  return new Promise((resolve, reject) => {
-    driver.executeScript('return window.happo.getAllExamples();').then((examples) => {
-      if (!examples.length) {
-        reject(new Error('No happo examples found'));
-      } else {
-        const examplesByViewport = {};
-        examples.forEach((example) => {
-          resolveViewports(example).forEach((viewport) => {
-            examplesByViewport[viewport.name] =
-              examplesByViewport[viewport.name] || {};
+  return new Promise((resolve, reject) => (
+    driver.executeScript('return window.happo.getAllExamples();')
+      .then((examples) => {
+        if (!examples.length) {
+          reject(new Error('No happo examples found'));
+        } else {
+          const examplesByViewport = {};
+          examples.forEach((example) => {
+            resolveViewports(example).forEach((viewport) => {
+              examplesByViewport[viewport.name] =
+                examplesByViewport[viewport.name] || {};
 
-            examplesByViewport[viewport.name].viewport =
-              examplesByViewport[viewport.name].viewport || viewport;
+              examplesByViewport[viewport.name].viewport =
+                examplesByViewport[viewport.name].viewport || viewport;
 
-            examplesByViewport[viewport.name].examples =
-              examplesByViewport[viewport.name].examples || [];
+              examplesByViewport[viewport.name].examples =
+                examplesByViewport[viewport.name].examples || [];
 
-            examplesByViewport[viewport.name].examples.push(example);
+              examplesByViewport[viewport.name].examples.push(example);
+            });
           });
-        });
-        resolve({ driver, examplesByViewport });
-      }
-    });
-  });
+          resolve({ driver, examplesByViewport });
+        }
+      })
+  ));
 }
 
 function getImageFromStream(stream) {
@@ -251,25 +252,31 @@ function renderExamples({ driver, examples, viewportName }) {
         .then(({ error, width, height, top, left }) => {
           if (error) {
             reject(new Error(`Error rendering "${description}":\n  ${error}`));
-            return;
+            return undefined;
           }
 
-          takeCroppedScreenshot({ driver, description, width, height, top, left })
-            .then((snapshotImage) => {
-              compareAndSavePromises.push(
-                compareAndSave({ description, viewportName, snapshotImage })
-                  .then(({ result, height: resultingHeight }) => {
-                    process.stdout.write(result === 'diff' ? '×' : '·');
-                    runResult.add({
-                      result,
-                      description,
-                      height: resultingHeight,
-                      viewportName,
-                    });
-                  }),
-              );
-              processNextExample();
-            });
+          return takeCroppedScreenshot({
+            driver,
+            description,
+            width,
+            height,
+            top,
+            left,
+          }).then((snapshotImage) => {
+            compareAndSavePromises.push(
+              compareAndSave({ description, viewportName, snapshotImage })
+                .then(({ result, height: resultingHeight }) => {
+                  process.stdout.write(result === 'diff' ? '×' : '·');
+                  runResult.add({
+                    result,
+                    description,
+                    height: resultingHeight,
+                    viewportName,
+                  });
+                }),
+            );
+            processNextExample();
+          });
         });
     }
 
@@ -296,7 +303,7 @@ function performDiffs({ driver, examplesByViewport }) {
 
       driver.manage().window().setSize(width, height).then(() => {
         process.stdout.write(`${viewportName} (${width}x${height}) `);
-        renderExamples({ driver, examples, viewportName })
+        return renderExamples({ driver, examples, viewportName })
           .then(({ runResult }) => {
             combinedResult.merge(runResult);
           })

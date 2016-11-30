@@ -87,7 +87,7 @@ module.exports = function uploadLastResult(triggeredByUrl) {
           uploadImage({ uploader, image, variant: 'current' }));
       });
 
-      Promise.all(uploadPromises).then(() => {
+      return Promise.all(uploadPromises).then(() => {
         uploadHTMLFile({ uploader, diffImages, newImages, triggeredByUrl })
           .then(resolve)
           .catch(reject);
