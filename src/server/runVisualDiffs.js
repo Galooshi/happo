@@ -4,7 +4,7 @@ const path = require('path');
 const mkdirp = require('mkdirp');
 const pngCrop = require('png-crop');
 
-const config = require('./config');
+const { config } = require('./config');
 const constructUrl = require('./constructUrl');
 const pathToSnapshot = require('./pathToSnapshot');
 

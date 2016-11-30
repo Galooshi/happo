@@ -1,6 +1,6 @@
 const seleniumWebdriver = require('selenium-webdriver');
 
-const config = require('./config');
+const { config } = require('./config');
 
 module.exports = function initializeWebdriver() {
   return new Promise((resolve, reject) => {

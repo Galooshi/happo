@@ -1,6 +1,6 @@
 const path = require('path');
 
-const config = require('./config');
+const { config } = require('./config');
 
 module.exports = function pathToSnapshot({ description, viewportName, fileName }) {
   return path.join(

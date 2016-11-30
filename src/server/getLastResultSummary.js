@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const config = require('./config');
+const { config } = require('./config');
 
 module.exports = function getLastResultSummary() {
   const resultSummaryJSON = fs.readFileSync(

@@ -3,7 +3,7 @@ const path = require('path');
 
 const rimraf = require('rimraf');
 
-const config = require('../config');
+const { config } = require('../config');
 const initializeWebdriver = require('../initializeWebdriver');
 const runVisualDiffs = require('../runVisualDiffs');
 const server = require('../server');

@@ -2,8 +2,6 @@
 const fs = require('fs');
 const path = require('path');
 
-const { HAPPO_CONFIG_FILE } = process.env;
-
 const defaultConfig = {
   bind: 'localhost',
   driver: 'firefox',
@@ -29,12 +27,27 @@ const defaultConfig = {
   },
 };
 
-function readUserConfig() {
-  const file = path.join(process.cwd(), HAPPO_CONFIG_FILE || '.happo.js');
+const DEFAULT_CONFIG_FILE_LOCATION = '.happo.js';
+
+function readUserConfig(configFilePath) {
+  const file = path.resolve(process.cwd(), configFilePath);
   if (!fs.existsSync(file)) {
+    if (configFilePath !== DEFAULT_CONFIG_FILE_LOCATION) {
+      throw new Error(`Config file does not exist: ${configFilePath}`);
+    }
     return {};
   }
   return require(file); // eslint-disable-line global-require
 }
 
-module.exports = Object.assign(defaultConfig, readUserConfig());
+function initialize(configFilePath) {
+  return Object.assign(defaultConfig,
+    readUserConfig(configFilePath || DEFAULT_CONFIG_FILE_LOCATION));
+}
+
+const config = initialize(process.env.HAPPO_CONFIG_FILE);
+
+module.exports = {
+  config,
+  initialize,
+};
