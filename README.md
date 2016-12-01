@@ -253,6 +253,12 @@ the argument to `happo upload_diffs`. E.g.
 happo upload "https://test.example"
 ```
 
+### `happo upload-test`
+
+Uploads a small text file to an AWS S3 Account. This is useful if you want to
+test your S3 configuration. Uses the same configuration as [`happo
+upload`](#happo-upload-triggeredbyurl) does.
+
 ## Running in a CI environment
 
 The main purpose for Happo is for it to be run in a CI (Continuous
