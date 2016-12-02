@@ -7,5 +7,6 @@ module.exports = {
 
   rules: {
     'jsx-quotes': ['error', 'prefer-single'],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
   },
 };
