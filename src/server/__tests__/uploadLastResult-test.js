@@ -6,14 +6,14 @@ const getLastResultSummary = require('../getLastResultSummary');
 jest.mock('../S3Uploader');
 const S3Uploader = require('../S3Uploader');
 
-it('rejects the promise when there are no diffs or new images', () => {
+it('resolves without a URL when there are no diffs or new images', () => {
   getLastResultSummary.mockImplementation(() => ({
     diffImages: [],
     newImages: [],
   }));
 
-  uploadLastResult().catch((message) => {
-    expect(message).toEqual('No results to upload');
+  uploadLastResult().then((url) => {
+    expect(url).toBe(undefined);
   });
 });
 

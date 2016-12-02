@@ -69,7 +69,7 @@ module.exports = function uploadLastResult(triggeredByUrl) {
     const { diffImages, newImages } = getLastResultSummary();
 
     if (!diffImages.length && !newImages.length) {
-      reject('No results to upload');
+      resolve();
       return;
     }
 
