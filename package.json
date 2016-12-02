@@ -11,7 +11,7 @@
     "jest": "jest",
     "jest:watch": "jest --watch",
     "lint": "eslint --ext .js,.jsx .",
-    "prepublish": "npm run --silent build",
+    "prepublish": "npm run --silent lint && npm run --silent build",
     "pretest": "npm run --silent lint",
     "test": "npm run --silent jest",
     "webpack": "webpack --optimize-minimize",
