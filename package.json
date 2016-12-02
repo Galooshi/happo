@@ -40,6 +40,9 @@
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.7.1",
     "jest": "^17.0.3",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "react-waypoint": "^4.1.0",
     "rimraf": "^2.5.4",
     "webpack": "^1.13.2"
   },
@@ -52,9 +55,6 @@
     "mkdirp": "^0.5.1",
     "png-crop": "0.0.1",
     "pngjs": "^2.3.1",
-    "react": "^15.4.1",
-    "react-dom": "^15.4.1",
-    "react-waypoint": "^4.1.0",
     "selenium-webdriver": "^2.53.3",
     "worker-loader": "^0.7.1"
   },
