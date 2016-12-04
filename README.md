@@ -1,4 +1,4 @@
-# Happo [![Build Status](https://travis-ci.org/Galooshi/happo.svg)](https://travis-ci.org/Galooshi/happo) [![Gem Version](https://badge.fury.io/rb/happo.svg)](https://badge.fury.io/rb/happo)
+# Happo [![Build Status](https://travis-ci.org/Galooshi/happo.svg)](https://travis-ci.org/Galooshi/happo)
 
 Happo (formerly Diffux-CI) is a command-line tool to visually diff JavaScript
 components. [Read more][end-of-visual-regressions].
