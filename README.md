@@ -135,7 +135,10 @@ happo.getRootNodes = function() {
 
 ## Installation
 
-Happo comes bundled as an npm module. To install it, run `npm install -g happo`.
+Happo comes bundled as an npm module. To install it, run
+```
+npm install -g happo
+````
 
 ## Configuration
 
