@@ -49,7 +49,7 @@ function uploadHTMLFile({ uploader, diffImages, newImages, triggeredByUrl }) {
       triggeredByUrl,
     },
     pageTitle: title,
-    ogImageUrl: diffImages[0].currentUrl,
+    ogImageUrl: (diffImages[0] || newImages[0]).currentUrl,
   }));
 
   return uploader.upload({
