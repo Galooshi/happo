@@ -16,6 +16,7 @@ module.exports = class S3Uploader {
       accessKeyId: S3_ACCESS_KEY_ID,
       secretAccessKey: S3_SECRET_ACCESS_KEY,
       region: 'us-west-2',
+      logger: process.stdout,
     });
     this.s3 = new AWS.S3();
     this.directory = [
