@@ -12,17 +12,22 @@ const {
 
 module.exports = class S3Uploader {
   constructor() {
+    process.stdout.write(`Initializing S3 configuration for ${S3_ACCESS_KEY_ID}\n`);
     AWS.config = new AWS.Config({
       accessKeyId: S3_ACCESS_KEY_ID,
       secretAccessKey: S3_SECRET_ACCESS_KEY,
       region: 'us-west-2',
       logger: process.stdout,
     });
+
     this.s3 = new AWS.S3();
+
     this.directory = [
       S3_BUCKET_PATH,
       crypto.randomBytes(16).toString('hex'),
     ].filter(Boolean).join('/');
+
+    process.stdout.write(`Setting S3 directory to ${this.directory}\n`);
   }
 
   /**
@@ -32,12 +37,17 @@ module.exports = class S3Uploader {
    */
   prepare() {
     return new Promise((resolve, reject) => {
+      process.stdout.write(`Checking for bucket ${Bucket}\n`);
+
       this.s3.headBucket({ Bucket }, (headErr) => {
         if (headErr) {
+          process.stdout.write(`Bucket not found, creating new bucket ${Bucket}`);
           this.s3.createBucket({ Bucket }, (createErr) => {
             if (createErr) {
+              process.stderr.write(`Bucket creation failed ${Bucket}`);
               reject(createErr);
             } else {
+              process.stdout.write(`Bucket creation successful ${Bucket}`);
               resolve();
             }
           });
@@ -71,8 +81,10 @@ module.exports = class S3Uploader {
         Key: `${this.directory}/${fileName}`,
       };
 
+      process.stdout.write('Attempting upload');
       this.s3.upload(uploadParams, (err, { Location }) => {
         if (err) {
+          process.stderr.write('Upload failed');
           reject(err);
         } else {
           resolve(Location);
