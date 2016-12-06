@@ -41,13 +41,13 @@ module.exports = class S3Uploader {
 
       this.s3.headBucket({ Bucket }, (headErr) => {
         if (headErr) {
-          process.stdout.write(`Bucket not found, creating new bucket ${Bucket}`);
+          process.stdout.write(`Bucket not found, creating new bucket ${Bucket}\n`);
           this.s3.createBucket({ Bucket }, (createErr) => {
             if (createErr) {
-              process.stderr.write(`Bucket creation failed ${Bucket}`);
+              process.stderr.write(`Bucket creation failed ${Bucket}\n`);
               reject(createErr);
             } else {
-              process.stdout.write(`Bucket creation successful ${Bucket}`);
+              process.stdout.write(`Bucket creation successful ${Bucket}\n`);
               resolve();
             }
           });
@@ -81,10 +81,10 @@ module.exports = class S3Uploader {
         Key: `${this.directory}/${fileName}`,
       };
 
-      process.stdout.write('Attempting upload');
+      process.stdout.write('Attempting upload\n');
       this.s3.upload(uploadParams, (err, { Location }) => {
         if (err) {
-          process.stderr.write('Upload failed');
+          process.stderr.write('Upload failed\n');
           reject(err);
         } else {
           resolve(Location);
