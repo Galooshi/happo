@@ -66,7 +66,7 @@ function uploadHTMLFile({ uploader, diffImages, newImages, triggeredByUrl }) {
  * @return {Promise} that resolves with a URL to the html document uploaded to
  *   s3.
  */
-module.exports = function uploadLastResult(triggeredByUrl, { debug }) {
+module.exports = function uploadLastResult(triggeredByUrl, { debug } = {}) {
   return new Promise((resolve, reject) => {
     const { diffImages, newImages } = getLastResultSummary();
 

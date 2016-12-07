@@ -52,7 +52,7 @@ describe('when there are files to upload', () => {
       ],
     }));
 
-    uploadLastResult().then(() => {
+    return uploadLastResult().then(() => {
       // 2 times each diff, 1 times the new image, 1 times index.html
       expect(uploadMock.mock.calls.length).toEqual(6);
     });
@@ -70,7 +70,7 @@ describe('when there are files to upload', () => {
       ],
     }));
 
-    uploadLastResult().then(() => {
+    return uploadLastResult().then(() => {
       // 1 times the new image, 1 times index.html
       expect(uploadMock.mock.calls.length).toEqual(2);
     });
