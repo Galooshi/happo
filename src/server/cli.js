@@ -48,18 +48,19 @@ commander.command('review-demo').action(() => {
   });
 });
 
-commander.command('upload [<triggeredByUrl>]').action((triggeredByUrl) => {
-  uploadLastResult(triggeredByUrl)
-    .then((url) => {
-      if (url) {
-        console.log(url);
-      }
-    })
-    .catch(logAndExit);
-});
+commander.command('upload [<triggeredByUrl>]').option('--debug').action(
+  (triggeredByUrl, { debug }) => {
+    uploadLastResult(triggeredByUrl, { debug })
+      .then((url) => {
+        if (url) {
+          console.log(url);
+        }
+      })
+      .catch(logAndExit);
+  });
 
-commander.command('upload-test').action(() => {
-  const uploader = new S3Uploader();
+commander.command('upload-test').option('--debug').action(({ debug }) => {
+  const uploader = new S3Uploader({ debug });
   uploader.prepare()
     .then(() => {
       uploader.upload({

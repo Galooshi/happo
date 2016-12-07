@@ -270,11 +270,19 @@ the argument to `happo upload_diffs`. E.g.
 happo upload "https://test.example"
 ```
 
+To debug uploading, you can use the `--debug` flag. Additional information will
+then be printed to `stderr`.
+
 ### `happo upload-test`
 
 Uploads a small text file to an AWS S3 Account. This is useful if you want to
 test your S3 configuration. Uses the same configuration as [`happo
-upload`](#happo-upload-triggeredbyurl) does.
+upload`](#happo-upload-triggeredbyurl) does. As with `happo upload`, you can
+apply a `--debug` flag here for a more verbose output.
+
+```sh
+happo upload-test --debug
+```
 
 ## Running in a CI environment
 

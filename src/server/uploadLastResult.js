@@ -61,10 +61,12 @@ function uploadHTMLFile({ uploader, diffImages, newImages, triggeredByUrl }) {
 }
 
 /**
+ * @param {String} triggeredByUrl
+ * @param {Boolean} options.debug
  * @return {Promise} that resolves with a URL to the html document uploaded to
  *   s3.
  */
-module.exports = function uploadLastResult(triggeredByUrl) {
+module.exports = function uploadLastResult(triggeredByUrl, { debug }) {
   return new Promise((resolve, reject) => {
     const { diffImages, newImages } = getLastResultSummary();
 
@@ -73,7 +75,7 @@ module.exports = function uploadLastResult(triggeredByUrl) {
       return;
     }
 
-    const uploader = new S3Uploader();
+    const uploader = new S3Uploader({ debug });
     uploader.prepare().then(() => {
       const uploadPromises = [];
       diffImages.forEach((image) => {
