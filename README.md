@@ -5,6 +5,15 @@ components. [Read more][end-of-visual-regressions].
 
 [end-of-visual-regressions]: https://medium.com/brigade-engineering/the-end-of-visual-regressions-b6b5c3d810f
 
+## Installation
+
+Happo comes bundled as an npm module. To install it, run
+```
+npm install -g happo
+````
+
+## Introduction
+
 You begin by defining a set of examples that Happo will grab snapshots for. If a
 previous snapshot exists for a component, Happo will diff the new snapshot with
 the previous. If a diff is found, a visual representation of the changes will be
@@ -132,13 +141,6 @@ happo.getRootNodes = function() {
   return document.querySelectorAll('[data-reactroot]');
 };
 ```
-
-## Installation
-
-Happo comes bundled as an npm module. To install it, run
-```
-npm install -g happo
-````
 
 ## Configuration
 
