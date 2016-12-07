@@ -8,6 +8,7 @@ const {
   S3_SECRET_ACCESS_KEY,
   S3_BUCKET_NAME: Bucket,
   S3_BUCKET_PATH,
+  S3_REGION,
 } = process.env;
 
 module.exports = class S3Uploader {
@@ -16,7 +17,7 @@ module.exports = class S3Uploader {
     AWS.config = new AWS.Config({
       accessKeyId: S3_ACCESS_KEY_ID,
       secretAccessKey: S3_SECRET_ACCESS_KEY,
-      region: 'us-west-2',
+      region: S3_REGION || 'us-west-2',
       logger: process.stdout,
     });
 

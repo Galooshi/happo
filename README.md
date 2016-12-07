@@ -230,8 +230,14 @@ to access those diff images. Requires that `S3_ACCESS_KEY_ID`,
 variables. `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY` will be the
 credentials Happo uses to access the bucket named `S3_BUCKET_NAME`.
 
-`S3_BUCKET_PATH` can also be set as an environment variable to specify a
-directory path for where you want diff images uploaded within the S3 bucket.
+`S3_BUCKET_PATH` can be set as an environment variable to specify a directory
+path for where you want diff images uploaded within the S3 bucket.
+
+Furthermore, `S3_REGION` controls what
+[region](http://docs.aws.amazon.com/general/latest/gr/rande.html) is used to
+find or create the bucket.
+
+``
 
 You can set these in the session by using `export`:
 
