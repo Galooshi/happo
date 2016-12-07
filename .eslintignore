@@ -1,3 +1,4 @@
 example-project/
-lib/happo/public/*.bundle.*
-lib/happo/public/*.worker.*
+public/*.bundle.*
+public/*.worker.*
+lib/

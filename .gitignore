@@ -1,4 +1,5 @@
-Gemfile.lock
+example-project/snapshots
+lib
 node_modules
-lib/happo/public/*.bundle.*
-lib/happo/public/*.worker.*
+public/*.bundle.*
+public/*.worker.*

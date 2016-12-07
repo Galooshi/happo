@@ -1,13 +1,13 @@
 module.exports = {
   entry: {
-    HappoApp: './js/src/HappoApp.jsx',
-    HappoRunner: './js/src/HappoRunner.js',
+    HappoApp: './src/HappoApp.jsx',
+    HappoRunner: './src/HappoRunner.js',
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],
   },
   output: {
-    path: './lib/happo/public',
+    path: './public',
     filename: '[name].bundle.js',
   },
   module: {
@@ -15,6 +15,10 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
+        loader: 'babel-loader',
+      },
+      {
+        test: /cssesc\.js$/,
         loader: 'babel-loader',
       },
     ],

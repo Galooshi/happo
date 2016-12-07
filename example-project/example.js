@@ -7,7 +7,7 @@ happo.define('foo', function() {
 
 happo.define('hallooo', function() {
   var elem = document.createElement('span');
-  elem.innerHTML = 'Hioyi!<br>Hello';
+  elem.innerHTML = 'Hioyi!<br>' + Math.random() + 'Hello';
   document.body.appendChild(elem);
 }, { viewports: ['mobile', 'desktop'] });
 

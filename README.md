@@ -1,9 +1,24 @@
-# Happo [![Build Status](https://travis-ci.org/Galooshi/happo.svg)](https://travis-ci.org/Galooshi/happo) [![Gem Version](https://badge.fury.io/rb/happo.svg)](https://badge.fury.io/rb/happo)
+# Happo [![Build Status](https://travis-ci.org/Galooshi/happo.svg)](https://travis-ci.org/Galooshi/happo)
 
 Happo (formerly Diffux-CI) is a command-line tool to visually diff JavaScript
 components. [Read more][end-of-visual-regressions].
 
 [end-of-visual-regressions]: https://medium.com/brigade-engineering/the-end-of-visual-regressions-b6b5c3d810f
+
+## Installation
+
+Happo comes bundled as an npm module. To install it, run
+
+```
+npm install -g happo
+````
+
+You'll also need Firefox installed on the machine. Happo uses
+[selenium-webdriver](https://github.com/SeleniumHQ/selenium) under the hood,
+and will support whatever version Selenium supports. Happo currently works best
+with _Firefox 47.0.1_.
+
+## Introduction
 
 You begin by defining a set of examples that Happo will grab snapshots for. If a
 previous snapshot exists for a component, Happo will diff the new snapshot with
@@ -17,7 +32,7 @@ information.
 ## Defining examples
 
 You define your examples in a JavaScript file and include it in the
-`source_files` [configuration](#configuration) option.
+`sourceFiles` [configuration](#configuration) option.
 
 Here's an example of a button component being added to a Happo suite:
 
@@ -133,60 +148,78 @@ happo.getRootNodes = function() {
 };
 ```
 
-## Installation
-
-Happo comes bundled as a gem. To install it, run `gem install happo`.
-
 ## Configuration
 
 Happo loads configuration in one of the following ways:
 
-- From a YAML file specified via a `HAPPO_CONFIG_FILE` environment variable
-- From `.happo.yaml` in the current working directory
+- From a javascript file specified via a `HAPPO_CONFIG_FILE` environment variable
+- From `.happo.js` in the current working directory
 
-```yaml
-# Control the interface on which the local server listens (defaults to 'localhost')
-bind: localhost
+### Example configuration
 
-# Control the port used for the local server
-port: 4567
+```js
+module.exports = {
+  // Control the interface on which the local server listens (defaults to 'localhost')
+  // (default: 'localhost')
+  bind: '0.0.0.0',
 
-# List javascript source files
-source_files:
-  - application.js
-  - happo-examples.js
+  // Control the port used for the local server
+  // (default: 4567)
+  port: 7777,
 
-# List css source files
-stylesheets:
-  - application.css
+  // List javascript source files. These can be files or raw URLs.
+  // (default: [])
+  sourceFiles: [
+    'https://unpkg.com/jquery@3.1.1',
+    'application.js',
+    'happo-examples.js',
+  ],
 
-# List directories where public files are accessible (useful for e.g. font files)
-public_directories:
-  - public
+  // List css source files. These can also be files or raw URLs.
+  // (default: [])
+  stylesheets: [
+    'application.css',
+  ],
 
-# Specify the folder where snapshots are saved
-snapshots_folder: ./snapshots
+  // List directories where public files are accessible (useful for e.g. font files)
+  // (default: [])
+  publicDirectories: [
+    'public',
+  ],
 
-# Configure the window size when taking snapshots
-viewports:
-  large:
-    width: 1024
-    height: 768
-  small:
-    width: 320
-    height: 444
+  // Specify the folder where snapshots are saved
+  // (default: 'snapshots')
+  snapshotsFolder: 'happo-snapshots',
+
+  // Configure the window size when taking snapshots
+  // (defaults shown below)
+  viewports: {
+    large: {
+      width: 1024,
+      height: 768,
+    },
+    medium: {
+      width: 640,
+      height: 888,
+    },
+    small: {
+      width: 320,
+      height: 444,
+    },
+  },
+};
 ```
 
 ## Command line tools
 
-### `happo`
+### `happo run`
 
 This command will fire up a Firefox instance and take snapshots of all your
 happo examples.
 
 ### `happo review`
 
-Once `happo` has finished, run `happo review` from the command line. This
+Once `happo run` has finished, run `happo review` from the command line. This
 will open a page that compares the latest run's snapshots against the
 previous snapshots.
 
@@ -197,7 +230,7 @@ This will open a browser window pointing at `/debug`, listing all your
 examples. If you click one of them, the example will be rendered in isolation
 and you can do use your developer tools to debug.
 
-### `happo upload_diffs [<triggered-by-url>]`
+### `happo upload [<triggeredByUrl>]`
 
 Uploads all current diff images to an Amazon S3 account and reports back URLs
 to access those diff images. Requires that `S3_ACCESS_KEY_ID`,
@@ -205,8 +238,14 @@ to access those diff images. Requires that `S3_ACCESS_KEY_ID`,
 variables. `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY` will be the
 credentials Happo uses to access the bucket named `S3_BUCKET_NAME`.
 
-`S3_BUCKET_PATH` can also be set as an environment variable to specify a
-directory path for where you want diff images uploaded within the S3 bucket.
+`S3_BUCKET_PATH` can be set as an environment variable to specify a directory
+path for where you want diff images uploaded within the S3 bucket.
+
+Furthermore, `S3_REGION` controls what
+[region](http://docs.aws.amazon.com/general/latest/gr/rande.html) is used to
+find or create the bucket.
+
+``
 
 You can set these in the session by using `export`:
 
@@ -214,28 +253,36 @@ You can set these in the session by using `export`:
 export S3_ACCESS_KEY_ID=<YOUR_ACCESS_KEY_VALUE>
 export S3_SECRET_ACCESS_KEY=<YOUR_SECRET_ACCESS_KEY_VALUE>
 export S3_BUCKET_NAME=<YOUR_BUCKET_NAME>
-export S3_BUCKET_PATH=<YOUR_BUCKET_PATH>
 
-happo upload_diffs
+happo upload
 ```
 
 or by adding them in the beginning of the command:
 
 ```sh
-S3_ACCESS_KEY_ID=<...> S3_SECRET_ACCESS_KEY=<...> ... happo upload_diffs
+S3_ACCESS_KEY_ID=<...> S3_SECRET_ACCESS_KEY=<...> ... happo upload
 ```
 
 If you want the diff page to link back to a commit/PR, you can pass in a URL as
 the argument to `happo upload_diffs`. E.g.
 
 ```sh
-happo upload_diffs "https://test.example"
+happo upload "https://test.example"
 ```
 
-### `happo clean`
+To debug uploading, you can use the `--debug` flag. Additional information will
+then be printed to `stderr`.
 
-Recursively removes everything in the snapshots folder (configured through
-`snapshots_folder`).
+### `happo upload-test`
+
+Uploads a small text file to an AWS S3 Account. This is useful if you want to
+test your S3 configuration. Uses the same configuration as [`happo
+upload`](#happo-upload-triggeredbyurl) does. As with `happo upload`, you can
+apply a `--debug` flag here for a more verbose output.
+
+```sh
+happo upload-test --debug
+```
 
 ## Running in a CI environment
 
@@ -250,11 +297,11 @@ any visual change.
 
 1. Check out the commit previous to the one to test (e.g. `git checkout HEAD^`)
 2. (optionally) precompile your JavaScript and/or CSS
-3. Run `happo` to generate previous snapshots
+3. Run `happo run` to generate previous snapshots
 4. Check out the commit to test
 5. (optionally) precompile your JavaScript and/or CSS
-6. Run `happo` to diff against previously created snapshots
-7. Run `happo upload_diffs` to upload diffs to a publicly accessible location
+6. Run `happo run` to diff against previously created snapshots
+7. Run `happo upload` to upload diffs to a publicly accessible location
 
 There's an example script implementing these steps located in
 [happo_example.sh](happo_example.sh). Use that as a starting point
@@ -265,11 +312,9 @@ for your own CI script.
 Since Happo uses Firefox to generate its snapshots, you need a display.  If
 you are on a build server, you usually don't have a screen. To run `happo`
 then, you can use a virtual display server such as
-[xvfb](http://www.x.org/archive/X11R7.6/doc/man/man1/Xvfb.1.xhtml).  The
+[xvfb](http://www.x.org/archive/X11R7.6/doc/man/man1/Xvfb.1.xhtml). The
 [example CI script](happo_example.sh) as well as the internal Travis test
-run for Happo uses `xvfb-run` in order to obtain a virtual display. There are
-other tools that can help you with this as well, for example the [headless
-gem](https://github.com/leonid-shevtsov/headless).
+run for Happo uses `xvfb-run` in order to obtain a virtual display.
 
 ## In the wild
 

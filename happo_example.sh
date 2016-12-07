@@ -13,7 +13,7 @@ run-happo() {
 
   # Run happo for the current commit. We use `xvfb-run` so that we can run
   # happo (which uses Firefox) in a headless display environment.
-  xvfb-run happo
+  xvfb-run happo run
 }
 
 # Check out the previous version and generate snapshots
@@ -23,7 +23,7 @@ run-happo HEAD^
 run-happo -
 
 # Finally, upload any diffs to s3
-url_to_diffs=`happo upload_diffs`
+url_to_diffs=`happo upload`
 if [ -n "$url_to_diffs" ]; then
   # We have a URL to the diff(s) found for the commit. We have a couple of
   # options here:

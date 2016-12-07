@@ -1,26 +1,15 @@
-language: ruby
-
+language: node_js
 sudo: false
 
-cache: bundler
+node_js:
+  - "4"
+  - "5"
+  - "6"
+  - "7"
 
-rvm:
-  - 2.0.0
-  - 2.1
-  - 2.2
-
-env:
-  - TRAVIS_NODE_VERSION="6"
+addons:
+  firefox: "47.0.1"
 
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
-
-install:
-  - 'rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION'
-  - 'npm install && npm run build'
-  - bundle install
-
-script:
-  - npm test
-  - bundle exec ruby headless_rspec.rb
