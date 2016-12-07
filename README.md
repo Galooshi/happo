@@ -8,9 +8,15 @@ components. [Read more][end-of-visual-regressions].
 ## Installation
 
 Happo comes bundled as an npm module. To install it, run
+
 ```
 npm install -g happo
 ````
+
+You'll also need Firefox installed on the machine. Happo uses
+[selenium-webdriver](https://github.com/SeleniumHQ/selenium) under the hood,
+and will support whatever version Selenium supports. Happo currently works best
+with _Firefox 47.0.1_.
 
 ## Introduction
 
