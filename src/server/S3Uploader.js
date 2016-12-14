@@ -52,6 +52,12 @@ module.exports = class S3Uploader {
 
       this.s3.headBucket({ Bucket }, (headErr) => {
         if (headErr) {
+          if (headErr.statusCode === 403) {
+            this.debugLog(`Access denied, assuming bucket exists ${Bucket}`);
+            resolve();
+            return;
+          }
+
           this.debugLog(`Bucket not found, creating new bucket ${Bucket}`);
           this.s3.createBucket({ Bucket }, (createErr) => {
             if (createErr) {
