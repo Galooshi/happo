@@ -19,7 +19,7 @@ module.exports = class S3Uploader {
     AWS.config = new AWS.Config({
       accessKeyId: S3_ACCESS_KEY_ID,
       secretAccessKey: S3_SECRET_ACCESS_KEY,
-      region: S3_REGION || 'us-west-2',
+      region: S3_REGION || 'us-east-1',
       logger: debug && process.stderr,
     });
 
