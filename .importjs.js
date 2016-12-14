@@ -20,7 +20,5 @@ module.exports = {
       'DiffController',
     ]
   },
-  importDevDependencies: function({ pathToCurrentFile }) {
-    return /__tests__/.test(pathToCurrentFile);
-  }
+  importDevDependencies: true,
 };
