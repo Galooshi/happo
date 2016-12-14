@@ -14,23 +14,21 @@ const {
 module.exports = class S3Uploader {
   constructor({ debug } = {}) {
     this.debug = debug;
-    this.debugLog(`Initializing S3 configuration for ${S3_ACCESS_KEY_ID}\n`);
+    this.debugLog(`Initializing S3 configuration for ${S3_ACCESS_KEY_ID}`);
 
-    AWS.config = new AWS.Config({
+    this.s3 = new AWS.S3({
       accessKeyId: S3_ACCESS_KEY_ID,
       secretAccessKey: S3_SECRET_ACCESS_KEY,
-      region: S3_REGION || 'us-west-2',
+      region: S3_REGION || 'us-east-1',
       logger: debug && process.stderr,
     });
-
-    this.s3 = new AWS.S3();
 
     this.directory = [
       S3_BUCKET_PATH,
       crypto.randomBytes(16).toString('hex'),
     ].filter(Boolean).join('/');
 
-    this.debugLog(`Setting S3 directory to ${this.directory}\n`);
+    this.debugLog(`Setting S3 directory to ${this.directory}`);
   }
 
   debugLog(message) {
@@ -40,7 +38,7 @@ module.exports = class S3Uploader {
 
     // We print to stderr to avoid messing with the end result (the link to the
     // uploaded HTML file)
-    process.stderr.write(message);
+    process.stderr.write(`${message}\n`);
   }
 
   /**
@@ -50,17 +48,23 @@ module.exports = class S3Uploader {
    */
   prepare() {
     return new Promise((resolve, reject) => {
-      this.debugLog(`Checking for bucket ${Bucket}\n`);
+      this.debugLog(`Checking for bucket ${Bucket}`);
 
       this.s3.headBucket({ Bucket }, (headErr) => {
         if (headErr) {
-          this.debugLog(`Bucket not found, creating new bucket ${Bucket}\n`);
+          if (headErr.statusCode === 403) {
+            this.debugLog(`Access denied, assuming bucket exists ${Bucket}`);
+            resolve();
+            return;
+          }
+
+          this.debugLog(`Bucket not found, creating new bucket ${Bucket}`);
           this.s3.createBucket({ Bucket }, (createErr) => {
             if (createErr) {
-              this.debugLog(`Bucket creation failed ${Bucket}\n`);
+              this.debugLog(`Bucket creation failed ${Bucket}`);
               reject(createErr);
             } else {
-              this.debugLog(`Bucket creation successful ${Bucket}\n`);
+              this.debugLog(`Bucket creation successful ${Bucket}`);
               resolve();
             }
           });
@@ -94,10 +98,10 @@ module.exports = class S3Uploader {
         Key: `${this.directory}/${fileName}`,
       };
 
-      this.debugLog('Attempting upload\n');
+      this.debugLog('Attempting upload');
       this.s3.upload(uploadParams, (err, { Location }) => {
         if (err) {
-          this.debugLog('Upload failed\n');
+          this.debugLog('Upload failed');
           reject(err);
         } else {
           resolve(Location);
