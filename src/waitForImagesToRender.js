@@ -1,8 +1,10 @@
+import findBackgroundImageUrls from './findBackgroundImageUrls';
+
 function waitForImageToLoad(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onerror = () => reject(new Error(`Failed to load image with url ${url}`));
-    img.onload = resolve;
+    img.addEventListener('load', resolve, { once: true });
     img.src = url;
   });
 }
@@ -12,7 +14,15 @@ export default function waitForImagesToRender() {
     const promises = Array.prototype.slice.call(document.querySelectorAll('img'))
       .map(img => img.src)
       .filter(Boolean)
-      .map(url => waitForImageToLoad(url));
+      .map(waitForImageToLoad);
+
+    Array.prototype.slice.call(document.body.querySelectorAll('*'))
+      .forEach((element) => {
+        const computedStyle = window.getComputedStyle(element);
+        const urls = findBackgroundImageUrls(
+          computedStyle.getPropertyValue('background-image'));
+        promises.push(...urls.map(waitForImageToLoad));
+      });
 
     if (promises.length === 0) {
       // There are no images to wait for, so we can just resolve right away.
