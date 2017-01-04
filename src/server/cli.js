@@ -4,6 +4,7 @@ const commander = require('commander');
 
 const S3Uploader = require('./S3Uploader');
 const checkBrowserVersion = require('./checkBrowserVersion');
+const closeDriver = require('./closeDriver');
 const constructUrl = require('./constructUrl');
 const initializeWebdriver = require('./initializeWebdriver');
 const runVisualDiffs = require('./runVisualDiffs');
@@ -28,12 +29,14 @@ commander.command('run').action(() => {
     .then((driver) => {
       runVisualDiffs(driver)
         .then(() => {
-          driver.close();
-          process.exit(0);
+          closeDriver(driver).then(() => {
+            process.exit(0);
+          });
         })
         .catch((error) => {
-          driver.close();
-          logAndExit(error);
+          closeDriver(driver).then(() => {
+            logAndExit(error);
+          });
         });
     });
 });

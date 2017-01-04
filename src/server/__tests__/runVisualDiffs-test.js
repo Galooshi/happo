@@ -1,9 +1,11 @@
 const os = require('os');
 const path = require('path');
 
+const jest = require('jest');
 const rimraf = require('rimraf');
 
 const { config } = require('../config');
+const closeDriver = require('../closeDriver');
 const initializeWebdriver = require('../initializeWebdriver');
 const runVisualDiffs = require('../runVisualDiffs');
 const server = require('../server');
@@ -28,7 +30,7 @@ describe('runVisualDiffs', () => {
 
   afterAll(() => {
     startedServer.close();
-    driver.close();
+    return closeDriver(driver);
   });
 
   beforeEach(() => {
