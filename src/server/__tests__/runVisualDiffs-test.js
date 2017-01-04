@@ -34,7 +34,7 @@ describe('runVisualDiffs', () => {
   });
 
   beforeEach(() => {
-    originalConfig = { ...config };
+    originalConfig = Object.assign({}, config);
     checkBrowserVersion.mockImplementation(() => Promise.resolve());
   });
 
