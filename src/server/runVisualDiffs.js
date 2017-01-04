@@ -4,7 +4,7 @@ const path = require('path');
 const { By } = require('selenium-webdriver');
 const mkdirp = require('mkdirp');
 
-const { SCREENSHOT_BOX_ID } = require('../Constants');
+const { SCREENSHOT_BOX_ID } = require('./Constants');
 const { config } = require('./config');
 const constructUrl = require('./constructUrl');
 const pathToSnapshot = require('./pathToSnapshot');

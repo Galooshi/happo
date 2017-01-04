@@ -1,4 +1,4 @@
-import { SCREENSHOT_BOX_ID } from './Constants';
+import { SCREENSHOT_BOX_ID } from './server/Constants';
 import getFullRect from './getFullRect';
 import waitForImagesToRender from './waitForImagesToRender';
 
