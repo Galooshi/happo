@@ -27,7 +27,7 @@ module.exports = function checkBrowserVersion() {
         } else if (parseFloat(match[1]) < MINIMUM_FIREFOX_VERSION) {
           reject(new Error(
             `Happo requires Firefox version ${MINIMUM_FIREFOX_VERSION} or later. ` +
-            `You are using ${match[1]}`));
+            `You are using ${stdout}`));
         } else {
           resolve();
         }

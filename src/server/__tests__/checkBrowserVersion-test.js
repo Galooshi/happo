@@ -29,7 +29,7 @@ describe('when firefox is too old', () => {
   it('rejects', () =>
     checkBrowserVersion().catch((error) => {
       expect(error.message).toEqual(
-        'Happo requires Firefox version 50 or later. You are using 47.0');
+        'Happo requires Firefox version 50 or later. You are using Mozilla Firefox 47.0');
     }));
 });
 
