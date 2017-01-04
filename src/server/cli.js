@@ -3,7 +3,6 @@ const crypto = require('crypto');
 const commander = require('commander');
 
 const { config } = require('./config');
-const S3Uploader = require('./S3Uploader');
 const checkBrowserVersion = require('./checkBrowserVersion');
 const closeDriver = require('./closeDriver');
 const constructUrl = require('./constructUrl');
