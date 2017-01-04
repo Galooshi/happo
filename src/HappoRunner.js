@@ -1,3 +1,4 @@
+import { SCREENSHOT_BOX_ID } from './Constants';
 import getFullRect from './getFullRect';
 import waitForImagesToRender from './waitForImagesToRender';
 
@@ -170,14 +171,16 @@ window.happo = {
             width,
           } = getFullRect(rootNodes);
 
-          const overlay = document.createElement('div');
-          overlay.style.position = 'absolute';
-          overlay.style.left = `${left}px`;
-          overlay.style.top = `${top}px`;
-          overlay.style.width = `${width}px`;
-          overlay.style.height = `${height}px`;
-          overlay.setAttribute('id', 'happo-screenshot-overlay');
-          document.body.appendChild(overlay);
+          // We place an (invisible) box on top of the visible rectangle. We
+          // then use it as the screenshot target.
+          const screenshotBox = document.createElement('div');
+          screenshotBox.style.position = 'absolute';
+          screenshotBox.style.left = `${left}px`;
+          screenshotBox.style.top = `${top}px`;
+          screenshotBox.style.width = `${width}px`;
+          screenshotBox.style.height = `${height}px`;
+          screenshotBox.setAttribute('id', SCREENSHOT_BOX_ID);
+          document.body.appendChild(screenshotBox);
 
           resolve({
             description: currentExample.description,

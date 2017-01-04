@@ -4,6 +4,7 @@ const path = require('path');
 const { By } = require('selenium-webdriver');
 const mkdirp = require('mkdirp');
 
+const { SCREENSHOT_BOX_ID } = require('../Constants');
 const { config } = require('./config');
 const constructUrl = require('./constructUrl');
 const pathToSnapshot = require('./pathToSnapshot');
@@ -88,7 +89,7 @@ function getImageFromStream(stream) {
 
 function takeCroppedScreenshot({ driver }) {
   return new Promise((resolve, reject) => {
-    driver.findElement(By.id('happo-screenshot-overlay')).then((overlay) => {
+    driver.findElement(By.id(SCREENSHOT_BOX_ID)).then((overlay) => {
       overlay.takeScreenshot().then((screenshot) => {
         // This is deprecated in Node 6. We will eventually need to change
         // this to:
