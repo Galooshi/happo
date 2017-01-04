@@ -2,6 +2,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const S3Uploader = require('./S3Uploader');
+
 const defaultConfig = {
   bind: 'localhost',
   driver: 'firefox',
@@ -9,6 +11,7 @@ const defaultConfig = {
   snapshotsFolder: 'snapshots',
   resultSummaryFilename: 'resultSummary.json',
   publicDirectories: [],
+  uploader: () => new S3Uploader(),
   sourceFiles: [],
   stylesheets: [],
   viewports: {

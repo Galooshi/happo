@@ -3,7 +3,7 @@ const path = require('path');
 
 const ejs = require('ejs');
 
-const S3Uploader = require('./S3Uploader');
+const { config } = require('./config');
 const getLastResultSummary = require('./getLastResultSummary');
 const pageTitle = require('./pageTitle');
 const pathToSnapshot = require('./pathToSnapshot');
@@ -62,11 +62,10 @@ function uploadHTMLFile({ uploader, diffImages, newImages, triggeredByUrl }) {
 
 /**
  * @param {String} triggeredByUrl
- * @param {Boolean} options.debug
  * @return {Promise} that resolves with a URL to the html document uploaded to
  *   s3.
  */
-module.exports = function uploadLastResult(triggeredByUrl, { debug } = {}) {
+module.exports = function uploadLastResult(triggeredByUrl) {
   return new Promise((resolve, reject) => {
     const { diffImages, newImages } = getLastResultSummary();
 
@@ -75,7 +74,7 @@ module.exports = function uploadLastResult(triggeredByUrl, { debug } = {}) {
       return;
     }
 
-    const uploader = new S3Uploader({ debug });
+    const uploader = config.uploader();
     uploader.prepare().then(() => {
       const uploadPromises = [];
       diffImages.forEach((image) => {

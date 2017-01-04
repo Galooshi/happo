@@ -317,18 +317,26 @@ the argument to `happo upload`. E.g.
 happo upload "https://test.example"
 ```
 
-To debug uploading, you can use the `--debug` flag which will print additional
-information to `stderr`.
+To debug uploading, override the `uploader` configuration option with a
+debug-enabled `S3Uploader` instance. This will print additional information to
+`stderr`.
+
+```js
+const S3Uploader = require('happo/lib/server/S3Uploader');
+
+module.exports = {
+  uploader: () => new S3Uploader({ debug: true });
+}
+```
 
 ### `happo upload-test`
 
 Uploads a small text file to an AWS S3 account. This is useful if you want to
 test your S3 configuration. Uses the same configuration as [`happo
-upload`](#happo-upload-triggeredbyurl) does. As with `happo upload`, you can
-apply a `--debug` flag here for a more verbose output.
+upload`](#happo-upload-triggeredbyurl) does.
 
 ```sh
-happo upload-test --debug
+happo upload-test
 ```
 
 ## Running in a CI environment

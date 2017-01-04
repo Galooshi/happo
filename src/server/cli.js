@@ -2,6 +2,7 @@ const crypto = require('crypto');
 
 const commander = require('commander');
 
+const { config } = require('./config');
 const S3Uploader = require('./S3Uploader');
 const checkBrowserVersion = require('./checkBrowserVersion');
 const closeDriver = require('./closeDriver');
@@ -53,9 +54,9 @@ commander.command('review-demo').action(() => {
   });
 });
 
-commander.command('upload [<triggeredByUrl>]').option('--debug').action(
-  (triggeredByUrl, { debug }) => {
-    uploadLastResult(triggeredByUrl, { debug })
+commander.command('upload [<triggeredByUrl>]').action(
+  (triggeredByUrl) => {
+    uploadLastResult(triggeredByUrl)
       .then((url) => {
         if (url) {
           console.log(url);
@@ -64,8 +65,8 @@ commander.command('upload [<triggeredByUrl>]').option('--debug').action(
       .catch(logAndExit);
   });
 
-commander.command('upload-test').option('--debug').action(({ debug }) => {
-  const uploader = new S3Uploader({ debug });
+commander.command('upload-test').action(() => {
+  const uploader = config.uploader();
   uploader.prepare()
     .then(() => {
       uploader.upload({
