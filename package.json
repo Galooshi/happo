@@ -60,7 +60,6 @@
     "worker-loader": "^0.7.1"
   },
   "jest": {
-    "testRegex": "/__tests__/.*-test.(js|jsx)$",
-    "transformIgnorePatterns": []
+    "testRegex": "/__tests__/.*-test.(js|jsx)$"
   }
 }
