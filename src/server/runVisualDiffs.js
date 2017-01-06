@@ -7,8 +7,10 @@ const pngCrop = require('png-crop');
 const { config } = require('./config');
 const constructUrl = require('./constructUrl');
 const pathToSnapshot = require('./pathToSnapshot');
-
-const PNG = require('pngjs').PNG;
+const getImageFromStream = require('./getImageFromStream');
+const RunResult = require('./RunResult');
+const saveResultToFile = require('./saveResultToFile');
+const areImagesEqual = require('./areImagesEqual');
 
 function checkForInitializationErrors(driver) {
   return new Promise((resolve, reject) => {
@@ -68,24 +70,6 @@ function getExamplesByViewport(driver) {
   ));
 }
 
-function getImageFromStream(stream) {
-  return new Promise((resolve, reject) => {
-    stream
-      .on('error', reject)
-      .pipe(new PNG())
-      .on('error', reject)
-      .on('parsed', function parsedCallback() {
-        // `this` is bound to an object with the following properties:
-        //    width (number)
-        //    height (number)
-        //    data (array of pixels, similar to what <canvas> uses)
-        //    pack (function)
-        //  }
-        resolve(this);
-      });
-  });
-}
-
 function takeCroppedScreenshot({ driver, width, height, top, left }) {
   return new Promise((resolve, reject) => {
     driver.takeScreenshot().then((screenshot) => {
@@ -108,22 +92,6 @@ function takeCroppedScreenshot({ driver, width, height, top, left }) {
       });
     });
   });
-}
-
-function areImagesEqual(a, b) {
-  if (a.height !== b.height) {
-    return false;
-  }
-  if (a.width !== b.width) {
-    return false;
-  }
-  const len = a.data.length;
-  for (let i = 0; i < len; i += 1) {
-    if (a.data[i] !== b.data[i]) {
-      return false;
-    }
-  }
-  return true;
 }
 
 function compareAndSave({ description, viewportName, snapshotImage }) {
@@ -185,34 +153,6 @@ function compareAndSave({ description, viewportName, snapshotImage }) {
         });
     }
   });
-}
-
-class RunResult {
-  constructor() {
-    this.newImages = [];
-    this.diffImages = [];
-  }
-
-  add({
-    result,
-    description,
-    height,
-    viewportName,
-  }) {
-    if (result === 'equal') {
-      return;
-    }
-    this[`${result}Images`].push({
-      description,
-      height,
-      viewportName,
-    });
-  }
-
-  merge(runResult) {
-    this.newImages.push(...runResult.newImages);
-    this.diffImages.push(...runResult.diffImages);
-  }
 }
 
 function renderExamples({ driver, examples, viewportName }) {
@@ -305,25 +245,6 @@ function performDiffs({ driver, examplesByViewport }) {
       });
     }
     processViewportIter();
-  });
-}
-
-function saveResultToFile(runResult) {
-  return new Promise((resolve, reject) => {
-    const resultToSerialize = Object.assign({
-      generatedAt: Date.now(),
-    }, runResult);
-
-    const pathToFile = path.join(
-      config.snapshotsFolder, config.resultSummaryFilename);
-
-    fs.writeFile(pathToFile, JSON.stringify(resultToSerialize), (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(resultToSerialize);
-      }
-    });
   });
 }
 

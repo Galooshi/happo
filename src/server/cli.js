@@ -6,6 +6,7 @@ const S3Uploader = require('./S3Uploader');
 const constructUrl = require('./constructUrl');
 const initializeWebdriver = require('./initializeWebdriver');
 const runVisualDiffs = require('./runVisualDiffs');
+const runIOSVisualDiffs = require('./runIOSVisualDiffs');
 const server = require('./server');
 const uploadLastResult = require('./uploadLastResult');
 
@@ -33,6 +34,18 @@ commander.command('run').action(() => {
           logAndExit(error);
         });
     });
+  });
+});
+
+commander.command('run-ios').action(() => {
+  server.start().then(() => {
+    runIOSVisualDiffs()
+      .then(() => {
+        process.exit(0);
+      })
+      .catch((error) => {
+        logAndExit(error);
+      });
   });
 });
 
