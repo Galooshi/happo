@@ -8,6 +8,8 @@
   "scripts": {
     "build": "npm run --silent clean && babel src/server/ -d lib/server/ --ignore __tests__ && npm run --silent webpack",
     "clean": "rimraf lib public/*.worker.js public/*.bundle.js*",
+    "babel:watch": "babel src/server -d lib/server --ignore __tests__ --watch",
+    "build:ios": "react",
     "jest": "jest",
     "jest:watch": "jest --watch",
     "lint": "eslint --ext .js,.jsx .",
@@ -47,6 +49,7 @@
     "webpack": "^1.13.2"
   },
   "dependencies": {
+    "appium": "^1.6.3",
     "aws-sdk": "^2.7.5",
     "commander": "^2.9.0",
     "cssesc": "^1.0.0",
@@ -55,7 +58,12 @@
     "mkdirp": "^0.5.1",
     "png-crop": "0.0.1",
     "pngjs": "^2.3.1",
+    "react": "15.4.1",
+    "react-native": "^0.39.2",
+    "react-native-view-shot": "^1.5.1",
     "selenium-webdriver": "^2.53.3",
+    "socket.io": "^1.7.2",
+    "wd": "^1.1.1",
     "worker-loader": "^0.7.1"
   },
   "jest": {
