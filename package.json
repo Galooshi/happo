@@ -1,6 +1,6 @@
 {
   "name": "happo",
-  "version": "4.0.0-beta.1",
+  "version": "4.0.0-beta.2",
   "description": "Command-line tool to visually diff JavaScript components",
   "bin": {
     "happo": "./bin/happo"
