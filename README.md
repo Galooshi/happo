@@ -37,8 +37,9 @@ npm install -g happo
 
 You'll also need Firefox installed on the machine. Happo uses
 [selenium-webdriver](https://github.com/SeleniumHQ/selenium) under the hood,
-and will support whatever version Selenium supports. Happo currently works best
-with _Firefox 47.0.1_.
+and will support the same version of Firefox as Selenium supports. Happo
+currently works best with _Firefox > 50_. It uses
+[geckodriver](https://github.com/mozilla/geckodriver) to control Firefox.
 
 ## Introduction
 
