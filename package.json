@@ -10,7 +10,6 @@
     "build": "npm run clean && npm run babel && npm run webpack",
     "clean": "rimraf lib public/*.worker.js public/*.bundle.js*",
     "jest": "jest",
-    "jest:watch": "jest --watch",
     "lint": "eslint --ext .js,.jsx .",
     "prepublish": "npm run lint && npm run build",
     "pretest": "npm run lint",
