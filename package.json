@@ -6,7 +6,8 @@
     "happo": "./bin/happo"
   },
   "scripts": {
-    "build": "npm run --silent clean && babel src/server/ -d lib/server/ --ignore __tests__ && npm run --silent webpack",
+    "babel": "babel src/server/ -d lib/server/ --ignore __tests__",
+    "build": "npm run --silent clean && npm run --silent babel && npm run --silent webpack",
     "clean": "rimraf lib public/*.worker.js public/*.bundle.js*",
     "jest": "jest",
     "jest:watch": "jest --watch",
