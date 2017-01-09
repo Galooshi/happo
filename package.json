@@ -54,7 +54,7 @@
     "ejs": "^2.5.2",
     "express": "^4.14.0",
     "mkdirp": "^0.5.1",
-    "pngjs": "^2.3.1",
+    "pngjs": "^3.0.0",
     "ps-node": "^0.1.4",
     "selenium-webdriver": "^3.0.1",
     "worker-loader": "^0.7.1"
