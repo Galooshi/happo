@@ -8,6 +8,9 @@ module.exports = {
     }
     return [];
   },
+  excludes: [
+    './lib/**',
+  ],
   declarationKeyword: function({ pathToCurrentFile }) {
     if (isNodeFile(pathToCurrentFile)) {
       return 'const';

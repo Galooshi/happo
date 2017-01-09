@@ -1,19 +1,19 @@
 {
   "name": "happo",
-  "version": "3.0.2",
+  "version": "4.0.0-beta.2",
   "description": "Command-line tool to visually diff JavaScript components",
   "bin": {
     "happo": "./bin/happo"
   },
   "scripts": {
-    "build": "npm run --silent clean && babel src/server/ -d lib/server/ --ignore __tests__ && npm run --silent webpack",
+    "babel": "babel src/server/ -d lib/server/ --ignore __tests__",
+    "build": "npm run clean && npm run babel && npm run webpack",
     "clean": "rimraf lib public/*.worker.js public/*.bundle.js*",
     "jest": "jest",
-    "jest:watch": "jest --watch",
     "lint": "eslint --ext .js,.jsx .",
-    "prepublish": "npm run --silent lint && npm run --silent build",
-    "pretest": "npm run --silent lint",
-    "test": "npm run --silent jest",
+    "prepublish": "npm run lint && npm run build",
+    "pretest": "npm run lint",
+    "test": "npm run jest",
     "webpack": "webpack --optimize-minimize",
     "webpack-dev": "webpack --devtool eval-source-map --progress --watch"
   },
@@ -30,8 +30,9 @@
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-core": "^6.14.0",
-    "babel-jest": "^17.0.2",
+    "babel-jest": "^18.0.0",
     "babel-loader": "^6.2.5",
+    "babel-plugin-transform-object-rest-spread": "^6.20.2",
     "babel-polyfill": "^6.13.0",
     "babel-preset-airbnb": "^2.1.1",
     "eslint": "^3.10.0",
@@ -39,7 +40,7 @@
     "eslint-plugin-import": "^2.1.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.7.1",
-    "jest": "^17.0.3",
+    "jest": "^18.1.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-waypoint": "^4.1.0",
@@ -53,9 +54,9 @@
     "ejs": "^2.5.2",
     "express": "^4.14.0",
     "mkdirp": "^0.5.1",
-    "png-crop": "0.0.1",
-    "pngjs": "^2.3.1",
-    "selenium-webdriver": "^2.53.3",
+    "pngjs": "^3.0.0",
+    "ps-node": "^0.1.4",
+    "selenium-webdriver": "^3.0.1",
     "worker-loader": "^0.7.1"
   },
   "jest": {

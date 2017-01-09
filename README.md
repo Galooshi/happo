@@ -37,8 +37,9 @@ npm install -g happo
 
 You'll also need Firefox installed on the machine. Happo uses
 [selenium-webdriver](https://github.com/SeleniumHQ/selenium) under the hood,
-and will support whatever version Selenium supports. Happo currently works best
-with _Firefox 47.0.1_.
+and will support the same version of Firefox as Selenium supports. Happo
+currently works best with _Firefox > 50_. It uses
+[geckodriver](https://github.com/mozilla/geckodriver) to control Firefox.
 
 ## Introduction
 
@@ -317,18 +318,26 @@ the argument to `happo upload`. E.g.
 happo upload "https://test.example"
 ```
 
-To debug uploading, you can use the `--debug` flag which will print additional
-information to `stderr`.
+To debug uploading, override the `uploader` configuration option with a
+debug-enabled `S3Uploader` instance. This will print additional information to
+`stderr`.
+
+```js
+const S3Uploader = require('happo/lib/server/S3Uploader');
+
+module.exports = {
+  uploader: () => new S3Uploader({ debug: true });
+}
+```
 
 ### `happo upload-test`
 
 Uploads a small text file to an AWS S3 account. This is useful if you want to
 test your S3 configuration. Uses the same configuration as [`happo
-upload`](#happo-upload-triggeredbyurl) does. As with `happo upload`, you can
-apply a `--debug` flag here for a more verbose output.
+upload`](#happo-upload-triggeredbyurl) does.
 
 ```sh
-happo upload-test --debug
+happo upload-test
 ```
 
 ## Running in a CI environment

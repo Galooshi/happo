@@ -2,7 +2,9 @@ const crypto = require('crypto');
 
 const commander = require('commander');
 
-const S3Uploader = require('./S3Uploader');
+const { config } = require('./config');
+const checkBrowserVersion = require('./checkBrowserVersion');
+const closeDriver = require('./closeDriver');
 const constructUrl = require('./constructUrl');
 const initializeWebdriver = require('./initializeWebdriver');
 const runVisualDiffs = require('./runVisualDiffs');
@@ -21,19 +23,22 @@ commander.command('debug').action(() => {
 });
 
 commander.command('run').action(() => {
-  server.start().then(() => {
-    initializeWebdriver().then((driver) => {
+  server.start()
+    .then(checkBrowserVersion)
+    .then(initializeWebdriver)
+    .then((driver) => {
       runVisualDiffs(driver)
         .then(() => {
-          driver.close();
-          process.exit(0);
+          closeDriver(driver).then(() => {
+            process.exit(0);
+          });
         })
         .catch((error) => {
-          driver.close();
-          logAndExit(error);
+          closeDriver(driver).then(() => {
+            logAndExit(error);
+          });
         });
     });
-  });
 });
 
 commander.command('review').action(() => {
@@ -48,9 +53,9 @@ commander.command('review-demo').action(() => {
   });
 });
 
-commander.command('upload [<triggeredByUrl>]').option('--debug').action(
-  (triggeredByUrl, { debug }) => {
-    uploadLastResult(triggeredByUrl, { debug })
+commander.command('upload [<triggeredByUrl>]').action(
+  (triggeredByUrl) => {
+    uploadLastResult(triggeredByUrl)
       .then((url) => {
         if (url) {
           console.log(url);
@@ -59,8 +64,8 @@ commander.command('upload [<triggeredByUrl>]').option('--debug').action(
       .catch(logAndExit);
   });
 
-commander.command('upload-test').option('--debug').action(({ debug }) => {
-  const uploader = new S3Uploader({ debug });
+commander.command('upload-test').action(() => {
+  const uploader = config.uploader();
   uploader.prepare()
     .then(() => {
       uploader.upload({

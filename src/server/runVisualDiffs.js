@@ -1,9 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 
+const { By } = require('selenium-webdriver');
 const mkdirp = require('mkdirp');
-const pngCrop = require('png-crop');
 
+const { SCREENSHOT_BOX_ID } = require('./Constants');
 const { config } = require('./config');
 const constructUrl = require('./constructUrl');
 const pathToSnapshot = require('./pathToSnapshot');
@@ -86,27 +87,22 @@ function getImageFromStream(stream) {
   });
 }
 
-function takeCroppedScreenshot({ driver, width, height, top, left }) {
+function takeCroppedScreenshot({ driver }) {
   return new Promise((resolve, reject) => {
-    driver.takeScreenshot().then((screenshot) => {
-      const cropConfig = { width, height, top, left };
-      // TODO we might need to guard against overcropping or
-      // undercropping here, depending on png-crop's behavior.
-
-      // This is deprecated in Node 6. We will eventually need to change
-      // this to:
-      //
-      //   Buffer.from(screenshot, 'base64')
-      const screenshotBuffer = new Buffer(screenshot, 'base64');
-
-      pngCrop.cropToStream(screenshotBuffer, cropConfig, (error, outputStream) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        getImageFromStream(outputStream).then(resolve);
-      });
-    });
+    driver.findElement(By.id(SCREENSHOT_BOX_ID)).then((overlay) => {
+      overlay.takeScreenshot().then((screenshot) => {
+        // This is deprecated in Node 6. We will eventually need to change
+        // this to:
+        //
+        //   Buffer.from(screenshot, 'base64')
+        const screenshotBuffer = new Buffer(screenshot, 'base64');
+        const png = new PNG();
+        png.on('parsed', function handlePngParsed() {
+          resolve(this);
+        });
+        png.parse(screenshotBuffer);
+      }).catch(reject);
+    }).catch(reject);
   });
 }
 

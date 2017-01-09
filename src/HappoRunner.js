@@ -1,3 +1,4 @@
+import { SCREENSHOT_BOX_ID } from './server/Constants';
 import getFullRect from './getFullRect';
 import waitForImagesToRender from './waitForImagesToRender';
 
@@ -169,6 +170,17 @@ window.happo = {
             top,
             width,
           } = getFullRect(rootNodes);
+
+          // We place an (invisible) box on top of the visible rectangle. We
+          // then use it as the screenshot target.
+          const screenshotBox = document.createElement('div');
+          screenshotBox.style.position = 'absolute';
+          screenshotBox.style.left = `${left}px`;
+          screenshotBox.style.top = `${top}px`;
+          screenshotBox.style.width = `${width}px`;
+          screenshotBox.style.height = `${height}px`;
+          screenshotBox.setAttribute('id', SCREENSHOT_BOX_ID);
+          document.body.appendChild(screenshotBox);
 
           resolve({
             description: currentExample.description,
