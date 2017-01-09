@@ -7,13 +7,13 @@
   },
   "scripts": {
     "babel": "babel src/server/ -d lib/server/ --ignore __tests__",
-    "build": "npm run clean && npm run babel && npm run webpack",
+    "build": "clean && babel && webpack",
     "clean": "rimraf lib public/*.worker.js public/*.bundle.js*",
     "jest": "jest",
     "lint": "eslint --ext .js,.jsx .",
-    "prepublish": "npm run lint && npm run build",
-    "pretest": "npm run lint",
-    "test": "npm run jest",
+    "prepublish": "lint && build",
+    "pretest": "lint",
+    "test": "jest",
     "webpack": "webpack --optimize-minimize",
     "webpack-dev": "webpack --devtool eval-source-map --progress --watch"
   },
