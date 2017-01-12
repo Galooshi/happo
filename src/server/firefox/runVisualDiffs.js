@@ -5,14 +5,14 @@ const { By } = require('selenium-webdriver');
 const { PNG } = require('pngjs');
 const mkdirp = require('mkdirp');
 
-const { SCREENSHOT_BOX_ID } = require('./Constants');
-const { config } = require('./config');
-const RunResult = require('./RunResult');
-const areImagesEqual = require('./areImagesEqual');
-const constructUrl = require('./constructUrl');
-const getImageFromStream = require('./getImageFromStream');
-const pathToSnapshot = require('./pathToSnapshot');
-const saveResultToFile = require('./saveResultToFile');
+const { SCREENSHOT_BOX_ID } = require('../Constants');
+const { config } = require('../config');
+const RunResult = require('../RunResult');
+const areImagesEqual = require('../areImagesEqual');
+const constructUrl = require('../constructUrl');
+const getImageFromStream = require('../getImageFromStream');
+const pathToSnapshot = require('../pathToSnapshot');
+const saveResultToFile = require('../saveResultToFile');
 
 function checkForInitializationErrors(driver) {
   return new Promise((resolve, reject) => {

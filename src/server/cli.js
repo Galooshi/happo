@@ -4,10 +4,10 @@ const commander = require('commander');
 
 const { config } = require('./config');
 const checkBrowserVersion = require('./firefox/checkBrowserVersion');
-const closeDriver = require('./closeDriver');
+const closeDriver = require('./firefox/closeDriver');
 const constructUrl = require('./constructUrl');
-const initializeWebdriver = require('./initializeWebdriver');
-const runVisualDiffs = require('./runVisualDiffs');
+const initializeWebdriver = require('./firefox/initializeWebdriver');
+const runVisualDiffs = require('./firefox/runVisualDiffs');
 const server = require('./server');
 const uploadLastResult = require('./uploadLastResult');
 
