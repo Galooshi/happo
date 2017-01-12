@@ -1,4 +1,4 @@
-require('./addGeckoDriverToPath');
+require('./firefox/addGeckoDriverToPath');
 
 const seleniumWebdriver = require('selenium-webdriver');
 
