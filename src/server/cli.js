@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const commander = require('commander');
 
 const { config } = require('./config');
-const checkBrowserVersion = require('./checkBrowserVersion');
+const checkBrowserVersion = require('./firefox/checkBrowserVersion');
 const closeDriver = require('./closeDriver');
 const constructUrl = require('./constructUrl');
 const initializeWebdriver = require('./initializeWebdriver');

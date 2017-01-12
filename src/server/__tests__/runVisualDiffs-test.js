@@ -10,8 +10,8 @@ const initializeWebdriver = require('../initializeWebdriver');
 const runVisualDiffs = require('../runVisualDiffs');
 const server = require('../server');
 
-jest.mock('../checkBrowserVersion');
-const checkBrowserVersion = require('../checkBrowserVersion');
+jest.mock('../firefox/checkBrowserVersion');
+const checkBrowserVersion = require('../firefox/checkBrowserVersion');
 
 describe('runVisualDiffs', () => {
   let driver;
