@@ -2,14 +2,17 @@ const fs = require('fs');
 const path = require('path');
 
 const { By } = require('selenium-webdriver');
+const { PNG } = require('pngjs');
 const mkdirp = require('mkdirp');
 
 const { SCREENSHOT_BOX_ID } = require('./Constants');
 const { config } = require('./config');
+const RunResult = require('./RunResult');
+const areImagesEqual = require('./areImagesEqual');
 const constructUrl = require('./constructUrl');
+const getImageFromStream = require('./getImageFromStream');
 const pathToSnapshot = require('./pathToSnapshot');
-
-const PNG = require('pngjs').PNG;
+const saveResultToFile = require('./saveResultToFile');
 
 function checkForInitializationErrors(driver) {
   return new Promise((resolve, reject) => {
@@ -69,24 +72,6 @@ function getExamplesByViewport(driver) {
   ));
 }
 
-function getImageFromStream(stream) {
-  return new Promise((resolve, reject) => {
-    stream
-      .on('error', reject)
-      .pipe(new PNG())
-      .on('error', reject)
-      .on('parsed', function parsedCallback() {
-        // `this` is bound to an object with the following properties:
-        //    width (number)
-        //    height (number)
-        //    data (array of pixels, similar to what <canvas> uses)
-        //    pack (function)
-        //  }
-        resolve(this);
-      });
-  });
-}
-
 function takeCroppedScreenshot({ driver }) {
   return new Promise((resolve, reject) => {
     driver.findElement(By.id(SCREENSHOT_BOX_ID)).then((overlay) => {
@@ -104,22 +89,6 @@ function takeCroppedScreenshot({ driver }) {
       }).catch(reject);
     }).catch(reject);
   });
-}
-
-function areImagesEqual(a, b) {
-  if (a.height !== b.height) {
-    return false;
-  }
-  if (a.width !== b.width) {
-    return false;
-  }
-  const len = a.data.length;
-  for (let i = 0; i < len; i += 1) {
-    if (a.data[i] !== b.data[i]) {
-      return false;
-    }
-  }
-  return true;
 }
 
 function compareAndSave({ description, viewportName, snapshotImage }) {
@@ -181,34 +150,6 @@ function compareAndSave({ description, viewportName, snapshotImage }) {
         });
     }
   });
-}
-
-class RunResult {
-  constructor() {
-    this.newImages = [];
-    this.diffImages = [];
-  }
-
-  add({
-    result,
-    description,
-    height,
-    viewportName,
-  }) {
-    if (result === 'equal') {
-      return;
-    }
-    this[`${result}Images`].push({
-      description,
-      height,
-      viewportName,
-    });
-  }
-
-  merge(runResult) {
-    this.newImages.push(...runResult.newImages);
-    this.diffImages.push(...runResult.diffImages);
-  }
 }
 
 function renderExamples({ driver, examples, viewportName }) {
@@ -301,25 +242,6 @@ function performDiffs({ driver, examplesByViewport }) {
       });
     }
     processViewportIter();
-  });
-}
-
-function saveResultToFile(runResult) {
-  return new Promise((resolve, reject) => {
-    const resultToSerialize = Object.assign({
-      generatedAt: Date.now(),
-    }, runResult);
-
-    const pathToFile = path.join(
-      config.snapshotsFolder, config.resultSummaryFilename);
-
-    fs.writeFile(pathToFile, JSON.stringify(resultToSerialize), (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(resultToSerialize);
-      }
-    });
   });
 }
 
