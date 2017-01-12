@@ -1,8 +1,8 @@
 jest.mock('child_process');
 const childProcess = require('child_process');
 
-jest.mock('../config');
-const config = require('../config');
+jest.mock('../../config');
+const { config } = require('../../config');
 
 const checkBrowserVersion = require('../checkBrowserVersion');
 

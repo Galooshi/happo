@@ -4,11 +4,11 @@ const path = require('path');
 const jest = require('jest');
 const rimraf = require('rimraf');
 
-const { config } = require('../config');
+const { config } = require('../../config');
 const closeDriver = require('../closeDriver');
 const initializeWebdriver = require('../initializeWebdriver');
 const runVisualDiffs = require('../runVisualDiffs');
-const server = require('../server');
+const server = require('../../server');
 
 jest.mock('../checkBrowserVersion');
 const checkBrowserVersion = require('../checkBrowserVersion');

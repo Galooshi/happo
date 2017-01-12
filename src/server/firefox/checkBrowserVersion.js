@@ -2,7 +2,7 @@ const childProcess = require('child_process');
 
 const firefox = require('selenium-webdriver/firefox');
 
-const config = require('./config');
+const { config } = require('../config');
 
 const MINIMUM_FIREFOX_VERSION = 50.0;
 const FIREFOX_VERSION_MATCHER = /Mozilla Firefox ([0-9.]+)/;
