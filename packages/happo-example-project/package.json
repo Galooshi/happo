@@ -1,0 +1,15 @@
+{
+  "name": "happo-example-project",
+  "version": "4.0.1",
+  "description": "Example project for the happo visual diffing library",
+  "repository": "https://github.com/Galooshi/happo/tree/master/packages/happo-example-project",
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+  },
+  "dependencies": {
+    "happo": "4.0.1",
+    "happo-target-firefox": "4.0.1",
+    "happo-uploader-s3": "4.0.1"
+  }
+}

@@ -1,5 +1,7 @@
-example-project/snapshots
+packages/happo-example-project/snapshots
 lib
 node_modules
-public/*.bundle.*
-public/*.worker.*
+packages/*/public/*.bundle.*
+packages/*/public/*.worker.*
+.DS_Store
+*-debug.log

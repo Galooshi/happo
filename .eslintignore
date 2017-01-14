@@ -1,4 +1,6 @@
-example-project/
-public/*.bundle.*
-public/*.worker.*
-lib/
+packages/happo-example-project/
+**/*.bundle.*
+**/*.worker.*
+packages/*/lib/
+packages/*/node_modules/
+node_modules

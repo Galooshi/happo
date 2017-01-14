@@ -1,0 +1,17 @@
+{
+  "name": "happo-uploader-s3",
+  "version": "4.0.1",
+  "description": "An Amazon S3 Uploader plugin for the happo visual diffing library",
+  "repository": "https://github.com/Galooshi/happo/tree/master/packages/happo-uploader-s3",
+  "author": "",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "../../node_modules/.bin/babel src -d lib --ignore __tests__",
+    "watch": "npm run build -- --watch",
+    "prepublish": "npm run build"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.7.5"
+  }
+}
