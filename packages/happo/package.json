@@ -6,6 +6,9 @@
   "author": "",
   "license": "MIT",
   "main": "lib/index.js",
+  "bin": {
+    "happo": "./bin/happo"
+  },
   "scripts": {
     "build": "../../node_modules/.bin/babel src -d lib --ignore __tests__",
     "watch": "npm run build -- --watch",
