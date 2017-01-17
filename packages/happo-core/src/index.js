@@ -1,6 +1,7 @@
 const areImagesEqual = require('./areImagesEqual');
 const getImageFromStream = require('./getImageFromStream');
 const getImageFromPath = require('./getImageFromPath');
+const getImageFromDataURI = require('./getImageFromDataURI');
 const getLastResultSummary = require('./getLastResultSummary');
 const pathToSnapshot = require('./pathToSnapshot');
 const RunResult = require('./RunResult');
@@ -14,6 +15,7 @@ module.exports = {
   areImagesEqual,
   getImageFromStream,
   getImageFromPath,
+  getImageFromDataURI,
   getLastResultSummary,
   pathToSnapshot,
   RunResult,

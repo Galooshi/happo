@@ -12,6 +12,7 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
+    "parse-data-uri": "^0.2.0",
     "pngjs": "^3.0.0"
   }
 }
