@@ -1,6 +1,6 @@
 {
   "name": "happo-core",
-  "version": "4.0.1",
+  "version": "5.0.0-rc.0",
   "description": "Core methods and modules for the happo visual diffing library",
   "repository": "https://github.com/Galooshi/happo/tree/master/packages/happo-core",
   "author": "",

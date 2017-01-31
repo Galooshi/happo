@@ -1,6 +1,6 @@
 {
   "name": "happo",
-  "version": "4.0.1",
+  "version": "5.0.0-rc.0",
   "description": "Command-line tool to visually diff user interfaces",
   "repository": "https://github.com/Galooshi/happo/tree/master/packages/happo",
   "author": "",
@@ -15,8 +15,8 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
-    "happo-core": "4.0.1",
-    "happo-viewer": "4.0.1",
+    "happo-core": "^5.0.0-rc.0",
+    "happo-viewer": "^5.0.0-rc.0",
     "commander": "^2.9.0",
     "ejs": "^2.5.2"
   }

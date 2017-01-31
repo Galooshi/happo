@@ -1,6 +1,6 @@
 {
   "name": "happo-viewer",
-  "version": "4.0.1",
+  "version": "5.0.0-rc.0",
   "description": "Command-line tool to visually diff JavaScript components",
   "repository": "https://github.com/Galooshi/happo/tree/master/packages/happo-target-firefox",
   "author": "",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "react": "15.4.1",
-    "happo-core": "4.0.1",
+    "happo-core": "^5.0.0-rc.0",
     "react-waypoint": "^4.1.0",
     "react-dom": "15.4.1",
     "selenium-webdriver": "^3.0.1",
