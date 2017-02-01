@@ -9,6 +9,7 @@ const {
 const initializeConfig = require('./initializeConfig');
 const validateConfig = require('./validateConfig');
 const { server, uploadLastResult } = require('happo-viewer');
+const processSerially = require('./processSerially');
 
 config.set(validateConfig(initializeConfig(process.env.HAPPO_CONFIG_FILE)));
 
@@ -34,7 +35,7 @@ commander.command('run [<target>]').action((targetName) => {
   if (targetName) {
     resultPromise = targetForName(targetName).run();
   } else {
-    resultPromise = Promise.all(config.get().targets.map(target => target.run()))
+    resultPromise = processSerially(config.get().targets, target => target.run())
       .then(results => results.reduce((a, b) => a.merge(b)));
   }
 
