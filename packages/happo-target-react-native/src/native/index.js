@@ -3,6 +3,9 @@ window.navigator.userAgent = 'react-native';
 
 const { AppRegistry } = require('react-native');
 
+// disable yellow box warnings for snapshot tests
+console.disableYellowBox = true;
+
 // this will get called once for side-effects, at require time.
 // eslint-disable-next-line global-require
 AppRegistry.registerComponent('HappoRunner', () => require('./Scaffold'));

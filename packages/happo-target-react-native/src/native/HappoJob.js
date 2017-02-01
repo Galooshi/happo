@@ -48,7 +48,7 @@ class HappoJob extends Component {
   render() {
     const { story } = this.state;
     return (
-      <View style={{ paddingTop: 20 }}>
+      <View>
         {story && (
           <StoryRenderer
             key={story.name}

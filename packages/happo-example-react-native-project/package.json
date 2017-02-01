@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "happo-example-react-native-project",
   "version": "4.0.1",
   "description": "Example RN project for the happo visual diffing library",
