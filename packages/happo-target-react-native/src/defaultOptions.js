@@ -69,7 +69,7 @@ const platformCapabilities = {
     automationName: 'xcuitest',
   },
   android: {
-    appPackage: 'com.HappoRunner',
+    appPackage: 'com.happorunner',
     appActivity: '.MainActivity',
   },
 };
