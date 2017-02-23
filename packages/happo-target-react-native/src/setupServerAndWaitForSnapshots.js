@@ -57,7 +57,7 @@ module.exports = function setupServerAndWaitForSnapshots({
     });
 
     httpServer.listen(options.port, () => {
-      console.log('Happo Target React Native server listening on *:5000');
+      console.log(`Happo Target React Native server listening on *:${options.port}`);
       Promise.resolve()
         // launch the user's RN packager process
         .then(initializePackager)
