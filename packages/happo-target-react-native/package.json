@@ -9,6 +9,7 @@
   "scripts": {
     "build:runner:ios": "./scripts/build-runner-ios.sh",
     "build:runner:android": "./scripts/build-runner-android.sh",
+    "build:runner:windows": "./scripts/build-runner-windows.sh",
     "build:server": "../../node_modules/.bin/babel src -d lib --ignore __tests__",
     "build": "npm run build:runner:ios && npm run build:runner:android && npm run build:server",
     "watch": "npm run build:server -- --watch"
