@@ -1,6 +1,7 @@
 using ReactNative;
 using ReactNative.Modules.Core;
 using ReactNative.Shell;
+using RNViewShot;
 using System.Collections.Generic;
 
 namespace HappoRunner
@@ -32,6 +33,7 @@ namespace HappoRunner
                 return new List<IReactPackage>
                 {
                     new MainReactPackage(),
+                    new RNViewShotPackage(),
                 };
             }
         }

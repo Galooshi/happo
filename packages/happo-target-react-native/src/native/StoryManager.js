@@ -14,8 +14,9 @@ const clear = () => { stories = []; map = {}; };
 
 let config = {
   host: Platform.select({
-    ios: 'localhost', // ios simulators are same machine
     android: '10.0.3.2', // genymotion VMs
+    ios: 'localhost', // ios simulators are same machine
+    windows: 'localhost',    
   }),
   port: 5000,
 };
