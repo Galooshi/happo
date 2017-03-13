@@ -3,7 +3,7 @@
   "version": "5.0.0-rc.1",
   "description": "React Native target for happo the visual diffing library",
   "repository": "https://github.com/Galooshi/happo/tree/master/packages/happo-target-react-native",
-  "author": "",
+  "author": "Anonymous",
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {

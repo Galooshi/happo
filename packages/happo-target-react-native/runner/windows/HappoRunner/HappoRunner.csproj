@@ -207,6 +207,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\node_modules\react-native-view-shot\windows\RNViewShot\RNViewShot.csproj">
+      <Project>{391a35d0-feba-11e6-9171-bd5177e581b7}</Project>
+      <Name>RNViewShot</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\node_modules\react-native-windows\ReactWindows\ChakraBridge\ChakraBridge.vcxproj">
       <Project>{4b72c796-16d5-4e3a-81c0-3e36f531e578}</Project>
       <Name>ChakraBridge</Name>
