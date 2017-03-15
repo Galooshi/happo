@@ -1,4 +1,5 @@
 const path = require('path');
+
 const prepareViewData = require('./prepareViewData');
 
 function isValidResource(file, options) {

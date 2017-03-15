@@ -1,8 +1,8 @@
 module.exports = {
-  environments: ['node'],
+  environments: ['browser'],
   excludes: [
+    './public/**',
     './lib/**',
     './**/__tests__/**',
   ],
-  declarationKeyword: 'const',
 };
