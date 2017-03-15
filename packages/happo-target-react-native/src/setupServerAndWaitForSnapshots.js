@@ -1,5 +1,6 @@
-const express = require('express');
 const http = require('http');
+
+const express = require('express');
 const io = require('socket.io');
 
 function buildStoryIterator(socket, stories, onStorySnapshot, onFinished) {
