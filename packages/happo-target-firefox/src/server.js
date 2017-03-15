@@ -1,4 +1,5 @@
 const path = require('path');
+
 const prepareViewData = require('happo-viewer/lib/prepareViewData');
 
 function isValidResource(file, options) {
