@@ -31,3 +31,4 @@ StoryManager.make('some red example', () => (
     <Text>Hello World!</Text>
   </View>
 ));
+
