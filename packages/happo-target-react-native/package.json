@@ -17,7 +17,7 @@
   "devDependencies": {
     "react-native": "^0.40.0",
     "react-native-view-shot": "^1.5.1",
-    "react-native-windows": "^0.43.0-rc.0",
+    "react-native-windows": "Microsoft/react-native-windows",
     "rnpm-plugin-windows": "^0.2.4"
   },
   "peerDependencies": {

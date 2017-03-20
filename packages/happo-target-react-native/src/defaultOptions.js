@@ -27,7 +27,13 @@ const androidAppPath = path.join(
 const windowsPath = path.join(
   __dirname, // path of this file
   '..', // root of this module
-  // TODO: Fill out rest of path
+  'runner',
+  'windows',
+  'HappoRunner',
+  'bin',
+  'x86',
+  'Debug',
+  'HappoRunner.exe'
 )
 
 function fail(message) {
