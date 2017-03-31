@@ -77,6 +77,12 @@ const platformCapabilities = {
 module.exports = passedOptions => validatePassedOptions(passedOptions) && ({
   name: 'react-native',
   port: 5000, // websockets port
+  usePackager: true,
+  bundlerCommand: 'node',
+  bundlerArgs: [
+    require.resolve('react-native/local-cli/cli'),
+    'bundle',
+  ],
   packagerCommand: 'node',
   packageArgs: [
     require.resolve('react-native/local-cli/cli'),

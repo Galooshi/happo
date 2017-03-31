@@ -1,4 +1,4 @@
-const ReactNativeTarget = require('happo-target-react-native');
+const ReactNativeTarget = require('../happo-target-react-native');
 const S3Uploader = require('../happo-uploader-s3');
 
 module.exports = {

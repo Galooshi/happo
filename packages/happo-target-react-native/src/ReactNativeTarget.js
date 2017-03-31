@@ -1,6 +1,7 @@
 const setupServerAndWaitForSnapshots = require('./setupServerAndWaitForSnapshots');
 const initializeDriver = require('./initializeDriver');
 const initializePackager = require('./initializePackager');
+const buildBundle = require('./buildBundle');
 const runVisualDiffs = require('./runVisualDiffs');
 const defaultOptions = require('./defaultOptions');
 
@@ -15,7 +16,10 @@ class ReactNativeTarget {
       options: this.options,
       initializeDriver: () => initializeDriver(this.options),
       initializePackager: () => initializePackager(this.options).then(() => {
-        console.log('Server started');
+        console.log('Packager server started');
+      }),
+      buildBundle: () => buildBundle(this.options).then(() => {
+        console.log('Build RN JS bundle');
       }),
     });
   }
@@ -25,6 +29,7 @@ class ReactNativeTarget {
       options: this.options,
       initializeDriver: () => initializeDriver(this.options),
       initializePackager: () => initializePackager(this.options),
+      buildBundle: () => buildBundle(this.options),
     }).then(snapshots => runVisualDiffs(snapshots, this.options));
   }
 }

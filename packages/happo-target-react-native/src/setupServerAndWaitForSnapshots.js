@@ -30,6 +30,7 @@ module.exports = function setupServerAndWaitForSnapshots({
   options,
   initializeDriver,
   initializePackager,
+  buildBundle,
 }) {
   return new Promise((resolve, reject) => {
     const expressServer = express();
@@ -59,8 +60,12 @@ module.exports = function setupServerAndWaitForSnapshots({
     httpServer.listen(options.port, () => {
       console.log(`Happo Target React Native server listening on *:${options.port}`);
       Promise.resolve()
-        // launch the user's RN packager process
-        .then(initializePackager)
+        // build RN JS bundle
+        .then(() =>
+          options.usePackager ?
+            initializePackager(options) :
+            buildBundle(options)
+        )
         // once the http server is running, and the packager is running,
         // we can safely launch the app via appium
         .then(initializeDriver)
