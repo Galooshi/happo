@@ -6,8 +6,8 @@ module.exports = {
   targets: [
     new ReactNativeTarget({
       platform: 'ios',
-      platformVersion: '9.3',
-      deviceName: 'iPhone 6',
+      platformVersion: '10.3',
+      deviceName: 'iPhone 7',
     }),
     new ReactNativeTarget({
       platform: 'android',
