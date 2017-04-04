@@ -18,9 +18,9 @@ function createApp(options) {
 
   const app = express();
   app.set('view engine', 'ejs');
-  app.set('views', path.resolve(__dirname, '../../views'));
-  app.use(express.static(path.resolve(__dirname, '../../public')));
-  options.publicDirectories.forEach((directory) => {
+  app.set('views', path.resolve(__dirname, '../views'));
+  app.use(express.static(path.resolve(__dirname, '../public')));
+  (options.publicDirectories || []).forEach((directory) => {
     app.use(express.static(path.join(process.cwd(), directory)));
   });
 
@@ -75,7 +75,7 @@ function createApp(options) {
 module.exports = {
   start(options) {
     return new Promise((resolve) => {
-      const app = createApp();
+      const app = createApp(options);
       const expressServer = app.listen(options.port, options.bind, () => {
         console.log(`Happo Viewer listening on ${options.port}`);
         resolve({ expressServer });
