@@ -1,6 +1,7 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
-export default function HappoDebug() {
+function HappoDebug() {
   return (
     <div>
       <header className='HappoDebug__header'>
@@ -26,3 +27,11 @@ export default function HappoDebug() {
     </div>
   );
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const rootElement = document.getElementById('react-root');
+  ReactDOM.render(
+    <HappoDebug />,
+    rootElement,
+  );
+});
