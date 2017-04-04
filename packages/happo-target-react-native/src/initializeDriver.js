@@ -96,5 +96,9 @@ const startDriver = ({
 
 module.exports = function initializeDriver(options) {
   console.log('[DRIVER]: starting it up');
-  return startAppium(options).then(() => startDriver(options));
+  if (options.platform === 'windows') {
+    return startDriver(options);
+  } else {
+    return startAppium(options).then(() => startDriver(options));
+  }
 };

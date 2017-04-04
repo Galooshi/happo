@@ -24,7 +24,17 @@ const androidAppPath = path.join(
   'app-debug.apk',
 );
 
-// `${process.cwd()}/../android/airbnb/build/outputs/apk/app-debug.apk`;
+const windowsPath = path.join(
+  __dirname, // path of this file
+  '..', // root of this module
+  'runner',
+  'windows',
+  'HappoRunner',
+  'bin',
+  'x86',
+  'Debug',
+  'HappoRunner.exe'
+)
 
 function fail(message) {
   /* eslint-disable no-console */
@@ -32,7 +42,6 @@ function fail(message) {
   console.error(message);
   process.exit(1);
 }
-
 
 function validatePassedOptions(options) {
   if (typeof options.platform !== 'string') {
@@ -42,9 +51,10 @@ function validatePassedOptions(options) {
   switch (options.platform.toLowerCase()) {
     case 'ios':
     case 'android':
+    case 'windows':
       break;
     default:
-      fail(`Expected \`platform\` to be one of ['ios', 'android']. Found '${options.platform}'.`);
+      fail(`Expected \`platform\` to be one of ['ios', 'android', 'windows']. Found '${options.platform}'.`);
       return false;
   }
   return true;
@@ -61,6 +71,10 @@ const platformDefaults = {
     platformName: 'Android',
     deviceOrientation: 'portrait',
   },
+  windows: {
+    runnerAppPath: windowsPath,
+    platformName: 'Windows'
+  }
 };
 
 // non-overridable capabilities
@@ -71,6 +85,9 @@ const platformCapabilities = {
   android: {
     appPackage: 'com.happorunner',
     appActivity: '.MainActivity',
+  },
+  windows: {
+    // TODO: Add capabilities
   },
 };
 

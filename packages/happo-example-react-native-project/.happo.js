@@ -14,5 +14,8 @@ module.exports = {
       platformVersion: '6.0',
       deviceName: 'Android Emulator',
     }),
+    new ReactNativeTarget({
+      platform: 'windows',
+    }),
   ],
 };
