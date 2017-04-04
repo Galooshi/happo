@@ -5,7 +5,7 @@
     "jest": "jest",
     "lint": "eslint --ext .js,.jsx .",
     "build": "lerna run build",
-    "watch": "lerna run watch",
+    "watch": "lerna run watch --no-sort --stream --concurrency=20",
     "pretest": "npm run lint",
     "test": "npm run jest"
   },
