@@ -5,7 +5,6 @@ const path = require('path');
 const rimraf = require('rimraf');
 
 const { config } = require('happo-core');
-const closeDriver = require('../closeDriver');
 const initializeWebdriver = require('../initializeWebdriver');
 const runVisualDiffs = require('../runVisualDiffs');
 const server = require('../server');
@@ -51,7 +50,7 @@ describe('runVisualDiffs', () => {
 
   afterAll(() => {
     startedServer.close();
-    return closeDriver(driver);
+    return driver.close();
   });
 
   beforeEach(() => {
