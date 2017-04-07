@@ -50,7 +50,7 @@ describe('runVisualDiffs', () => {
 
   afterAll(() => {
     startedServer.close();
-    return driver.close();
+    return driver.quit();
   });
 
   beforeEach(() => {
