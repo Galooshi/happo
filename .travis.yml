@@ -7,7 +7,7 @@ node_js:
   - "7"
 
 addons:
-  firefox: "50.0"
+  firefox: "52.0"
 
 before_install:
   - "export DISPLAY=:99.0"
