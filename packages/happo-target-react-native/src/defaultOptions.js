@@ -69,7 +69,7 @@ const platformCapabilities = {
     automationName: 'xcuitest',
   },
   android: {
-    appPackage: 'com.happorunner',
+    appPackage: 'com.test_rn_project',
     appActivity: '.MainActivity',
   },
 };
@@ -83,6 +83,7 @@ module.exports = passedOptions => validatePassedOptions(passedOptions) && ({
     require.resolve('react-native/local-cli/cli'),
     'bundle',
   ],
+  bundlerEntryFile: 'happo.js',
   packagerCommand: 'node',
   packageArgs: [
     require.resolve('react-native/local-cli/cli'),

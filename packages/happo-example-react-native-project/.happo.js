@@ -8,11 +8,13 @@ module.exports = {
       platform: 'ios',
       platformVersion: '10.3',
       deviceName: 'iPhone 7',
+      usePackager: false,
     }),
-    new ReactNativeTarget({
-      platform: 'android',
-      platformVersion: '6.0',
-      deviceName: 'Android Emulator',
-    }),
+    // new ReactNativeTarget({
+    //   platform: 'android',
+    //   platformVersion: '6.0',
+    //   deviceName: 'Android Emulator',
+    //   usePackager: false,
+    // }),
   ],
 };

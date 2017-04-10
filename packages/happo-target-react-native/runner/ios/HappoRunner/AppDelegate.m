@@ -18,7 +18,15 @@
 {
   NSURL *jsCodeLocation;
 
-  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"happo" fallbackResource:nil];
+  // create bridge with bridge delegate, make the appdelegate the bridge delegate
+  // implement urlforbridge-ish method of bridge delegate
+  // in there, make sync http call to 8081, see if returns
+  // create root view w/ bridge, instead of bundle url
+  // look at native navigation boilerplate
+
+//  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"happo" fallbackResource:nil];
+
+  jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"HappoRunner"
