@@ -5,7 +5,6 @@ const path = require('path');
 const rimraf = require('rimraf');
 
 const { config } = require('happo-core');
-const closeDriver = require('../closeDriver');
 const initializeWebdriver = require('../initializeWebdriver');
 const runVisualDiffs = require('../runVisualDiffs');
 const server = require('../server');
@@ -42,10 +41,8 @@ describe('runVisualDiffs', () => {
       stylesheets: [],
     };
     return server.start(options).then(({ expressServer }) => {
-      console.log('server', typeof expressServer);
       startedServer = expressServer;
       return initializeWebdriver(options).then((webdriver) => {
-        console.log('webdriver', typeof webdriver);
         driver = webdriver;
       });
     });
@@ -53,7 +50,7 @@ describe('runVisualDiffs', () => {
 
   afterAll(() => {
     startedServer.close();
-    return closeDriver(driver);
+    return driver.quit();
   });
 
   beforeEach(() => {
@@ -110,7 +107,7 @@ describe('runVisualDiffs', () => {
 
       return runVisualDiffs(driver, options).then((result) => {
         expect(result.newImages.length).toEqual(1);
-        expect(result.newImages[0].height).toEqual(1);
+        expect(result.newImages[0].height).toEqual(2);
       });
     });
 
@@ -141,7 +138,7 @@ describe('runVisualDiffs', () => {
       return runVisualDiffs(driver, options).then((firstResult) => {
         expect(firstResult.newImages.length).toEqual(1);
         expect(firstResult.diffImages.length).toEqual(0);
-        expect(firstResult.newImages[0].height).toEqual(100);
+        expect(firstResult.newImages[0].height).toEqual(200);
 
         // Switch to a short example
         options.sourceFiles.pop();
@@ -150,7 +147,7 @@ describe('runVisualDiffs', () => {
         expect(secondResult.diffImages.length).toEqual(1);
 
         // We expect height to be the max of the before and after
-        expect(secondResult.diffImages[0].height).toEqual(100);
+        expect(secondResult.diffImages[0].height).toEqual(200);
       });
     });
   });

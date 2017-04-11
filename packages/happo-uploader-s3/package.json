@@ -1,6 +1,6 @@
 {
   "name": "happo-uploader-s3",
-  "version": "5.0.0-rc.0",
+  "version": "5.0.0-rc.2",
   "description": "An Amazon S3 Uploader plugin for the happo visual diffing library",
   "repository": "https://github.com/Galooshi/happo/tree/master/packages/happo-uploader-s3",
   "author": "",
