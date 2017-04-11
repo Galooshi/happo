@@ -25,8 +25,11 @@ class FirefoxTarget {
       .then(checkBrowserVersion)
       .then(() => initializeWebdriver(this.options))
       .then(driver => runVisualDiffs(driver, this.options)
-        .then(result => driver.quit())
-        .catch(error => {
+        .then((result) => {
+          driver.quit();
+          return result;
+        })
+        .catch((error) => {
           driver.quit();
           throw new Error(error);
         }));
