@@ -5,6 +5,8 @@ packages/*/public/*.bundle.*
 packages/*/public/*.worker.*
 .DS_Store
 *-debug.log
+*.jsbundle
+*.jsbundle.meta
 
 # OSX
 #

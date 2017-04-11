@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 echo "Building app-debug.apk"
-node ./node_modules/react-native/local-cli/cli.js run-android --root ./runner
+node ./node_modules/react-native/local-cli/cli.js run-android --root ./runner --packager=false
 
 echo "Building app-debug.apk (done)"

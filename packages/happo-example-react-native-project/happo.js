@@ -4,7 +4,7 @@ import StoryManager from 'happo-target-react-native/client';
 // import { View, Text } from 'react-native';
 
 StoryManager.make('some example', () => (
-  {}
+  null
   // <View
   //   style={{
   //     backgroundColor: 'blue',
@@ -20,7 +20,7 @@ StoryManager.make('some example', () => (
 
 
 StoryManager.make('some red example', () => (
-  {}
+  null
   // <View
   //   style={{
   //     backgroundColor: 'red',
