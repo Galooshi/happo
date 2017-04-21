@@ -13,6 +13,10 @@
     "build": "npm run build:runner:ios && npm run build:runner:android && npm run build:server",
     "watch": "npm run build:server -- --watch"
   },
+  "devDependencies": {
+    "react-native": "^0.42.3",
+    "react-native-view-shot": "^1.5.1"
+  },
   "peerDependencies": {
     "react-native": "*",
     "react-native-view-shot": "*"
@@ -23,8 +27,6 @@
     "happo-core": "^5.0.0-rc.1",
     "mkdirp": "^0.5.1",
     "react": "15.4.1",
-    "react-native": "^0.42.3",
-    "react-native-view-shot": "^1.5.1",
     "socket.io": "^1.7.2",
     "socket.io-client": "^1.7.2",
     "wd": "^1.1.1"

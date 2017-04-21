@@ -78,8 +78,6 @@ module.exports = function buildBundle(options) {
       path.resolve(assetsDest),
     ];
 
-    console.log(args, cwd)
-
     const bundlerProcess = childProcess.spawn(command, args, { cwd, env });
 
     bundlerProcess.stderr.on('data', (data) => {
