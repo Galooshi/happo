@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "happo-example-react-native-project",
-  "version": "4.0.1",
+  "version": "5.0.0-rc.5",
   "description": "Example RN project for the happo visual diffing library",
   "repository": "https://github.com/Galooshi/happo/tree/master/packages/happo-example-react-native-project",
   "author": "",
@@ -11,12 +11,12 @@
     "packager": "node ./node_modules/react-native/local-cli/cli.js start --reset-cache"
   },
   "dependencies": {
-    "react": "15.4.1",
-    "react-native": "^0.40.0",
     "happo": "../happo",
-    "happo-viewer": "../happo-viewer",
     "happo-core": "../happo-core",
     "happo-target-react-native": "../happo-target-react-native",
-    "happo-uploader-s3": "../happo-target-react-native"
+    "happo-uploader-s3": "../happo-target-react-native",
+    "happo-viewer": "../happo-viewer",
+    "react": "15.4.1",
+    "react-native": "^0.40.0"
   }
 }

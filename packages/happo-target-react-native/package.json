@@ -1,6 +1,6 @@
 {
   "name": "happo-target-react-native",
-  "version": "5.0.0-rc.1",
+  "version": "5.0.0-rc.5",
   "description": "React Native target for happo the visual diffing library",
   "repository": "https://github.com/Galooshi/happo/tree/master/packages/happo-target-react-native",
   "author": "",

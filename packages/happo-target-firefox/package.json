@@ -1,6 +1,6 @@
 {
   "name": "happo-target-firefox",
-  "version": "5.0.0-rc.1",
+  "version": "5.0.0-rc.5",
   "description": "Firefox target for the happo visual diffing library",
   "repository": "https://github.com/Galooshi/happo/tree/master/packages/happo-target-firefox",
   "author": "",
@@ -15,12 +15,12 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
-    "happo-core": "^5.0.0-rc.1",
-    "pngjs": "^3.0.0",
-    "selenium-webdriver": "3.3.0",
-    "mkdirp": "^0.5.1",
-    "ps-node": "^0.1.4",
+    "ejs": "^2.5.2",
     "express": "^4.14.0",
-    "ejs": "^2.5.2"
+    "happo-core": "^5.0.0-rc.1",
+    "mkdirp": "^0.5.1",
+    "pngjs": "^3.0.0",
+    "ps-node": "^0.1.4",
+    "selenium-webdriver": "3.3.0"
   }
 }
