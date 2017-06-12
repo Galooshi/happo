@@ -3,7 +3,7 @@ import findBackgroundImageUrls from './findBackgroundImageUrls';
 function waitForImageToLoad(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.onerror = () => reject(new Error(`Failed to load image with url ${url}`));
+    img.onerror = () => reject(new Error(`Happo: Failed to load image with url ${url}`));
     img.addEventListener('load', resolve, { once: true });
     img.src = url;
   });
