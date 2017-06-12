@@ -5,7 +5,9 @@ export default function findBackgroundImageUrls(string) {
   let match;
   // eslint-disable-next-line no-cond-assign
   while (match = URL_PATTERN.exec(string)) {
-    result.push(match[1]);
+    // We need to unescape the simple quote.
+    const url = match[1].replace(/\\'/g, "'");
+    result.push(url);
   }
   return result;
 }

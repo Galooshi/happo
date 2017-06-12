@@ -2,6 +2,7 @@
   "private": true,
   "description": "Command-line tool to visually diff JavaScript components",
   "scripts": {
+    "bootstrap": "lerna bootstrap",
     "jest": "jest",
     "lint": "eslint --ext .js,.jsx .",
     "build": "lerna run build",
