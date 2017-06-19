@@ -1,4 +1,5 @@
 language: node_js
+
 sudo: false
 
 node_js:
@@ -14,6 +15,6 @@ before_install:
 
 install:
   - "npm install"
-  - "lerna bootstrap"
+  - "npm run bootstrap"
 
 script: "npm test"
