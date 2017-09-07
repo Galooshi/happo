@@ -17,7 +17,8 @@
   "dependencies": {
     "ejs": "^2.5.2",
     "express": "^4.14.0",
-    "happo-core": "^5.0.0-rc.1",
+    "happo-core": "../happo",
+    "happo-viewer": "../happo-viewer",
     "mkdirp": "^0.5.1",
     "pngjs": "^3.0.0",
     "ps-node": "^0.1.4",
