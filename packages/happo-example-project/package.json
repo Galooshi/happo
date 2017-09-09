@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "happo-example-project",
-  "version": "5.0.0-rc.7",
+  "version": "5.0.0-rc.8",
   "description": "Example project for the happo visual diffing library",
   "repository": "https://github.com/Galooshi/happo/tree/master/packages/happo-example-project",
   "author": "",
@@ -9,7 +9,7 @@
   "scripts": {},
   "dependencies": {
     "happo": "^5.0.0-rc.1",
-    "happo-target-firefox": "^5.0.0-rc.7",
+    "happo-target-firefox": "^5.0.0-rc.8",
     "happo-uploader-s3": "^5.0.0-rc.0"
   }
 }
