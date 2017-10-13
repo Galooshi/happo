@@ -35,7 +35,7 @@
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.7.1",
     "jest": "^18.1.0",
-    "lerna": "^2.0.0-rc.5",
+    "lerna": "^2.4.0",
     "rimraf": "^2.5.4",
     "webpack": "^1.13.2"
   },

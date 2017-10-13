@@ -1,7 +1,7 @@
 {
-  "lerna": "2.0.0-rc.5",
+  "lerna": "2.4.0",
   "packages": [
     "packages/*"
   ],
-  "version": "5.0.0-rc.8"
+  "version": "independent"
 }
