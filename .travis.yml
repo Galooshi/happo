@@ -4,7 +4,7 @@ sudo: false
 
 node_js:
   - "6"
-  - "7"
+  - "8"
 
 addons:
   firefox: "52.0"
