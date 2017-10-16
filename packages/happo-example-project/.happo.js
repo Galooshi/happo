@@ -2,8 +2,8 @@ const FirefoxTarget = require('happo-target-firefox');
 const S3Uploader = require('../happo-uploader-s3');
 
 module.exports = {
-  // bind: '0.0.0.0',
-  // port: 5555,
+  bind: '0.0.0.0',
+  port: 5555,
   uploader: () => new S3Uploader(),
   targets: [
     new FirefoxTarget({

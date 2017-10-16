@@ -1,7 +1,6 @@
 const { constructUrl } = require('happo-core');
 const runVisualDiffs = require('./runVisualDiffs');
 const initializeWebdriver = require('./initializeWebdriver');
-const closeDriver = require('./closeDriver');
 const checkBrowserVersion = require('./checkBrowserVersion');
 const server = require('./server');
 const defaultOptions = require('./defaultOptions');
@@ -26,10 +25,14 @@ class FirefoxTarget {
       .then(checkBrowserVersion)
       .then(() => initializeWebdriver(this.options))
       .then(driver => runVisualDiffs(driver, this.options)
-        .then(result => closeDriver(driver).then(() => result))
-        .catch(error => closeDriver(driver).then(() => {
-          throw error;
-        })));
+        .then((result) => {
+          driver.quit();
+          return result;
+        })
+        .catch((error) => {
+          driver.quit();
+          throw new Error(error);
+        }));
   }
 }
 
