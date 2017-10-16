@@ -1,3 +1,0 @@
-// dummy index.js file? For some reason, RN packager seems to not like an index file not
-// being here...
-console.log('useless');
