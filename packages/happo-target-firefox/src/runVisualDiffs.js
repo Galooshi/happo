@@ -244,6 +244,10 @@ function performDiffs({ driver, examplesByViewport }) {
 }
 
 module.exports = function runVisualDiffs(driver, options) {
+  if (!driver) {
+    throw new Error('driver not successfully loaded');
+  }
+
   return loadTestPage(driver, options)
     .then(checkForInitializationErrors)
     .then(d => getExamplesByViewport(d, options))
