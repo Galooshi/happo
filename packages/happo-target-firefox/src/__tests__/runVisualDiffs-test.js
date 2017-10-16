@@ -107,7 +107,7 @@ describe('runVisualDiffs', () => {
 
       return runVisualDiffs(driver, options).then((result) => {
         expect(result.newImages.length).toEqual(1);
-        expect(result.newImages[0].height).toEqual(2);
+        expect(result.newImages[0].height).toEqual(1);
       });
     });
 
@@ -138,7 +138,7 @@ describe('runVisualDiffs', () => {
       return runVisualDiffs(driver, options).then((firstResult) => {
         expect(firstResult.newImages.length).toEqual(1);
         expect(firstResult.diffImages.length).toEqual(0);
-        expect(firstResult.newImages[0].height).toEqual(200);
+        expect(firstResult.newImages[0].height).toEqual(100);
 
         // Switch to a short example
         options.sourceFiles.pop();
@@ -147,7 +147,7 @@ describe('runVisualDiffs', () => {
         expect(secondResult.diffImages.length).toEqual(1);
 
         // We expect height to be the max of the before and after
-        expect(secondResult.diffImages[0].height).toEqual(200);
+        expect(secondResult.diffImages[0].height).toEqual(100);
       });
     });
   });
