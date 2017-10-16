@@ -23,6 +23,6 @@
     "pngjs": "^3.0.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "selenium-webdriver": "3.3.0"
+    "selenium-webdriver": "3.6.0"
   }
 }
