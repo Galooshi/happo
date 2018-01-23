@@ -26,6 +26,10 @@ more][end-of-visual-regressions].
 
 [end-of-visual-regressions]: https://medium.com/brigade-engineering/the-end-of-visual-regressions-b6b5c3d810f
 
+***
+*Looking for hosted happo?* Try https://happo.io!
+***
+
 ## Installation
 
 Happo comes bundled as an npm package. To install it, run
