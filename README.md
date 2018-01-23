@@ -1,4 +1,4 @@
-# Happo <sup>[![Version Badge][npm-version-svg]][package-url]</sup>
+# Happo
 
 [![Build Status][travis-svg]][travis-url]
 [![dependency status][deps-svg]][deps-url]
@@ -9,7 +9,6 @@
 [![npm badge][npm-badge-png]][package-url]
 
 [package-url]: https://npmjs.org/package/happo
-[npm-version-svg]: http://versionbadg.es/Galooshi/happo.svg
 [travis-svg]: https://travis-ci.org/Galooshi/happo.svg
 [travis-url]: https://travis-ci.org/Galooshi/happo
 [deps-svg]: https://david-dm.org/Galooshi/happo.svg
