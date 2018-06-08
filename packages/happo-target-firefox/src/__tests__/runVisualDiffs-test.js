@@ -107,7 +107,7 @@ describe('runVisualDiffs', () => {
 
       return runVisualDiffs(driver, options).then((result) => {
         expect(result.newImages.length).toEqual(1);
-        expect(result.newImages[0].height).toEqual(1);
+        expect(result.newImages[0].height).toBeGreaterThan(0);
       });
     });
 
@@ -136,18 +136,31 @@ describe('runVisualDiffs', () => {
       options.sourceFiles.push(fixturePath('tallExample.js'));
 
       return runVisualDiffs(driver, options).then((firstResult) => {
+        const { height } = firstResult.newImages[0];
         expect(firstResult.newImages.length).toEqual(1);
         expect(firstResult.diffImages.length).toEqual(0);
-        expect(firstResult.newImages[0].height).toEqual(100);
+        expect(height).toBeGreaterThan(99);
 
         // Switch to a short example
         options.sourceFiles.pop();
         options.sourceFiles.push(fixturePath('shortExample.js'));
-      }).then(() => runVisualDiffs(driver, options)).then((secondResult) => {
-        expect(secondResult.diffImages.length).toEqual(1);
+        return runVisualDiffs(driver, options).then((secondResult) => {
+          expect(secondResult.diffImages.length).toEqual(1);
 
-        // We expect height to be the max of the before and after
-        expect(secondResult.diffImages[0].height).toEqual(100);
+          // We expect height to be the max of the before and after
+          expect(secondResult.diffImages[0].height).toEqual(height);
+        });
+      });
+    });
+
+    it('waits for images in srcset', () => {
+      // Use a tall example to begin with
+      options.sourceFiles.push(fixturePath('srcsetExample.js'));
+
+      return runVisualDiffs(driver, options).then((firstResult) => {
+        expect(firstResult.newImages.length).toEqual(1);
+        expect(firstResult.diffImages.length).toEqual(0);
+        expect(firstResult.newImages[0].height).toBeGreaterThan(100);
       });
     });
   });

@@ -11,10 +11,23 @@ export function waitForImageToLoad(url) {
 
 export default function waitForImagesToRender() {
   return new Promise((resolve, reject) => {
-    const promises = Array.prototype.slice.call(document.querySelectorAll('img'))
+    const images = Array.prototype.slice.call(document.querySelectorAll('img'));
+    const promises = images
       .map(img => img.src)
       .filter(Boolean)
       .map(waitForImageToLoad);
+
+    images.forEach((img) => {
+      const srcset = img.getAttribute('srcset');
+      if (!srcset) {
+        return;
+      }
+
+      srcset.split(/,\s*/).forEach((entry) => {
+        const [url] = entry.split(' ');
+        promises.push(waitForImageToLoad(url));
+      });
+    });
 
     Array.prototype.slice.call(document.body.querySelectorAll('*'))
       .forEach((element) => {
