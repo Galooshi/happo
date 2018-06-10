@@ -1,4 +1,5 @@
 import findBackgroundImageUrls from './findBackgroundImageUrls';
+import getUrlsFromSrcset from './getUrlsFromSrcset';
 
 export function waitForImageToLoad(url) {
   return new Promise((resolve, reject) => {
@@ -23,10 +24,7 @@ export default function waitForImagesToRender() {
         return;
       }
 
-      srcset.split(/,\s*/).forEach((entry) => {
-        const [url] = entry.split(' ');
-        promises.push(waitForImageToLoad(url));
-      });
+      promises.push(...getUrlsFromSrcset(srcset).map(waitForImageToLoad));
     });
 
     Array.prototype.slice.call(document.body.querySelectorAll('*'))
