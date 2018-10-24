@@ -154,13 +154,14 @@ describe('runVisualDiffs', () => {
     });
 
     it('waits for images with crossOrigin', () => {
-      // Use a tall example to begin with
-      options.sourceFiles.push(fixturePath('crossOriginImageExample.js'));
+      options.sourceFiles.push(fixturePath('crossOriginImageExamples.js'));
 
       return runVisualDiffs(driver, options).then((firstResult) => {
-        expect(firstResult.newImages.length).toEqual(1);
+        expect(firstResult.newImages.length).toEqual(3);
         expect(firstResult.diffImages.length).toEqual(0);
         expect(firstResult.newImages[0].height).toBeGreaterThan(100);
+        expect(firstResult.newImages[1].height).toBeGreaterThan(100);
+        expect(firstResult.newImages[2].height).toBeGreaterThan(100);
       });
     });
 
