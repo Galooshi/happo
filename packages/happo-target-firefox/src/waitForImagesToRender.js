@@ -1,11 +1,18 @@
 import findBackgroundImageUrls from './findBackgroundImageUrls';
 import getUrlsFromSrcset from './getUrlsFromSrcset';
 
-export function waitForImageToLoad(url) {
+export function waitForImageToLoad(imageOrUrl) {
   return new Promise((resolve, reject) => {
+    let url = imageOrUrl;
+    let crossOrigin;
+    if (typeof imageOrUrl !== 'string') {
+      url = imageOrUrl.src;
+      crossOrigin = imageOrUrl.crossOrigin;
+    }
     const img = new Image();
     img.onerror = () => reject(new Error(`Happo: Failed to load image with url ${url}`));
     img.addEventListener('load', resolve, { once: true });
+    img.crossOrigin = crossOrigin;
     img.src = url;
   });
 }
@@ -14,8 +21,7 @@ export default function waitForImagesToRender() {
   return new Promise((resolve, reject) => {
     const images = Array.prototype.slice.call(document.querySelectorAll('img'));
     const promises = images
-      .map(img => img.src)
-      .filter(Boolean)
+      .filter(({ src }) => !!src)
       .map(waitForImageToLoad);
 
     images.forEach((img) => {
