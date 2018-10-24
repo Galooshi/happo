@@ -17,7 +17,7 @@
   "dependencies": {
     "ejs": "^2.5.2",
     "express": "^4.14.0",
-    "geckodriver": "^1.9.0",
+    "geckodriver": "1.9.0",
     "happo-core": "^5.0.0",
     "happo-viewer": "^5.0.0",
     "mkdirp": "^0.5.1",
