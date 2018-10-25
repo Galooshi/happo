@@ -1,12 +1,13 @@
 import findBackgroundImageUrls from './findBackgroundImageUrls';
 import getUrlsFromSrcset from './getUrlsFromSrcset';
 
-export function waitForImageToLoad(url) {
+export function waitForImageToLoad({ src, crossOrigin }) {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.onerror = () => reject(new Error(`Happo: Failed to load image with url ${url}`));
+    img.onerror = () => reject(new Error(`Happo: Failed to load image with url ${src}, crossOrigin=${crossOrigin}`));
     img.addEventListener('load', resolve, { once: true });
-    img.src = url;
+    img.crossOrigin = crossOrigin;
+    img.src = src;
   });
 }
 
@@ -14,9 +15,8 @@ export default function waitForImagesToRender() {
   return new Promise((resolve, reject) => {
     const images = Array.prototype.slice.call(document.querySelectorAll('img'));
     const promises = images
-      .map(img => img.src)
-      .filter(Boolean)
-      .map(waitForImageToLoad);
+      .filter(({ src }) => !!src)
+      .map(({ src, crossOrigin }) => waitForImageToLoad({ src, crossOrigin }));
 
     images.forEach((img) => {
       const srcset = img.getAttribute('srcset');
@@ -24,7 +24,9 @@ export default function waitForImagesToRender() {
         return;
       }
 
-      promises.push(...getUrlsFromSrcset(srcset).map(waitForImageToLoad));
+      const crossOrigin = img.crossOrigin;
+      promises.push(...getUrlsFromSrcset(srcset).map(src =>
+        waitForImageToLoad({ src, crossOrigin })));
     });
 
     Array.prototype.slice.call(document.body.querySelectorAll('*'))
@@ -32,7 +34,7 @@ export default function waitForImagesToRender() {
         const computedStyle = window.getComputedStyle(element);
         const urls = findBackgroundImageUrls(
           computedStyle.getPropertyValue('background-image'));
-        promises.push(...urls.map(waitForImageToLoad));
+        promises.push(...urls.map(src => waitForImageToLoad({ src })));
       });
 
     if (promises.length === 0) {
