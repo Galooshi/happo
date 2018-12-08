@@ -1,34 +1,15 @@
 # Happo
 
-[![Build Status][travis-svg]][travis-url]
-[![dependency status][deps-svg]][deps-url]
-[![dev dependency status][dev-deps-svg]][dev-deps-url]
-[![License][license-image]][license-url]
-[![Downloads][downloads-image]][downloads-url]
+***
 
-[![npm badge][npm-badge-png]][package-url]
+*This project is in maintenance mode. New development, including cross-browser support, easier CI integration, etc takes place at https://happo.io*
 
-[package-url]: https://npmjs.org/package/happo
-[travis-svg]: https://travis-ci.org/Galooshi/happo.svg
-[travis-url]: https://travis-ci.org/Galooshi/happo
-[deps-svg]: https://david-dm.org/Galooshi/happo.svg
-[deps-url]: https://david-dm.org/Galooshi/happo
-[dev-deps-svg]: https://david-dm.org/Galooshi/happo/dev-status.svg
-[dev-deps-url]: https://david-dm.org/Galooshi/happo#info=devDependencies
-[npm-badge-png]: https://nodei.co/npm/happo.png?downloads=true&stars=true
-[license-image]: http://img.shields.io/npm/l/happo.svg
-[license-url]: LICENSE
-[downloads-image]: http://img.shields.io/npm/dm/happo.svg
-[downloads-url]: http://npm-stat.com/charts.html?package=happo
+***
 
-Happo is a command-line tool to visually diff user interfaces. [Read
-more][end-of-visual-regressions].
+Happo is a screenshot testing tool. [Read more][end-of-visual-regressions].
 
 [end-of-visual-regressions]: https://medium.com/brigade-engineering/the-end-of-visual-regressions-b6b5c3d810f
 
-***
-*Looking for hosted happo?* Try https://happo.io!
-***
 
 ## Installation
 
