@@ -22,7 +22,7 @@ function tryAsync(func) {
     // went haywire and we need to move on.
     const timeout = setTimeout(() => {
       reject(new Error('Async callback was not invoked within timeout.'));
-    }, 3000);
+    }, 30000);
 
     // This function is called by the example when it is done executing.
     const doneCallback = () => {
