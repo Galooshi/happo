@@ -16,13 +16,13 @@ function handleError(currentExample, error) {
  *   that is called when it is done.
  * @return {Promise}
  */
-function tryAsync(func) {
+function tryAsync(func, timeoutDuration = 3000) {
   return new Promise((resolve, reject) => {
-    // Safety valve: if the function does not finish after 3s, then something
-    // went haywire and we need to move on.
+    // Safety valve: if the function does not finish after the timeoutDuration,
+    // then something probably went haywire and we need to move on.
     const timeout = setTimeout(() => {
       reject(new Error('Async callback was not invoked within timeout.'));
-    }, 3000);
+    }, timeoutDuration);
 
     // This function is called by the example when it is done executing.
     const doneCallback = () => {
@@ -111,12 +111,12 @@ window.happo = {
         document.body.removeChild(document.body.firstChild);
       }
 
-      const { func } = currentExample;
+      const { func, options } = currentExample;
       if (func.length) {
         // The function takes an argument, which is a callback that is called
         // once it is done executing. This can be used to write functions that
         // have asynchronous code in them.
-        tryAsync(func).then(() => {
+        tryAsync(func, options.timeout).then(() => {
           this.processExample(currentExample).then(doneFunc).catch(doneFunc);
         }).catch((error) => {
           doneFunc(handleError(currentExample, error));
