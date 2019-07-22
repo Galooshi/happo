@@ -15,6 +15,7 @@ function createApp(options) {
   app.set('view engine', 'ejs');
   app.set('views', path.resolve(__dirname, '../views'));
   app.use(express.static(path.resolve(__dirname, '../public')));
+
   options.publicDirectories.forEach((directory) => {
     app.use(express.static(path.join(process.cwd(), directory)));
   });
