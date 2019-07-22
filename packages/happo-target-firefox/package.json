@@ -1,6 +1,6 @@
 {
   "name": "happo-target-firefox",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "description": "Firefox target for the happo visual diffing library",
   "repository": "https://github.com/Galooshi/happo/tree/master/packages/happo-target-firefox",
   "author": "",
