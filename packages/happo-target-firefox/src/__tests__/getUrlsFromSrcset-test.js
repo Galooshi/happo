@@ -41,3 +41,7 @@ it('handles multiple urls with whitespace', () => {
 
   `)).toEqual(['http://foo.com/foo,40,50', '/bar,20.png']);
 });
+
+it('handles multiple URLs with mixed descriptors', () => {
+  expect(getUrlsFromSrcset('/foo.png, /bar.png 400w')).toEqual(['/foo.png', '/bar.png']);
+});

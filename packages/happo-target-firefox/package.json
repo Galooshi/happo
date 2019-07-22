@@ -21,10 +21,10 @@
     "happo-core": "^5.0.0",
     "happo-viewer": "^5.0.0",
     "mkdirp": "^0.5.1",
+    "parse-srcset": "^1.0.2",
     "pngjs": "^3.0.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "selenium-webdriver": "3.6.0",
-    "string.prototype.matchall": "^3.0.0"
+    "selenium-webdriver": "3.6.0"
   }
 }
