@@ -30,6 +30,7 @@ describe('runVisualDiffs', () => {
       uploader: () => ({}),
       targets: [],
     });
+
     options = {
       ...defaultOptions,
       bind: '0.0.0.0',
@@ -40,8 +41,10 @@ describe('runVisualDiffs', () => {
       ],
       stylesheets: [],
     };
+
     return server.start(options).then(({ expressServer }) => {
       startedServer = expressServer;
+
       return initializeWebdriver(options).then((webdriver) => {
         driver = webdriver;
       });
